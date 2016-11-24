@@ -15,15 +15,16 @@ public interface BoardI {
      * @param color color of player=stone in this turn
      * @param placeX coordinate X where to add stone
      * @param placeY coordinate Y where to add stone
+     * @return true if stone added with succes
      */
-     void addStone(PLAYER color, int placeX,int placeY);
+     boolean addStone(PLAYER color, int placeX,int placeY);
 
     /**
      *
      * @param color color of player=stone for which we are asking
      * @param placeX where we want to know if we can add this stone
      * @param placeY coordinate Y where to add stone
-     * @return true if stone added with success
+     * @return true if stone can be added at this place
      */
     boolean canAddHere(PLAYER color, int placeX, int placeY);
 
@@ -38,7 +39,7 @@ public interface BoardI {
      *
      * @return table of PLACES informs what is on place with numer as table index
      */
-    PLACE[] getGameTable();
+    PLACE[][] getGameTable();
 
 
 

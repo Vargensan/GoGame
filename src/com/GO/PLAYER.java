@@ -4,4 +4,18 @@
 
 package com.GO;
 
-public enum PLAYER {BLACK,WHITE};
+public enum PLAYER {
+
+    BLACK,WHITE;
+
+public PLACE playerToPlace()
+{
+    switch(this)
+    {
+        case BLACK:
+            return PLACE.BLACK;
+        case WHITE:
+            return PLACE.WHITE;
+    }
+}
+};

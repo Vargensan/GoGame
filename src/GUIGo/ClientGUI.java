@@ -21,7 +21,7 @@ public class ClientGUI extends JFrame implements ActionListener{
     private Container content;
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
-    private DrawPanel jDrawPanel;
+    private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
@@ -36,7 +36,7 @@ public class ClientGUI extends JFrame implements ActionListener{
     }
     private void test(){
         PLACE[][] GameBoard = new PLACE[19][19];
-        jDrawPanel.startDrawing(GameBoard);
+        jDrawingBoard.startDrawing(GameBoard);
     }
 
     private void createWindow(){
@@ -54,7 +54,7 @@ public class ClientGUI extends JFrame implements ActionListener{
         addjOptionPanelButtons();
         //add components
         content.add(jOptionPanel);
-        content.add(jDrawPanel);
+        content.add(jDrawingBoard);
         content.add(jStartGame);
         content.add(jBoardSelect);
         jClient.setLocationRelativeTo(null);
@@ -76,9 +76,9 @@ public class ClientGUI extends JFrame implements ActionListener{
         CenterX =(int) (jClient.getSize().width- X_OF_DRAWPANEL)/2;
         CenterY =(int) (Y_OF_DRAWPANEL- jClient.getWidth())/2;
 
-        jDrawPanel = new DrawPanel();
+        jDrawingBoard = new DrawingBoard();
         System.out.println(CenterX);
-        jDrawPanel.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
+        jDrawingBoard.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
     }
 
     private void addjOptionPanelButtons(){

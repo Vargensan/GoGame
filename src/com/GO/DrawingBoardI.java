@@ -11,11 +11,9 @@ import java.awt.*;
  */
 
 public interface DrawingBoardI {
-    public void drawLine(Graphics g2, int[] X, int[] Y);
+    public void drawLines(Graphics2D g2,int temp);
+    public void filledCircle(Graphics2D g2, PLAYER player, int[] cordinates);
     public void update();
-    public void countLines(int tableSize);
-    public int setStartConditions();
-    public void drawLines(Graphics2D g2, int temp);
     public int getXofPoint();
     public int getYofPoint();
 

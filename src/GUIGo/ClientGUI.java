@@ -21,7 +21,7 @@ public class ClientGUI extends JFrame implements ActionListener{
     private Container content;
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
-    private DrawingBoard jDrawingBoard;
+    protected DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
@@ -31,12 +31,11 @@ public class ClientGUI extends JFrame implements ActionListener{
      */
     public ClientGUI(){
         createWindow();
-        test();
 
     }
-    private void test(){
-        PLACE[][] GameBoard = new PLACE[19][19];
-        jDrawingBoard.startDrawing(GameBoard);
+
+    public void startDrawing(PLACE[][] board){
+        jDrawingBoard.startDrawing(board);
     }
 
     private void createWindow(){

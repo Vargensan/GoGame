@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26e7e973-5748-44b7-ac05-7cd2de3c1b9f" name="Default" comment="New features added to Drawing Class">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+    <list default="true" id="26e7e973-5748-44b7-ac05-7cd2de3c1b9f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="GO.iws" />
@@ -142,6 +141,12 @@
       <map>
         <entry key="$PROJECT_DIR$" value="a76640c098a8e900e1c7507fee5b6a64e9043cd6" />
       </map>
+    </option>
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
+      </GitPushTagMode>
     </option>
   </component>
   <component name="GradleLocalSettings">
@@ -833,7 +838,7 @@
       <workItem from="1480012398231" duration="5534000" />
       <workItem from="1480080270384" duration="1846000" />
       <workItem from="1480337156035" duration="2384000" />
-      <workItem from="1480367999280" duration="1476000" />
+      <workItem from="1480367999280" duration="1690000" />
     </task>
     <task id="LOCAL-00001" summary="GUI  for Go game - Initial">
       <created>1480004822852</created>
@@ -856,11 +861,18 @@
       <option name="project" value="LOCAL" />
       <updated>1480339517999</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="New features added to Drawing Class">
+      <created>1480369501655</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1480369501655</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13148000" />
+    <option name="totallyTimeSpent" value="13362000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1036" extended-state="6" />

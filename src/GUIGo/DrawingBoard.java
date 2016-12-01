@@ -68,6 +68,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
         }
     }
 
+    /**
+     * Method which allows to draw on the picture, create image
+     * and also initialize the other drawing functions
+     * @param g graphics added to overided method
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -88,6 +93,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
     public DrawingBoard(){
 
     }
+
+    /**
+     * Method which starts calculating of all nessecery objects needed to
+     * start drawing
+     * @param GameBoard takes actuall gameboard size
+     */
     public void startDrawing(PLACE GameBoard[][]){
         sizeGameBoard = GameBoard.length;
         System.out.println(sizeGameBoard);
@@ -104,6 +115,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
         repaint();
     }
 
+    /**
+     *
+     * Method which refresh actuall position of the mouse
+     * and gets the closest intersection of the lines
+      * @param e mouse event action was made
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         Mouse_Cordinates[0] = e.getX();

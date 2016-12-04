@@ -10,7 +10,7 @@ public class Board implements BoardI {
 
     private int size;
     private PLACE GameTable[][];
-
+    private int[] nextCoordinates;
     Board(int size)
     {
         this.size=size;

@@ -16,6 +16,8 @@ public PLACE playerToPlace()
             return PLACE.BLACK;
         case WHITE:
             return PLACE.WHITE;
+        default:return PLACE.WHITE;
     }
+
 }
-};
+}

@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26e7e973-5748-44b7-ac05-7cd2de3c1b9f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/GUIGo/BoardOnClickListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/GUIGo/ButtonListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/GUIGo/DrawMathObject.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUIGo/ClientGUI.java" afterPath="$PROJECT_DIR$/src/GUIGo/ClientGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUIGo/DrawingBoard.java" afterPath="$PROJECT_DIR$/src/GUIGo/DrawingBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUIGo/GUIMathClass.java" afterPath="$PROJECT_DIR$/src/GUIGo/GUIMathClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Test/DrawingBoardTest.java" afterPath="$PROJECT_DIR$/src/Test/DrawingBoardTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/GO/DrawingBoardI.java" afterPath="$PROJECT_DIR$/src/com/GO/DrawingBoardI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/GO/PLAYER.java" afterPath="$PROJECT_DIR$/src/com/GO/PLAYER.java" />
     </list>
     <ignored path="GO.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -98,8 +95,8 @@
       <file leaf-file-name="DrawingBoard.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/GUIGo/DrawingBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="363">
-              <caret line="118" column="7" selection-start-line="118" selection-start-column="7" selection-end-line="118" selection-end-column="7" />
+            <state relative-caret-position="74">
+              <caret line="101" column="26" selection-start-line="101" selection-start-column="26" selection-end-line="101" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -944,7 +941,7 @@
       <workItem from="1480367999280" duration="1690000" />
       <workItem from="1480546498348" duration="4294000" />
       <workItem from="1480628983966" duration="47000" />
-      <workItem from="1480882979093" duration="17089000" />
+      <workItem from="1480882979093" duration="17751000" />
     </task>
     <task id="LOCAL-00001" summary="GUI  for Go game - Initial">
       <created>1480004822852</created>
@@ -981,11 +978,18 @@
       <option name="project" value="LOCAL" />
       <updated>1480550158103</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Separation of tasks in DrawingBoard class. Added Listeners as diffrent classes.&#10;Documentation for added classes. Added feature drag-drawing.">
+      <created>1480900784737</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1480900784737</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34792000" />
+    <option name="totallyTimeSpent" value="35454000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1036" extended-state="6" />
@@ -1060,7 +1064,8 @@
     <MESSAGE value="GUI  for Go game - Initial" />
     <MESSAGE value="New features added to Drawing Class" />
     <MESSAGE value="GoDiagram for actual classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="GoDiagram for actual classes" />
+    <MESSAGE value="Separation of tasks in DrawingBoard class. Added Listeners as diffrent classes.&#10;Documentation for added classes. Added feature drag-drawing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Separation of tasks in DrawingBoard class. Added Listeners as diffrent classes.&#10;Documentation for added classes. Added feature drag-drawing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1463,8 +1468,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GUIGo/DrawingBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="118" column="7" selection-start-line="118" selection-start-column="7" selection-end-line="118" selection-end-column="7" />
+        <state relative-caret-position="74">
+          <caret line="101" column="26" selection-start-line="101" selection-start-column="26" selection-end-line="101" selection-end-column="26" />
           <folding />
         </state>
       </provider>

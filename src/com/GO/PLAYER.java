@@ -18,6 +18,10 @@ public PLACE playerToPlace()
             return PLACE.WHITE;
         default:return PLACE.WHITE;
     }
+<<<<<<< HEAD
 
 }
+=======
+    return  PLACE.WHITE;
+>>>>>>> master
 }

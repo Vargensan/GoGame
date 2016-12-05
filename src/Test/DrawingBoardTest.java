@@ -20,5 +20,11 @@ public class DrawingBoardTest extends DrawingBoard{
         app.startDrawing(GameBoard);
     }
 
+   /* @Test
+    public void howmanyintersections(){
+        app.startDrawing(GameBoard);
+        assertEquals();
+    }*/
+
 
 }

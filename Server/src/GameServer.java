@@ -10,15 +10,11 @@ import java.net.Socket;
  */
 public class GameServer {
     private ServerSocket server;
-    private Socket client;
+    private Socket client1;
+    private Socket client2;
     BufferedReader in;
     PrintWriter out;
     String line="";
-
-
-    String pomoc;
-
-    private String drzewo="a";
 
 
     /**server initializing*/
@@ -35,25 +31,29 @@ public class GameServer {
     /**comunication support*/
     public void listenSocket() {
         try {
-            client = server.accept();
+            client1 = server.accept();
+            client2 = server.accept();
+
         }
         catch (IOException e) {
             System.out.println("Accept failed: 4444");
             System.exit(-1);
         }
         try {
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintWriter(client.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(client1.getInputStream()));
+            out = new PrintWriter(client1.getOutputStream(), true);
         }
         catch (IOException e) {
             System.out.println("Accept failed: 4444"); System.exit(-1);
         }
         while(true) {
             try {
-                line = in.readLine();
-                System.out.println(line);
+                if(line!=null) {
+                    line = in.readLine();
+                    System.out.println(line);
 
-                //here what to do with signals
+                    //here what to do with signals
+                }
                  }
 
             catch (IOException e) {
@@ -66,7 +66,7 @@ public class GameServer {
         try {
             in.close();
             out.close();
-            client.close();
+            client1.close();
             server.close();
         }
         catch (IOException e) {

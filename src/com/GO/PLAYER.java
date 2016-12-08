@@ -6,22 +6,16 @@ package com.GO;
 
 public enum PLAYER {
 
-    BLACK,WHITE;
+    BLACK, WHITE;
 
-public PLACE playerToPlace()
-{
-    switch(this)
-    {
-        case BLACK:
-            return PLACE.BLACK;
-        case WHITE:
-            return PLACE.WHITE;
-        default:return PLACE.WHITE;
+    public PLACE playerToPlace() {
+        switch (this) {
+            case BLACK:
+                return PLACE.BLACK;
+            case WHITE:
+                return PLACE.WHITE;
+            default:
+                return PLACE.WHITE;
+        }
     }
-<<<<<<< HEAD
-
-}
-=======
-    return  PLACE.WHITE;
->>>>>>> master
 }

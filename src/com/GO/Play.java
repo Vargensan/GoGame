@@ -2,6 +2,8 @@ package com.GO;
 
 import GUIGo.ClientGUI;
 
+import java.io.IOException;
+
 /**
  * Kinga Krata 2016-12-05.
  */
@@ -19,10 +21,19 @@ public class Play {
 
          window=new ClientGUI();
          window.startDrawing(playBoard.getGameTable());
-         clientSocket.out.println("aaa");
-
-
-
 
     }
+
+    public void move_done()
+    {
+        clientSocket.out.println(playBoard);
+        try {
+            if (clientSocket.in.readLine() == "OK") ;
+        }
+        catch(IOException ex)
+        {
+
+        }
+    }
+
 }

@@ -24,7 +24,7 @@ public interface GUIMathClass {
      * @return start point in which drawing begins
      */
 
-    public int[] calculateStartPoint(int height, int width);
+    public int[] calculateStartPoint(int height, int size, int distance);
 
     /**
      * Method to calculate actuall height and width of drawing board
@@ -42,7 +42,7 @@ public interface GUIMathClass {
      * @param distance takes a constant distance between lines
      * @return table of intersection of the lines
      */
-    public int[][] calculateTableIntersection(int[] startPoint, int distance);
+    public int[][][] calculateTableIntersection(int[] startPoint, int distance, int boardSize, int criclesize);
 
     /**
      * Method which sets the constant distance between lines
@@ -51,5 +51,14 @@ public interface GUIMathClass {
      * @return distance in which lines are drowed
      */
     public int calculateDistance(int height, int boardSize);
+
+    /**
+     * Method that sets how large will be a filled cricle in the DrawingBoard
+     * @param distance
+     * @return size of filled circle
+     */
+
+    public int calculateSizeOfCircle(int distance);
+
 
 }

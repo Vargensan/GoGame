@@ -6,11 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseMotionListener;
 
 /**
  * Created by Bartłomiej on 2016-11-21.
  */
-public class ClientGUI extends JFrame implements ActionListener{
+public class ClientGUI extends JFrame{
 
     /*
       * Constants declared to JFrame build
@@ -30,6 +31,8 @@ public class ClientGUI extends JFrame implements ActionListener{
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
+    ButtonListener bonl_ClickListener = new ButtonListener();
+
     //END OF THE OBJECTS NEEDED TO BUILD A GUI WINDOW
 
     /**
@@ -38,7 +41,9 @@ public class ClientGUI extends JFrame implements ActionListener{
      */
     public ClientGUI(){
         createWindow();
-
+        PLACE[][] app = new PLACE[5][5];
+        startDrawing(app);
+        jDrawingBoard.initalizeMouseListener();
     }
 
     public void startDrawing(PLACE[][] board){
@@ -149,11 +154,7 @@ public class ClientGUI extends JFrame implements ActionListener{
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
         button.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
+        button.addActionListener(bonl_ClickListener);
 
     }
 }

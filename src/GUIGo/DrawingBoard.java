@@ -13,20 +13,23 @@ import java.awt.event.MouseMotionListener;
 /**
  * Created by Bartłomiej on 2016-11-21.
  */
-public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotionListener,GUIMathClass{
+public class DrawingBoard extends JComponent implements DrawingBoardI{
 
+    //Private
     private Image image;
     private Graphics2D g2;
-    private int sizeGameBoard;
-    private int[] StartPoint = new int[2];
-    private int WhatDoDraw;
-    private int[] Mouse_Cordinates;
-    private int[][] Table_Intersection;
-    private int[] IntersetionPoint;
-    private int distance;
     private PLAYER player;
-    private int[] cordinates;
-
+    private BoardOnClickListener set_MouseListener;
+    private int WhatDoDraw;
+    private int criclefilled;
+    private int sizeGameBoard;
+    private static int[] StartPoint = new int[2];
+    private int[][][] Table_Intersection;
+    //Package-public
+    int distance;
+    boolean drawIntersection = false;
+    int[] intersectionPoint;
+    DrawMathObject dmo_calculate = new DrawMathObject();
 
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
@@ -35,8 +38,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
             g2.setColor(Color.BLACK);
         else
             g2.setColor(Color.WHITE);
-        g2.drawOval(cordinates[0],cordinates[1],15,15);
-        g2.fillOval(cordinates[0],cordinates[1],15,15);
+        System.out.println(cordinates[0]);
+        System.out.println(cordinates[1]);
+        g2.drawOval(Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],criclefilled,criclefilled);
+        g2.fillOval(Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],criclefilled,criclefilled);
     }
 
     @Override
@@ -87,11 +92,28 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
         }
         if(WhatDoDraw==1)
             drawLines(g2,distance);
+        if(drawIntersection){
+            filledCircle(g2,PLAYER.BLACK,intersectionPoint);
+            drawIntersection = false;
+        }
         g.drawImage(image, 0, 0, null);
     }
 
     public DrawingBoard(){
 
+    }
+
+    /**
+     * Method that initialize custom MouseListener
+     * set it's properties
+     */
+    public void initalizeMouseListener(){
+        set_MouseListener = new BoardOnClickListener(this);
+        set_MouseListener.setBoardSize(this.sizeGameBoard);
+        set_MouseListener.setHeight(this.getHeight());
+        set_MouseListener.initialize();
+        this.addMouseMotionListener(set_MouseListener);
+        System.out.println("Added Mouse Listener!");
     }
 
     /**
@@ -102,9 +124,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
     public void startDrawing(PLACE GameBoard[][]){
         sizeGameBoard = GameBoard.length;
         System.out.println(sizeGameBoard);
-        StartPoint = calculateStartPoint(this.getHeight(),this.getWidth());
-        distance = calculateDistance(this.getHeight(),sizeGameBoard);
-        Table_Intersection = calculateTableIntersection(StartPoint, distance);
+        distance = dmo_calculate.calculateDistance(this.getHeight(), sizeGameBoard);
+        StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(), sizeGameBoard, distance);
+        criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
+        Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
         WhatDoDraw=1;
         //drawLines(every);
     }
@@ -112,52 +135,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI,MouseMotio
     @Override
     public void update() {
         g2.setColor(new Color(160,160,160));
+        image=null;
         repaint();
     }
 
-    /**
-     *
-     * Method which refresh actuall position of the mouse
-     * and gets the closest intersection of the lines
-      * @param e mouse event action was made
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        Mouse_Cordinates[0] = e.getX();
-        Mouse_Cordinates[1] = e.getY();
-        IntersetionPoint = calculateIntersection(Mouse_Cordinates,this.getHeight(),StartPoint,distance);
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    @Override
-    public int calculateDistance(int height, int boardSize) {
-        return (int) height/boardSize;
-    }
-
-    @Override
-    public int[][] calculateTableIntersection(int[] startPoint, int distance) {
-        return new int[0][];
-    }
-
-    @Override
-    public int[] calculateIntersection(int[] cordinats, int size, int[] startPoint, int distance) {
-        return new int[0];
-    }
-
-    @Override
-    public int[] calculateStartPoint(int height, int width) {
-        int[] X = new int[2];
-        X[0] = 10;
-        X[1] = 10;
-        return X;
-    }
-
-    @Override
-    public int calculateHeightandWidth(int width, int lenght) {
-        return 0;
-    }
 }

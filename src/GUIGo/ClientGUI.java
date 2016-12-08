@@ -41,14 +41,13 @@ public class ClientGUI extends JFrame{
      */
     public ClientGUI(){
         createWindow();
-        PLACE[][] app = new PLACE[5][5];
-        startDrawing(app);
-        jDrawingBoard.initalizeMouseListener();
     }
 
-    public void startDrawing(PLACE[][] board){
+    public void startDrawing(PLACE[][] board)
+    {
         jDrawingBoard.startDrawing(board);
-    }
+        jDrawingBoard.initalizeMouseListener();
+}
 
     /*
     * Method responsiable for creating window

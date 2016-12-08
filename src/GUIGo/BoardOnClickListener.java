@@ -57,6 +57,7 @@ public class BoardOnClickListener implements MouseMotionListener{
         obj.drawIntersection = true;
         System.out.println("I am reactiong!");
         mouse_coordinates[0] = e.getX();
+        System.out.println(mouse_coordinates[0]);
         mouse_coordinates[1] = e.getY();
         obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         obj.update();

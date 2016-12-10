@@ -2,13 +2,14 @@ package GUIGo;
 
 import com.GO.PLACE;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Bartłomiej on 2016-11-21.
@@ -34,7 +35,8 @@ public class ClientGUI extends JFrame{
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener = new ButtonListener();
-
+    //private ImageIcon image;
+    //String file;
     //END OF THE OBJECTS NEEDED TO BUILD A GUI WINDOW
     private PLACE[][] gameboard;
     /**
@@ -63,7 +65,7 @@ public class ClientGUI extends JFrame{
         jClient.setTitle("Go Game");
         jClient.setResizable(false);
         jClient.setSize(X_WINDOW_SIZE,Y_WINDOW_SIZE);
-
+        setIconImage(jClient);
         //set components
         setStartButtons();
         setjOptionPanel();
@@ -79,6 +81,15 @@ public class ClientGUI extends JFrame{
 
     }
 
+    private static void setIconImage(JFrame window){
+        try{
+            InputStream imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/go_icon.png");
+            BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+            window.setIconImage(bufferedImage);
+        } catch (IOException exception){
+            exception.printStackTrace();
+        }
+    }
     /**
      * Method which add Start game button and list of playable games
      */

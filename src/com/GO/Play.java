@@ -19,8 +19,7 @@ public class Play {
          clientSocket=new Client();
          clientSocket.listenSocket();
 
-         window=new ClientGUI();
-         window.startDrawing(playBoard.getGameTable());
+         window=new ClientGUI(playBoard.getGameTable());
 
     }
 

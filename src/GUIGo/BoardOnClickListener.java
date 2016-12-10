@@ -35,9 +35,8 @@ public class BoardOnClickListener implements MouseMotionListener,MouseListener{
         mouse_coordinates[0] = e.getX();
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
-        //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
+        System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
         obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
-        obj.update();
         //End of Temp Code
     }
 
@@ -89,9 +88,9 @@ public class BoardOnClickListener implements MouseMotionListener,MouseListener{
     @Override
     public void mouseDragged(MouseEvent e) {
         obj.drawIntersection = true;
-        //System.out.println("I am reactiong!");
+        System.out.println("I am reactiong!");
         mouse_coordinates[0] = e.getX();
-       // System.out.println(mouse_coordinates[0]);
+        System.out.println(mouse_coordinates[0]);
         mouse_coordinates[1] = e.getY();
         obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         obj.update();

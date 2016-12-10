@@ -35,19 +35,19 @@ public class DrawMathObject implements GUIMathClass{
     }
 
     @Override
-    public int[] calculateIntersection(int[] coordinates, int size, int[] startPoint, int distance) {
-        if(coordinates[0]<=0 )
-            coordinates[0] = 0;
-        if(coordinates[1]<=0)
-            coordinates[1] = 0;
+    public int[] calculateIntersection(int[] cordinats, int size, int[] startPoint, int distance) {
+        if(cordinats[0]<=0 )
+            cordinats[0] = 0;
+        if(cordinats[1]<=0)
+            cordinats[1] = 0;
         int[] tempCor = new int[2];
-        tempCor[0] = (int) Math.round((((double) coordinates[0]- (double) startPoint[0])/((double) distance)));
-        //System.out.print("X: "+ tempCor[0]);
-        tempCor[1] = (int) Math.round((((double) coordinates[1]- (double)startPoint[1])/((double) distance)));
-        //System.out.print("    Y: "+ tempCor[1]);
-        //System.out.println(" distance: "+distance);
-        //System.out.println("realX: "+ cordinats[0] + "  realY: " + cordinats[1] + "  realSPX: "+ (cordinats[0]- startPoint[0])
-        //+ " realSPY: "+ (cordinats[1]- startPoint[1]));
+        tempCor[0] = (int) Math.round((((double) cordinats[0]- (double) startPoint[0])/((double) distance)));
+        System.out.print("X: "+ tempCor[0]);
+        tempCor[1] = (int) Math.round((((double)cordinats[1]- (double)startPoint[1])/((double) distance)));
+        System.out.print("    Y: "+ tempCor[1]);
+        System.out.println(" distance: "+distance);
+        System.out.println("realX: "+ cordinats[0] + "  realY: " + cordinats[1] + "  realSPX: "+ (cordinats[0]- startPoint[0])
+        + " realSPY: "+ (cordinats[1]- startPoint[1]));
         return tempCor;
     }
 

@@ -4,16 +4,12 @@ import com.GO.DrawingBoardI;
 import com.GO.PLACE;
 import com.GO.PLAYER;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JComponent;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Bartłomiej on 2016-11-21.
@@ -21,9 +17,7 @@ import java.io.InputStream;
 public class DrawingBoard extends JComponent implements DrawingBoardI{
 
     //Private
-    private BufferedImage controlerImage;
-    private ImageResize imageResizer;
-    private BufferedImage image;
+    private Image image;
     private Graphics2D g2;
     private PLAYER player;
     private BoardOnClickListener set_MouseListener;
@@ -32,7 +26,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private int allow_to_drawing = 0;
     private static int[] StartPoint = new int[2];
     private int[][][] Table_Intersection;
-    private BufferedImage black,white;
     //Package-public
     int distance;
     boolean drawIntersection = false;
@@ -41,19 +34,17 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     int[] relasedPoint;
     DrawMathObject dmo_calculate = new DrawMathObject();
 
-    private BufferedImage gettempimage(){
-        if(controlerImage != null){
-            return controlerImage;
-        }
-        return image;
-    }
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
         this.player = player;
-        if(player.equals(PLAYER.BLACK)) {
-            g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
-        }else
-            g2.drawImage(white,Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],null);
+        if(player.equals(PLAYER.BLACK))
+            g2.setColor(Color.BLACK);
+        else
+            g2.setColor(Color.WHITE);
+        System.out.println(cordinates[0]);
+        System.out.println(cordinates[1]);
+        g2.drawOval(Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],criclefilled,criclefilled);
+        g2.fillOval(Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],criclefilled,criclefilled);
     }
 
     @Override
@@ -95,21 +86,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         super.paintComponent(g);
         System.out.print("Hi");
         if(image==null) {
-            try {
-                if(controlerImage != null){
-                    image = gettempimage();
-                }
-                else{
-                    InputStream imageInputStream = this.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.jpg");
-                    BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-                    image = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            image = createImage(getSize().width, getSize().height);
             g2 = (Graphics2D) image.getGraphics();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(120, 120, 120));
+            g2.fillRect(0, 0, this.getSize().width, this.getSize().height);
 
         }
         if(allow_to_drawing == 1)
@@ -161,39 +142,14 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         distance = dmo_calculate.calculateDistance(this.getHeight(),sizeGameBoard);
         StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
         criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
-        System.out.println("Circle filled:  "+ criclefilled);
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
         intersectionPoint = new int[2];
-        setBlackandWhite(this);
         //gameboard[0][0] = PLACE.BLACK;
-        //gameboard[0][3] = PLACE.WHITE;
-        //gameboard[1][2] = PLACE.BLACK;
-        //gameboard[3][3] = PLACE.WHITE;
+        //gameboard[1][3] = PLACE.WHITE;
+        //gameboard[4][8] = PLACE.BLACK;
         allow_to_drawing = 1;
         initializeMouseListener();
         update();
-    }
-
-    /**
-     * Method that reads images and sets graphic of buttons
-     * @param window takes drawingboard table
-     */
-
-    private void setBlackandWhite(DrawingBoard window){
-        try{
-            imageResizer = new ImageResize();
-            InputStream imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/black_button.png");
-            BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-            black = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/white_button2.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            white = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.jpg");
-            bufferedImage = ImageIO.read(imageInputStream);
-            controlerImage = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
-        } catch (IOException exception){
-            exception.printStackTrace();
-        }
     }
 
     /**
@@ -221,10 +177,9 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     @Override
     public void update() {
         if(g2 != null) {
-            //g2.fillRect(0,0,image.getWidth(),image.getHeight());
             g2.setColor(new Color(160, 160, 160));
         }
-        g2.drawImage(gettempimage(),0,0,null);
+        image=null;
         repaint();
     }
 

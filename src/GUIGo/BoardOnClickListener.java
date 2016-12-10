@@ -1,5 +1,7 @@
 package GUIGo;
 
+import com.GO.PLACE;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -7,38 +9,69 @@ import java.awt.event.MouseMotionListener;
 /**
  * Created by Bartłomiej on 2016-12-04.
  */
-public class BoardOnClickListener implements MouseMotionListener{
+public class BoardOnClickListener implements MouseMotionListener,MouseListener{
 
-    private int[] IntersetionPoint = new int[2];
     private int distance;
     private int height;
     private int BoardSize;
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
-    DrawingBoard obj;
+    private DrawingBoard obj;
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        //Temp Code - to do checkout
+        //if game logic accepts point then it will be drown
+        mouse_coordinates[0] = e.getX();
+        mouse_coordinates[1] = e.getY();
+        obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
+        System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
+        obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
+        //End of Temp Code
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 
     /**
      * Method that sets distance between drawed lines and Start Point where
      * the drawing begins
      */
-    public void initialize(){
+    void initialize(){
         this.distance = obj.distance;
         StartPoint = obj.dmo_calculate.calculateStartPoint(height, BoardSize, distance);
     }
 
     /**
-     * Method that takes a height from DrawingBoard
-     * @param height
+     * Method that sets a height
+     * @param height takes height from DrawingBoard
      */
-    public void setHeight(int height){
+    void setHeight(int height){
         this.height = height;
     }
 
     /**
      * Method that takes a length of the playable area
-     * @param boardSize
+     * @param boardSize take board size from DrawingBoard
      */
-    public void setBoardSize(int boardSize){
+    void setBoardSize(int boardSize){
         this.BoardSize = boardSize;
     }
 

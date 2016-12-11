@@ -2,11 +2,14 @@ package GUIGo;
 
 import com.GO.PLACE;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Bartłomiej on 2016-11-21.
@@ -27,32 +30,32 @@ public class ClientGUI extends JFrame{
     private Container content;
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
-    protected DrawingBoard jDrawingBoard;
+    private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
-    ButtonListener bonl_ClickListener = new ButtonListener();
-
+    private ButtonListener bonl_ClickListener = new ButtonListener();
+    //private ImageIcon image;
+    //String file;
     //END OF THE OBJECTS NEEDED TO BUILD A GUI WINDOW
-
+    private PLACE[][] gameboard;
     /**
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
      */
-    public ClientGUI(){
+    public ClientGUI(PLACE[][] gameboard) {
+        this.gameboard = gameboard;
         createWindow();
-        PLACE[][] app = new PLACE[5][5];
-        startDrawing(app);
-        jDrawingBoard.initalizeMouseListener();
+        startDrawing();
     }
 
-    public void startDrawing(PLACE[][] board){
-        jDrawingBoard.startDrawing(board);
+    public void startDrawing() {
+        jDrawingBoard.startDrawing(gameboard);
     }
 
-    /*
-    * Method responsiable for creating window
-    *
+    /**
+     * Method responsiable for creating window
+     *
      */
     private void createWindow(){
         content = jClient.getContentPane();
@@ -62,7 +65,7 @@ public class ClientGUI extends JFrame{
         jClient.setTitle("Go Game");
         jClient.setResizable(false);
         jClient.setSize(X_WINDOW_SIZE,Y_WINDOW_SIZE);
-
+        setIconImage(jClient);
         //set components
         setStartButtons();
         setjOptionPanel();
@@ -78,8 +81,17 @@ public class ClientGUI extends JFrame{
 
     }
 
-    /*
-    * Method which add Start game button and list of playable games
+    private static void setIconImage(JFrame window){
+        try{
+            InputStream imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/go_icon.png");
+            BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+            window.setIconImage(bufferedImage);
+        } catch (IOException exception){
+            exception.printStackTrace();
+        }
+    }
+    /**
+     * Method which add Start game button and list of playable games
      */
 
     private void setStartButtons() {
@@ -90,23 +102,23 @@ public class ClientGUI extends JFrame{
         setButtonLook(jStartGame, "Start");
         jStartGame.setBounds(10,50,100,30);
     }
-    /*
-    * Method that sets DrawingBoard attached to GUI of the
-    * client
+    /**
+     * Method that sets DrawingBoard attached to GUI of the
+     * client
      */
 
     private void setjDrawPanel() {
         int CenterX,CenterY;
-        CenterX =(int) (jClient.getSize().width- X_OF_DRAWPANEL)/2;
-        CenterY =(int) (Y_OF_DRAWPANEL- jClient.getWidth())/2;
+        CenterX = (jClient.getSize().width- X_OF_DRAWPANEL)/2;
+        CenterY = (Y_OF_DRAWPANEL- jClient.getWidth())/2;
 
         jDrawingBoard = new DrawingBoard();
         System.out.println(CenterX);
         jDrawingBoard.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
     }
-    /*
-    * Method which add Buttons to JPanel which is added to GUI
-    * of the client
+    /**
+     * Method which add Buttons to JPanel which is added to GUI
+     * of the client
      */
 
     private void addjOptionPanelButtons(){
@@ -115,18 +127,18 @@ public class ClientGUI extends JFrame{
         jOptionPanel.add(jOptionPass);
         jOptionPanel.add(jOptionEnd);
     }
-    /*
-    * Method which configure settings of JPanel attached to
-    * the GUI of the client
+    /**
+     * Method which configure settings of JPanel attached to
+     * the GUI of the client
      */
     private void setjOptionPanel(){
         jOptionPanel.setLayout(null);
         jOptionPanel.setBounds(0,530,JPANEL_WIDTH,JPANEL_HEIGHT);
     }
 
-    /*
-    * Method which sets default name of buttons added to
-    * JPanel, also alocate their's position on JPanel
+    /**
+     * Method which sets default name of buttons added to
+     * JPanel, also alocate their's position on JPanel
      */
     private void setJOptionButtonsNames(){
         int height = jOptionPanel.getHeight();
@@ -143,9 +155,9 @@ public class ClientGUI extends JFrame{
         jOptionEnd.setBounds(250, height - 40, 110,30);
     }
 
-    /*
-    * Method which sets the look of JButtons attached
-    * to JPanel, including BackGround, Foreground, Font
+    /**
+     * Method which sets the look of JButtons attached
+     * to JPanel, including BackGround, Foreground, Font
      */
 
     private void setButtonLook(JButton button, String name){

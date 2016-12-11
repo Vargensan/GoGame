@@ -9,11 +9,13 @@ package com.GO;
 public class Board implements BoardI {
 
     private int size;
+    public Play play;
     private PLACE GameTable[][];
     private int[] nextCoordinates;
-    Board(int size)
+    Board(int size,Play play)
     {
         this.size=size;
+        this.play=play;
         GameTable=new PLACE[size][size];
 
         initialize();

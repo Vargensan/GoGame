@@ -12,9 +12,11 @@ public class Play {
     private Board playBoard;
     private Client clientSocket;
     private ClientGUI window;
+    private PLAYER player_color;
     Play()
     {
-         playBoard=new Board(19);
+         player_color=PLAYER.BLACK;
+         playBoard=new Board(19,this);
 
          clientSocket=new Client();
          clientSocket.listenSocket();
@@ -22,6 +24,10 @@ public class Play {
          window=new ClientGUI();
          window.startDrawing(playBoard.getGameTable());
 
+    }
+    public PLAYER get_player_color()
+    {
+        return player_color;
     }
 
     public void move_done()

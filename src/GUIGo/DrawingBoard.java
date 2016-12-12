@@ -223,8 +223,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         if(g2 != null) {
             //g2.fillRect(0,0,image.getWidth(),image.getHeight());
             g2.setColor(new Color(160, 160, 160));
+            g2.drawImage(gettempimage(),0,0,null);
+        } else{
+            if(image != null){
+                g2 = (Graphics2D) image.getGraphics();
+            }
         }
-        g2.drawImage(gettempimage(),0,0,null);
         repaint();
     }
 

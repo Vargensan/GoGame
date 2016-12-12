@@ -4,11 +4,13 @@ package GUIGo;
  * Created by Bartłomiej on 2016-12-04.
  */
 public class DrawMathObject implements GUIMathClass{
+    protected static final double SCALE = 4.0/5.0;
+
     @Override
     public int calculateSizeOfCircle(int distance) {
         double k = (double) distance;
         double i = 1.0;
-        while((i/k) < (2.0/3.0)) {
+        while((i/k) < (SCALE)) {
             System.out.println("i: "+i + "  distance: "+ distance);
             i+=1.0;
         }

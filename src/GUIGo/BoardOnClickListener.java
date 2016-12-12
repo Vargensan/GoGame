@@ -20,15 +20,6 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
 
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -41,16 +32,6 @@ public class BoardOnClickListener extends MouseAdapter{
         obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
         obj.update();
         //End of Temp Code
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 
     /**
@@ -78,7 +59,7 @@ public class BoardOnClickListener extends MouseAdapter{
         this.BoardSize = boardSize;
     }
 
-   public BoardOnClickListener(DrawingBoard obj,Board board){
+   public BoardOnClickListener(DrawingBoard obj){
         this.obj = obj;
     }
 
@@ -102,7 +83,7 @@ public class BoardOnClickListener extends MouseAdapter{
    @Override
     public void mouseClicked(MouseEvent e)
    {
-       if(board.canAddHere(board.play.get_player_color(),obj.intersectionPoint[0],obj.intersectionPoint[1]))
-           System.out.println("czarny");
+      // if(board.canAddHere(board.play.get_player_color(),obj.intersectionPoint[0],obj.intersectionPoint[1]))
+      //     System.out.println("czarny");
    }
 }

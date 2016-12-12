@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
  */
 public class BoardOnClickListener extends MouseAdapter{
 
+    private boolean isClicable;
     private int distance;
     private int height;
     private int BoardSize;
@@ -83,5 +84,11 @@ public class BoardOnClickListener extends MouseAdapter{
    @Override
     public void mouseClicked(MouseEvent e) {
 
+   }
+   public boolean getIsClicable(){
+        return isClicable;
+   }
+   public void setIsClicable(boolean clicable){
+        this.isClicable = clicable;
    }
 }

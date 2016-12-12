@@ -3,4 +3,4 @@
  */
 package com.GO;
 
-public enum  PLACE {BLACK,WHITE,EMPTY,WALL};
+public enum  PLACE {BLACK,WHITE,EMPTY}

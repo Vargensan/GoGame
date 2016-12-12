@@ -1,19 +1,21 @@
 package GUIGo;
 
+import com.GO.Board;
+
+import java.awt.event.MouseAdapter;
 import com.GO.PLACE;
 
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 /**
  * Created by Bartłomiej on 2016-12-04.
  */
-public class BoardOnClickListener implements MouseMotionListener,MouseListener{
+public class BoardOnClickListener extends MouseAdapter{
 
     private int distance;
     private int height;
     private int BoardSize;
+    private Board board;
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
@@ -76,7 +78,7 @@ public class BoardOnClickListener implements MouseMotionListener,MouseListener{
         this.BoardSize = boardSize;
     }
 
-   public BoardOnClickListener(DrawingBoard obj){
+   public BoardOnClickListener(DrawingBoard obj,Board board){
         this.obj = obj;
     }
 
@@ -97,8 +99,10 @@ public class BoardOnClickListener implements MouseMotionListener,MouseListener{
         obj.update();
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+   @Override
+    public void mouseClicked(MouseEvent e)
+   {
+       if(board.canAddHere(board.play.get_player_color(),obj.intersectionPoint[0],obj.intersectionPoint[1]))
+           System.out.println("czarny");
+   }
 }

@@ -1,6 +1,8 @@
 package com.GO;
 
+import GUIGo.BoardOnClickListener;
 import GUIGo.ClientGUI;
+import GUIGo.DrawingBoard;
 
 import java.io.IOException;
 
@@ -13,6 +15,9 @@ public class Play {
     private Client clientSocket;
     private ClientGUI window;
     private PLAYER player_color;
+    private DrawingBoard clickListener;
+    
+
     Play()
     {
          player_color=PLAYER.BLACK;
@@ -22,6 +27,7 @@ public class Play {
          clientSocket.listenSocket();
 
          window=new ClientGUI(playBoard.getGameTable());
+         this.clickListener=window.getDrawingBoard();
 
     }
     public PLAYER get_player_color()

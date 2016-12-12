@@ -53,13 +53,15 @@ public class ClientGUI extends JFrame{
         jDrawingBoard.startDrawing(gameboard);
     }
 
-    public BoardOnClickListener getListener(){
-        return jDrawingBoard.get_MouseListener();
-    }
+
     /**
      * Method responsiable for creating window
      *
      */
+    public DrawingBoard getDrawingBoard()
+    {
+        return jDrawingBoard;
+    }
     private void createWindow(){
         content = jClient.getContentPane();
         content.setLayout(null);

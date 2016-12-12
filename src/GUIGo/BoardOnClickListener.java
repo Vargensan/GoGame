@@ -81,9 +81,7 @@ public class BoardOnClickListener extends MouseAdapter{
     }
 
    @Override
-    public void mouseClicked(MouseEvent e)
-   {
-      // if(board.canAddHere(board.play.get_player_color(),obj.intersectionPoint[0],obj.intersectionPoint[1]))
-      //     System.out.println("czarny");
+    public void mouseClicked(MouseEvent e) {
+
    }
 }

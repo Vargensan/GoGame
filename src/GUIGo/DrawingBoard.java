@@ -26,7 +26,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private BufferedImage image;
     private Graphics2D g2;
     private PLAYER player;
-    private BoardOnClickListener set_MouseListener;
+    private BoardOnClickListener mouseListener;
     private int criclefilled;
     private int sizeGameBoard;
     private int allow_to_drawing = 0;
@@ -126,18 +126,22 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     public DrawingBoard(){
 
     }
+    
+    public BoardOnClickListener get_MouseListener(){
+        return mouseListener;
+    }
 
     /**
      * Method that initialize custom MouseListener
      * set it's properties
      */
     public void initializeMouseListener(){
-        set_MouseListener = new BoardOnClickListener(this);
-        set_MouseListener.setBoardSize(this.sizeGameBoard);
-        set_MouseListener.setHeight(this.getHeight());
-        set_MouseListener.initialize();
-        this.addMouseMotionListener(set_MouseListener);
-        this.addMouseListener(set_MouseListener);
+        mouseListener = new BoardOnClickListener(this);
+        mouseListener.setBoardSize(this.sizeGameBoard);
+        mouseListener.setHeight(this.getHeight());
+        mouseListener.initialize();
+        this.addMouseMotionListener(mouseListener);
+        this.addMouseListener(mouseListener);
         System.out.println("Added Mouse Motion Listener + Mouse Listener!");
     }
 

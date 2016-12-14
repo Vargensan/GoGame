@@ -85,9 +85,19 @@ public class BoardOnClickListener extends MouseAdapter{
     public void mouseClicked(MouseEvent e) {
 
    }
+
+    /**
+     * Getter for boolean isClicable
+     * @return state of boolean isClicable
+     */
    public boolean getIsClicable(){
         return isClicable;
    }
+
+    /**
+     * Setter for boolean isClicable
+     * @param clicable takes a boolean and assign it to isClicable
+     */
    public void setIsClicable(boolean clicable){
         this.isClicable = clicable;
    }

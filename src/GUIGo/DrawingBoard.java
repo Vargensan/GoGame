@@ -231,6 +231,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         } else{
             if(image != null){
                 g2 = (Graphics2D) image.getGraphics();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
         }
         repaint();

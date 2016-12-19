@@ -23,7 +23,6 @@ public class Board implements BoardI {
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
         initialize();
-
         nextCoordinates=new int[4];
     }
 
@@ -64,10 +63,6 @@ public class Board implements BoardI {
                 (11,10)
          (10,11)(11,11)(12,11)
                 (11,12)
-         it this function bellow checks:
-          (10,10)      (12,10)
-                (11,11)
-          (10,12)      (12,12)
          */
         for(int i = 0; i<4 ; i++){
             XY = values(i);
@@ -107,10 +102,7 @@ public class Board implements BoardI {
     private void canEnemyBreath(PLACE[][] GameTable, PLAYER color, int placeX, int placeY){
         PLAYER enemy;
         int XY[] = new int[2];
-        if(color == PLAYER.BLACK)
-            enemy = PLAYER.WHITE;
-        else
-            enemy = PLAYER.BLACK;
+        enemy = play.get_player_color().getEnemyColor(color);
         for(int i = 0; i < 4; i++){
             XY = values(i);
             if(GameTable[placeX+XY[0]][placeY+XY[1]] == enemy.playerToPlace()){
@@ -162,13 +154,7 @@ public class Board implements BoardI {
         int[] XY = new int[2];
         for(int i = 0; i <size ; i++) {
             for(int j =0; j < size; j++) {
-                if(GameTable[i][j] == PLACE.BLACK) {
-                    tempboard[i][j] = PLACE.BLACK;
-                }else if(GameTable[i][j] == PLACE.WHITE){
-                    tempboard[i][j] = PLACE.WHITE;
-                }else {
-                    tempboard[i][j] = PLACE.EMPTY;
-                }
+                tempboard[i][j] = GameTable[i][j];
             }
         }
         tempboard[placeX][placeY] = color.playerToPlace();
@@ -183,15 +169,13 @@ public class Board implements BoardI {
         //nuller to KO
         nullKO_situation();
         //if KO wasn't detected then do normal checkout
-        if(color.playerToPlace() == PLACE.WHITE)
-            enemyplayer = PLAYER.BLACK;
-        else
-            enemyplayer = PLAYER.WHITE;
-
+        //Set enemy colour
+        enemyplayer = play.get_player_color().getEnemyColor(color);
         for(int i = 0; i<4 ; i++){
             XY = values(i);
             if(canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false){
                 //then ++ ko_state_counter
+                //Unused-Dunno-Where-To-Put
                 System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {

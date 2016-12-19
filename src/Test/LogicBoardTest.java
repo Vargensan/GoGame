@@ -31,11 +31,11 @@ public class LogicBoardTest extends DrawingBoard{
         GameTable[5][3] = player2.playerToPlace();
         GameTable[5][5] = player2.playerToPlace();
         GameTable[6][4] = player2.playerToPlace();
-        canadd = gameboard.addStone(player2,4,4);
+        canadd = gameboard.canAddHere(player2,4,4);
         if(canadd){
             GameTable[4][4] = player2.playerToPlace();
         }
-        canadd = gameboard.addStone(player,4,4);
+        canadd = gameboard.canAddHere(player,4,4);
         assertFalse(canadd);
     }
 
@@ -43,7 +43,7 @@ public class LogicBoardTest extends DrawingBoard{
     public void testifcanbreathe(){
         boolean canadd;
         setstone();
-        canadd = gameboard.addStone(player,10,10);
+        canadd = gameboard.canAddHere(player,10,10);
         gameboard.addStone(player,10,10);
         if(canadd == true){
             GameTable[11][11] = player.playerToPlace();
@@ -51,14 +51,14 @@ public class LogicBoardTest extends DrawingBoard{
         }else
             System.out.println("Player 1: Fail on adding stone!");
         //Making rectangle
-        canadd = gameboard.addStone(player,10,9);
+        canadd = gameboard.canAddHere(player,10,9);
         if(canadd == true){
             GameTable[10][9] = player.playerToPlace();
             System.out.println("Player 1: Success on adding stone!");
         }else
             System.out.println("Player 1: Fail on adding stone!");
         //Assert he cant add on same place
-        canadd = gameboard.addStone(player2,10,9);
+        canadd = gameboard.canAddHere(player2,10,9);
         if(canadd == true){
             GameTable[10][9] = player.playerToPlace();
             System.out.println("Player 2: Success on adding stone!");
@@ -72,11 +72,11 @@ public class LogicBoardTest extends DrawingBoard{
     public void testdoublesameclick(){
         boolean canadd;
         setstone();
-        canadd = gameboard.addStone(player,10,9);
+        canadd = gameboard.canAddHere(player,10,9);
         if(canadd){
             GameTable[10][9] = player.playerToPlace();
         }
-        canadd = gameboard.addStone(player,10,9);
+        canadd = gameboard.canAddHere(player,10,9);
         assertFalse(canadd);
     }
 
@@ -85,32 +85,32 @@ public class LogicBoardTest extends DrawingBoard{
         boolean canadd;
         setstone();
         for(int i = 10; i < 13; i++){
-            canadd = gameboard.addStone(player,i,10);
+            canadd = gameboard.canAddHere(player,i,10);
             if(canadd == true){
                 GameTable[i][10] = player.playerToPlace();
                 System.out.println("Player 1: Success on adding stone! On X: "+i+" And Y: "+ 10);
             }else
                 System.out.println("Player 1: Fail on adding stone! On X: "+i+" And Y: "+ 10);
-            canadd = gameboard.addStone(player,10,i);
+            canadd = gameboard.canAddHere(player,10,i);
             if(canadd == true){
                 GameTable[10][i] = player.playerToPlace();
                 System.out.println("Player 1: Success on adding stone! On X: "+10+" And Y: "+ i);
             }else
                 System.out.println("Player 1: Fail on adding stone! On X: "+10+" And Y: "+ i);
-            canadd = gameboard.addStone(player,12,i);
+            canadd = gameboard.canAddHere(player,12,i);
             if(canadd == true){
                 GameTable[12][i] = player.playerToPlace();
                 System.out.println("Player 1: Success on adding stone! On X: "+12+" And Y: "+ i);
             }else
                 System.out.println("Player 1: Fail on adding stone! On X: "+12+" And Y: "+ i);
-            canadd = gameboard.addStone(player,i,12);
+            canadd = gameboard.canAddHere(player,i,12);
             if(canadd == true){
                 GameTable[i][12] = player.playerToPlace();
                 System.out.println("Player 1: Success on adding stone! On X: "+i+" And Y: "+ 12);
             }else
                 System.out.println("Player 1: Fail on adding stone! On X: "+i+" And Y: "+ 12);
         }
-        canadd = gameboard.addStone(player2,11,11);
+        canadd = gameboard.canAddHere(player2,11,11);
         assertFalse(canadd);
     }
 

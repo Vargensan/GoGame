@@ -113,12 +113,9 @@ public class Board implements BoardI {
     }
 
     @Override
-    public boolean addStone(PLAYER color, int placeX, int placeY) {
+    public void addStone(PLAYER color, int placeX, int placeY) {
+        GameTable[placeX][placeY]=color.playerToPlace();
 
-        if(canAddHere(color,placeX, placeY))
-            return true;
-        else
-            return false;
 
     }
     private boolean checkifempty(PLACE[][] table, PLAYER color, int X, int Y){

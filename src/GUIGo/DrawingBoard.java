@@ -1,5 +1,6 @@
 package GUIGo;
 
+import com.GO.Board;
 import com.GO.DrawingBoardI;
 import com.GO.PLACE;
 import com.GO.PLAYER;
@@ -11,7 +12,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -129,7 +129,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         g.drawImage(image, 0, 0, null);
     }
 
-    public DrawingBoard(){
+     DrawingBoard(){
+
 
     }
     

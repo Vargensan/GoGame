@@ -30,6 +30,10 @@ public class Play {
          this.clickListener=window.getDrawingBoard();
 
     }
+    public Board getPlayBoard()
+    {
+        return playBoard;
+    }
     public PLAYER get_player_color()
     {
         return player_color;

@@ -17,7 +17,7 @@ public interface BoardI {
      * @param placeY coordinate Y where to add stone
      * @return true if stone added with succes
      */
-     boolean addStone(PLAYER color, int placeX,int placeY);
+     void addStone(PLAYER color, int placeX,int placeY);
 
     /**
      *

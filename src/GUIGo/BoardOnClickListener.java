@@ -4,6 +4,7 @@ import com.GO.Board;
 
 import java.awt.event.MouseAdapter;
 import com.GO.PLACE;
+import com.GO.PLAYER;
 
 import java.awt.event.MouseEvent;
 
@@ -33,12 +34,7 @@ public class BoardOnClickListener extends MouseAdapter{
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
-        if(color)
-            obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
-        else
-            obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.WHITE;
-        color = !color;
-        obj.color = this.color;
+        board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
         obj.update();
         //End of Temp Code
     }
@@ -68,8 +64,9 @@ public class BoardOnClickListener extends MouseAdapter{
         this.BoardSize = boardSize;
     }
 
-   public BoardOnClickListener(DrawingBoard obj){
+   public BoardOnClickListener(DrawingBoard obj,){
         this.obj = obj;
+        this.board=player;
     }
 
     /**
@@ -88,11 +85,6 @@ public class BoardOnClickListener extends MouseAdapter{
         obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         obj.update();
     }
-
-   @Override
-    public void mouseClicked(MouseEvent e) {
-
-   }
 
     /**
      * Getter for boolean isClicable

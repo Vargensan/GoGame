@@ -46,7 +46,7 @@ public class GameServer {
         catch (IOException e) {
             System.out.println("Accept failed: 4444"); System.exit(-1);
         }
-        out1.println("b");
+        out1.println("w");
         while(true) {
             try {
                 if(line!=null) {

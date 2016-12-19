@@ -46,8 +46,9 @@ public class Play {
         else
         {
             player_color=PLAYER.WHITE;
+            System.out.println("white");
         }
-        player_color=PLAYER.BLACK;
+
         playBoard=new Board(19,this);
 
          window=new ClientGUI(playBoard);

@@ -122,10 +122,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         if(allow_to_drawing == 1)
             drawLines(g2,distance);
         if(drawIntersection){
-            if(color)
-                filledCircle(g2,PLAYER.BLACK,intersectionPoint);
-            else
-                filledCircle(g2,PLAYER.WHITE,intersectionPoint);
+               filledCircle(g2,board.getPLayerColor(),intersectionPoint);
+
             drawIntersection = false;
         }
         if(allow_to_drawing == 1)

@@ -37,10 +37,9 @@ BoardOnClickListener(DrawingBoard obj,Board board)
         mouse_coordinates[0] = e.getX();
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
-        //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
-       if( board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]))
+       if( board.canAddHere(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]))
        {
-           board.addStone(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
+           board.addStone(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]);
        }
         obj.update();
         //End of Temp Code

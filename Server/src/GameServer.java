@@ -14,6 +14,8 @@ public class GameServer {
     private Socket client2;
     BufferedReader in1;
     PrintWriter out1;
+    BufferedReader in2;
+    PrintWriter out2;
     String line="";
 
 
@@ -32,7 +34,7 @@ public class GameServer {
     public void listenSocket() {
         try {
             client1 = server.accept();
-            //client2 = server.accept();
+            client2 = server.accept();
 
         }
         catch (IOException e) {
@@ -42,16 +44,26 @@ public class GameServer {
         try {
             in1 = new BufferedReader(new InputStreamReader(client1.getInputStream()));
             out1 = new PrintWriter(client1.getOutputStream(), true);
+            in2 = new BufferedReader(new InputStreamReader(client1.getInputStream()));
+            out2 = new PrintWriter(client1.getOutputStream(), true);
         }
         catch (IOException e) {
             System.out.println("Accept failed: 4444"); System.exit(-1);
         }
         out1.println("w");
+        out2.println("b");
         while(true) {
             try {
                 if(line!=null) {
                     line = in1.readLine();
-                    System.out.println(line);
+                    if(line.substring(0,1)=="p")
+                        out2.print(line);
+
+                    line = in2.readLine();
+                    if(line.substring(0,1)=="p")
+                        out1.print(line);
+
+
 
                     //here what to do with signals
                 }

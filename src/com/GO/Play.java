@@ -18,7 +18,7 @@ public class Play {
     private Client clientSocket;
     private ClientGUI window;
     private PLAYER player_color;
-    private DrawingBoard clickListener;
+    private BoardOnClickListener clickListener;
     
 
     Play()
@@ -46,13 +46,39 @@ public class Play {
         else
         {
             player_color=PLAYER.WHITE;
-            System.out.println("white");
         }
-
+        clientSocket.out.println("ok");
         playBoard=new Board(19,this);
 
          window=new ClientGUI(playBoard);
-         this.clickListener=window.getDrawingBoard();
+         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+
+
+    }
+    public void game()
+    {
+        int x=-1,y=-1;
+
+
+            try {
+                if(clientSocket.in.readLine().substring(0,1)=="p")
+                {
+                    x=Integer.parseInt(clientSocket.in.readLine().substring(1,2));
+                    y=Integer.parseInt(clientSocket.in.readLine().substring(2,3));
+                }
+
+            }
+            catch(NumberFormatException ex)
+            {
+
+            }
+            catch(IOException ex)
+            {
+
+            }
+            playBoard.addStone(PLAYER.BLACK,x,y);
+            clickListener.setIsClicable(true);
+
 
     }
     public Board getPlayBoard()

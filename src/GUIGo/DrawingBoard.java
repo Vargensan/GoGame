@@ -145,7 +145,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         this.addMouseListener(mouseListener);
         System.out.println("Added Mouse Motion Listener + Mouse Listener!");
     }
-
+    public BoardOnClickListener getBoardOnClickListener()
+    {
+        return mouseListener;
+    }
     /**
      * Method which sets game board, and starts method responsible for computing start vales
      * of drawing

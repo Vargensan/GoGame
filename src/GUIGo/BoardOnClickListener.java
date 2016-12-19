@@ -40,6 +40,7 @@ BoardOnClickListener(DrawingBoard obj,Board board)
        if( board.canAddHere(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]))
        {
            board.addStone(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]);
+           setIsClicable(false);
        }
         obj.update();
         //End of Temp Code

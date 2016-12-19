@@ -268,6 +268,7 @@ public class Board implements BoardI {
     public PLACE[][] getGameTable() {
         return GameTable;
     }
+
     public PLAYER getPLayerColor()
     {
         return play.get_player_color();

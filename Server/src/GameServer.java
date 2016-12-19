@@ -34,7 +34,10 @@ public class GameServer {
     public void listenSocket() {
         try {
             client1 = server.accept();
-            client2 = server.accept();
+            in1 = new BufferedReader(new InputStreamReader(client1.getInputStream()));
+            out1 = new PrintWriter(client1.getOutputStream(), true);
+            out1.println("b");
+            in1.readLine();
 
         }
         catch (IOException e) {
@@ -42,16 +45,18 @@ public class GameServer {
             System.exit(-1);
         }
         try {
-            in1 = new BufferedReader(new InputStreamReader(client1.getInputStream()));
-            out1 = new PrintWriter(client1.getOutputStream(), true);
-            in2 = new BufferedReader(new InputStreamReader(client1.getInputStream()));
-            out2 = new PrintWriter(client1.getOutputStream(), true);
-        }
+            client2 = server.accept();
+            in2 = new BufferedReader(new InputStreamReader(client2.getInputStream()));
+            out2 = new PrintWriter(client2.getOutputStream(), true);
+            out2.println("w");
+            in2.readLine();
+
+            }
         catch (IOException e) {
             System.out.println("Accept failed: 4444"); System.exit(-1);
         }
-        out1.println("w");
-        out2.println("b");
+
+
         while(true) {
             try {
                 if(line!=null) {

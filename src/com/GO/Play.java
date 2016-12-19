@@ -38,9 +38,9 @@ public class Play {
             System.out.println("Problem z polaczeniem");
             exit(-1);
          }
-
-        if(color.substring(0,1)=="b")
+         if(color.substring(0,1).equals("b"))
         {
+            System.out.println(color);
             player_color=PLAYER.BLACK;
         }
         else
@@ -51,7 +51,7 @@ public class Play {
         playBoard=new Board(19,this);
 
          window=new ClientGUI(playBoard);
-         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+         //this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
 
 
     }

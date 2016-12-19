@@ -1,5 +1,6 @@
 package GUIGo;
 
+import com.GO.Board;
 import com.GO.PLACE;
 
 import javax.imageio.ImageIO;
@@ -32,9 +33,10 @@ public class ClientGUI extends JFrame{
     private JPanel jOptionPanel = new JPanel();
     private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
-    private JButton jStartGame;
+
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener = new ButtonListener();
+    private Board board;
     //private BufferedImage image;
     //public ImageResize imageResizer;
     //private ImageIcon image;
@@ -45,8 +47,9 @@ public class ClientGUI extends JFrame{
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
      */
-    public ClientGUI(PLACE[][] gameboard) {
-        this.gameboard = gameboard;
+    public ClientGUI(Board board) {
+        this.board=board;
+        gameboard=board.getGameTable();
         createWindow();
         startDrawing();
     }
@@ -85,7 +88,6 @@ public class ClientGUI extends JFrame{
         //add components to GUI of User
         content.add(jOptionPanel);
         content.add(jDrawingBoard);
-        content.add(jStartGame);
         content.add(jBoardSelect);
         jClient.setLocationRelativeTo(null);
         jClient.setVisible(true);
@@ -109,9 +111,7 @@ public class ClientGUI extends JFrame{
         String[] boards = new String[]{"19x19","9x9","7x7"};
         jBoardSelect = new JComboBox<>(boards);
         jBoardSelect.setBounds(10,90,100,30);
-        jStartGame = new JButton("Start Game");
-        setButtonLook(jStartGame, "Start");
-        jStartGame.setBounds(10,50,100,30);
+
     }
     /**
      * Method that sets DrawingBoard attached to GUI of the
@@ -123,7 +123,7 @@ public class ClientGUI extends JFrame{
         CenterX = (jClient.getSize().width- X_OF_DRAWPANEL)/2;
         CenterY = (Y_OF_DRAWPANEL- jClient.getWidth())/2;
 
-        jDrawingBoard = new DrawingBoard();
+        jDrawingBoard = new DrawingBoard(board);
         System.out.println(CenterX);
         jDrawingBoard.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
     }

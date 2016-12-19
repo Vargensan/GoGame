@@ -25,7 +25,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private ImageResize imageResizer;
     private BufferedImage image;
     private Graphics2D g2;
-    private PLAYER player;
     private BoardOnClickListener mouseListener;
     private int criclefilled;
     private int sizeGameBoard;
@@ -33,6 +32,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private static int[] StartPoint = new int[2];
     private int[][][] Table_Intersection;
     private BufferedImage black,white;
+    private Board board;
     //Temp
     public boolean color = true;
     //End Temp
@@ -44,6 +44,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     int[] relasedPoint;
     DrawMathObject dmo_calculate = new DrawMathObject();
 
+    DrawingBoard(Board board){
+        this.board=board;
+
+    }
+
     private BufferedImage gettempimage(){
         if(controlerImage != null){
             return controlerImage;
@@ -52,8 +57,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     }
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
-        this.player = player;
-        if(player.equals(PLAYER.BLACK)) {
+         if(player.equals(PLAYER.BLACK)) {
             g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
         }else
             g2.drawImage(white,Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],null);
@@ -129,21 +133,14 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         g.drawImage(image, 0, 0, null);
     }
 
-     DrawingBoard(){
 
-
-    }
-    
-    public BoardOnClickListener get_MouseListener(){
-        return mouseListener;
-    }
 
     /**
      * Method that initialize custom MouseListener
      * set it's properties
      */
     public void initializeMouseListener(){
-        mouseListener = new BoardOnClickListener(this);
+        mouseListener = new BoardOnClickListener(this,board);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
         mouseListener.initialize();

@@ -25,7 +25,11 @@ public class BoardOnClickListener extends MouseAdapter{
     boolean color = true;
     //
 
-
+BoardOnClickListener(DrawingBoard obj,Board board)
+{
+    this.obj = obj;
+    this.board=board;
+}
     @Override
     public void mouseReleased(MouseEvent e) {
         //Temp Code - to do checkout
@@ -34,7 +38,10 @@ public class BoardOnClickListener extends MouseAdapter{
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
-        board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
+       if( board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]))
+       {
+           board.addStone(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
+       }
         obj.update();
         //End of Temp Code
     }
@@ -64,10 +71,7 @@ public class BoardOnClickListener extends MouseAdapter{
         this.BoardSize = boardSize;
     }
 
-   public BoardOnClickListener(DrawingBoard obj,){
-        this.obj = obj;
-        this.board=player;
-    }
+
 
     /**
      *

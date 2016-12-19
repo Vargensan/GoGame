@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Bartłomiej on 2016-11-28.
  */
-public class LogicBoardTest extends DrawingBoard{
+public class LogicBoardTest{
 
     Board gameboard;
     PLAYER player;

@@ -8,6 +8,6 @@ public class START {
     public static void main(String argv[])
     {
 
-        game =new Play();
+        game = new Play();
     }
 }

@@ -81,7 +81,7 @@ public class Play {
         }
         playBoard.addStone(player_color.getEnemyColor(),x,y);
         window.getDrawingBoard().update();
-        clickListener.setIsClicable(true);
+
     }
 
     public void game(int x, int y)
@@ -111,8 +111,8 @@ public class Play {
 
             }
             playBoard.addStone(player_color.getEnemyColor(),x,y);
-            window.getDrawingBoard().update();
-            clickListener.setIsClicable(true);
+            window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+
 
 
     }

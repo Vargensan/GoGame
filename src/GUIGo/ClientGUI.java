@@ -73,8 +73,6 @@ public class ClientGUI extends JFrame{
         //image = imageResizer.scale(bufferedImage,getWidth(),getHeight());
         content = jClient.getContentPane();
         content.setLayout(null);
-        if(play.get_player_color()== PLAYER.BLACK)
-            content.setBackground(Color.black);
         //set JFrame look
         jClient.setDefaultCloseOperation(EXIT_ON_CLOSE);
         jClient.setTitle("Go Game");

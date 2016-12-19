@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
  */
 public class BoardOnClickListener extends MouseAdapter{
 
-    private boolean isClicable;
     private int distance;
     private int height;
     private int BoardSize;
@@ -32,12 +31,11 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
     this.play=play;
     this.obj = obj;
     this.board=board;
-    if(play.get_player_color()==PLAYER.WHITE)
-    this.setIsClicable(true);
+
 }
     @Override
     public void mouseReleased(MouseEvent e) {
-    if(isClicable) {
+
         //Temp Code - to do checkout
         //if game logic accepts point then it will be drown
         mouse_coordinates[0] = e.getX();
@@ -45,16 +43,15 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
         if (board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1])) {
             board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-            //obj.update();
-            obj.paintComponent(obj.getGraphics());
-            setIsClicable(false);
+            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
+           // obj.paintComponent(obj.getGraphics());
             play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
 
         }
 
         //End of Temp Code
     }
-    }
+
 
     /**
      * Method that sets distance between drawed lines and Start Point where
@@ -97,22 +94,6 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
             mouse_coordinates[1] = e.getY();
             obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
             obj.update();
-
     }
 
-    /**
-     * Getter for boolean isClicable
-     * @return state of boolean isClicable
-     */
-   public boolean getIsClicable(){
-        return isClicable;
-   }
-
-    /**
-     * Setter for boolean isClicable
-     * @param clicable takes a boolean and assign it to isClicable
-     */
-   public void setIsClicable(boolean clicable){
-        this.isClicable = clicable;
-   }
 }

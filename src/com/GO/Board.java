@@ -49,14 +49,10 @@ public class Board implements BoardI {
      * @param placeY where we want to know if stone can breath
      * @return returns if stone in given color can breath on given place
      */
-    //Implement methods...
-    //
-    //
     private boolean canBreathHere(PLACE[][] table,PLAYER color, int placeX,int placeY,int IgnoreX,int IgnoreY) {
 
         PLACE actuall;
         int[] XY = new int[2];
-        // loops goes for all combinations 1 and -1 for i i j
         /*
         Edit: Let's assume we have point placeX=11 placeY=11
         Check around points should be: as bellow
@@ -99,6 +95,15 @@ public class Board implements BoardI {
         canEnemyBreath(GameTable,color,placeX,placeY);
     }
 
+    /**
+     * Method that checks if enemy player's pawn can breath after put in
+     * X,Y coordinates player's pawn
+     * @param GameTable takes a GameTable
+     * @param color takes a color of player
+     * @param placeX takes X coordinate of pawn
+     * @param placeY takes Y coordinate of pawn
+     */
+
     private void canEnemyBreath(PLACE[][] GameTable, PLAYER color, int placeX, int placeY){
         PLAYER enemy;
         int XY[] = new int[2];
@@ -109,12 +114,9 @@ public class Board implements BoardI {
                 if(!canBreathHere(GameTable,enemy,placeX+XY[0],placeY+XY[1],placeX+XY[0],placeY+XY[1])){
                     for(int j = 0; j < size ; j++){
                         for(int z = 0; z < size; z++){
-                            if(DeleteGameTable[j][z] == GameTable[j][z]){
+                            if(DeleteGameTable[j][z] == GameTable[j][z])
                                 GameTable[j][z] = PLACE.EMPTY;
-                                DeleteGameTable[j][z] = PLACE.EMPTY;
-                            }
-                            else
-                                DeleteGameTable[j][z] = PLACE.EMPTY;
+                            DeleteGameTable[j][z] = PLACE.EMPTY;
 
 
                         }
@@ -123,6 +125,16 @@ public class Board implements BoardI {
             }
         }
     }
+
+    /**
+     * Method that checks if position on X,Y is empty if yes, then it allows to
+     * give there a pawn, unless some other functions detects errors in this action
+     * @param table takes a Game Table
+     * @param color takes a color of player
+     * @param X takes a X coordinate of pawn in gameboard
+     * @param Y takes a Y coordinate of pawn in gameboard
+     * @return status of pawn(empty or not)
+     */
     private boolean checkifempty(PLACE[][] table, PLAYER color, int X, int Y){
         PLACE actuall;
         actuall = GameTable[X][Y];
@@ -147,6 +159,15 @@ public class Board implements BoardI {
        return false;
     }
 
+    /**
+     * Method that return status of checking if player pawn can breath after put it on a place, where
+     * it has no right to be, but in situation, in which it will erase other player's
+     * pawn/pawns it will be placed
+     * @param color takes a color of player
+     * @param placeX takes a X coordinate of pawn, where player demands to place it
+     * @param placeY takes a Y coordiante of pawn, where player demands to place it
+     * @return status of checking
+     */
     public boolean canBreatheAfterSicmering(PLAYER color, int placeX, int placeY){
         PLAYER enemyplayer;
         //pentla for na tempboard[][]
@@ -192,6 +213,13 @@ public class Board implements BoardI {
         return dead;
     }
 
+    /**
+     * Method that checks
+     * @param color takes a color of player
+     * @param placeX takes a coordinate X of specific point
+     * @param placeY takes a coordinate Y of specific point
+     * @return status of
+     */
     private boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
            System.out.println("KO Situation detected!");
@@ -199,6 +227,13 @@ public class Board implements BoardI {
        }
        return true;
     }
+
+    /**
+     * Method that in dependence of value from 1 to 4 returns borderer of
+     * specific pawn
+     * @param i takes a number from 1 to 4
+     * @return X and Y coordinate of neightboor of pawn
+     */
     private int[] values(int i){
         int p[] = new int[2];
         switch(i) {
@@ -227,6 +262,10 @@ public class Board implements BoardI {
      and after diffrent move of that player we need to null integer ko_situationXY
      (by saying null, assume to set it to -1) so it does not attach any field on game board
      */
+
+    /**
+     * null KO situation
+     */
     private void nullKO_situation(){
         koSituationXY[0] = -1;
         koSituationXY[1] = -1;
@@ -253,6 +292,10 @@ public class Board implements BoardI {
         return GameTable;
     }
 
+    /**
+     * Method that returns color of actual player
+     * @return color of actual player
+     */
     public PLAYER getPLayerColor()
     {
         return play.get_player_color();

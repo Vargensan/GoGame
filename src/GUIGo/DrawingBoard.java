@@ -49,6 +49,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
 
     }
 
+    /**
+     * Method that is getter for background image
+     * @return image that is printed on background
+     */
     private BufferedImage gettempimage(){
         if(controlerImage != null){
             return controlerImage;

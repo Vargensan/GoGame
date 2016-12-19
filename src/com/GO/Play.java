@@ -55,6 +55,11 @@ public class Play {
 
 
     }
+
+    /**
+     * Method that blocks mouse clicking, and also unblock, waits for signals from Client,
+     * sends signals to Client
+     */
     public void game()
     {
         int x=-1,y=-1;
@@ -81,10 +86,20 @@ public class Play {
 
 
     }
+
+    /**
+     * Method that is responsiable for getting play board
+     * @return play board
+     */
     public Board getPlayBoard()
     {
         return playBoard;
     }
+
+    /**
+     * Getter for player color
+     * @return color of player
+     */
     public PLAYER get_player_color()
     {
         return player_color;

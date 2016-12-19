@@ -62,14 +62,12 @@ public class GameServer {
             try {
                 if(line!=null) {
 
-
                     line = in2.readLine();
                     System.out.println(line);
                    if(line.substring(0,1).equals("p")) {
                         x=Integer.parseInt(in2.readLine().substring(1));
-                        System.out.println(x);
                         y=Integer.parseInt(in2.readLine().substring(1));
-                        System.out.println(y);
+
 
                         out1.println("p");
                         out1.println("x"+x);
@@ -80,9 +78,7 @@ public class GameServer {
                     if(line.substring(0,1).equals("p"))
                     {
                         x=Integer.parseInt(in1.readLine().substring(1));
-                        System.out.println(x);
                         y=Integer.parseInt(in1.readLine().substring(1));
-                        System.out.println(y);
 
                         out2.println("p");
                         out2.println("x"+x);

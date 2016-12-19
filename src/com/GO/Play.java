@@ -61,14 +61,13 @@ public class Play {
     public void startBlackPlayer()
     {
         int x=0,y=0;
-        window.getDrawingBoard().update();
+
+
         try {
             if(clientSocket.in.readLine().substring(0,1).equals("p"))
             {
                 x=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                System.out.println(x);
                 y=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                System.out.println(y);
             }
 
         }
@@ -87,7 +86,7 @@ public class Play {
 
     public void game(int x, int y)
     {
-        clientSocket.out.println("p");
+         clientSocket.out.println("p");
 
         clientSocket.out.println("x"+x);
         clientSocket.out.println("y"+y);

@@ -239,6 +239,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
         }
+
         repaint();
     }
 

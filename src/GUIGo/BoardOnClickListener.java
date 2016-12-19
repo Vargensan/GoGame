@@ -45,7 +45,8 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
         if (board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1])) {
             board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-            obj.update();
+            //obj.update();
+            obj.paintComponent(obj.getGraphics());
             setIsClicable(false);
             play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
 

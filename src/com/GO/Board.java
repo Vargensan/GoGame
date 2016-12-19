@@ -92,7 +92,7 @@ public class Board implements BoardI {
     @Override
     public void addStone(PLAYER color, int placeX, int placeY) {
         GameTable[placeX][placeY] = color.playerToPlace();
-        //canEnemyBreath(GameTable,color,placeX,placeY);
+        canEnemyBreath(GameTable,color,placeX,placeY);
     }
 
     /**

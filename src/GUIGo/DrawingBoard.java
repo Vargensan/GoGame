@@ -34,7 +34,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private BufferedImage black,white;
     private Board board;
     //Temp
-    public boolean color = true;
+    //public boolean color = true;
     //End Temp
     //Package-public
     int distance;
@@ -100,7 +100,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.print("Hi");
         if(image==null) {
             try {
                 if(controlerImage != null){
@@ -167,7 +166,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         distance = dmo_calculate.calculateDistance(this.getHeight(),sizeGameBoard);
         StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
         criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
-        System.out.println("Circle filled:  "+ criclefilled);
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
         intersectionPoint = new int[2];
         setBlackandWhite(this);
@@ -227,7 +225,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     @Override
     public void update() {
         if(g2 != null) {
-            //g2.fillRect(0,0,image.getWidth(),image.getHeight());
             g2.setColor(new Color(160, 160, 160));
             g2.drawImage(gettempimage(),0,0,null);
         } else{

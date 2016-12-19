@@ -37,11 +37,6 @@ public class ClientGUI extends JFrame{
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener = new ButtonListener();
     private Board board;
-    //private BufferedImage image;
-    //public ImageResize imageResizer;
-    //private ImageIcon image;
-    //String file;
-    //END OF THE OBJECTS NEEDED TO BUILD A GUI WINDOW
     private PLACE[][] gameboard;
     /**
      * Constructor of the ClientGUI class

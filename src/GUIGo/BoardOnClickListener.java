@@ -37,7 +37,6 @@ BoardOnClickListener(DrawingBoard obj,Board board)
         mouse_coordinates[0] = e.getX();
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
-        //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
        if( board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]))
        {
            board.addStone(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
@@ -82,9 +81,7 @@ BoardOnClickListener(DrawingBoard obj,Board board)
     @Override
     public void mouseDragged(MouseEvent e) {
         obj.drawIntersection = true;
-        //System.out.println("I am reactiong!");
         mouse_coordinates[0] = e.getX();
-       // System.out.println(mouse_coordinates[0]);
         mouse_coordinates[1] = e.getY();
         obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         obj.update();

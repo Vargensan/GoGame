@@ -11,7 +11,6 @@ public class DrawMathObject implements GUIMathClass{
         double k = (double) distance;
         double i = 1.0;
         while((i/k) < (SCALE)) {
-            System.out.println("i: "+i + "  distance: "+ distance);
             i+=1.0;
         }
         return (int) i;
@@ -44,12 +43,7 @@ public class DrawMathObject implements GUIMathClass{
             coordinates[1] = 0;
         int[] tempCor = new int[2];
         tempCor[0] = (int) Math.round((((double) coordinates[0]- (double) startPoint[0])/((double) distance)));
-        //System.out.print("X: "+ tempCor[0]);
         tempCor[1] = (int) Math.round((((double) coordinates[1]- (double)startPoint[1])/((double) distance)));
-        //System.out.print("    Y: "+ tempCor[1]);
-        //System.out.println(" distance: "+distance);
-        //System.out.println("realX: "+ cordinats[0] + "  realY: " + cordinats[1] + "  realSPX: "+ (cordinats[0]- startPoint[0])
-        //+ " realSPY: "+ (cordinats[1]- startPoint[1]));
         return tempCor;
     }
 

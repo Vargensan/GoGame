@@ -11,6 +11,7 @@ public class Board implements BoardI {
     private int size;
     public Play play;
     private PLACE GameTable[][];
+    private PLACE DeleteGameTable[][];
     private int[] nextCoordinates;
     //------------------------------
     int[] koSituationXY = new int[2];
@@ -20,7 +21,7 @@ public class Board implements BoardI {
         this.size=size;
         this.play=play;
         GameTable=new PLACE[size][size];
-
+        DeleteGameTable = new PLACE[size][size];
         initialize();
 
         nextCoordinates=new int[4];
@@ -37,6 +38,7 @@ public class Board implements BoardI {
             {
 
                 GameTable[i][j]=PLACE.EMPTY;
+                DeleteGameTable[i][j]=PLACE.EMPTY;
             }
         }
     }
@@ -67,24 +69,6 @@ public class Board implements BoardI {
                 (11,11)
           (10,12)      (12,12)
          */
-        /*
-         */
-        /*for (int i = -1; i < 2; i += 2) {
-            for (int j = -1; j < 2; j += 2)
-                try {
-                    actuall = table[placeX + i][placeY + j];
-                    if (actuall == PLACE.EMPTY)
-                        return true;
-                    else if(actuall == color.playerToPlace()) {
-                        return canBreathHere(table,color,placeX+i,placeY+j);
-                    }
-
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    //we go to wall
-                }
-
-        }
-        return false;*/
         for(int i = 0; i<4 ; i++){
             XY = values(i);
             try {
@@ -95,6 +79,8 @@ public class Board implements BoardI {
                     return true;
                 }
                 else if(actuall == color.playerToPlace()) {
+                    //Implement deletetable
+                    DeleteGameTable[placeX+XY[0]][placeY+XY[1]] = GameTable[placeX+XY[0]][placeY+XY[1]];
                     if(placeX+XY[0] != IgnoreX && placeY+XY[1] != IgnoreY)
                         return canBreathHere(table,color,placeX+XY[0],placeY+XY[1],placeX,placeY);
                 }
@@ -114,9 +100,36 @@ public class Board implements BoardI {
 
     @Override
     public void addStone(PLAYER color, int placeX, int placeY) {
-        GameTable[placeX][placeY]=color.playerToPlace();
+        GameTable[placeX][placeY] = color.playerToPlace();
+        canEnemyBreath(GameTable,color,placeX,placeY);
+    }
+
+    private void canEnemyBreath(PLACE[][] GameTable, PLAYER color, int placeX, int placeY){
+        PLAYER enemy;
+        int XY[] = new int[2];
+        if(color == PLAYER.BLACK)
+            enemy = PLAYER.WHITE;
+        else
+            enemy = PLAYER.BLACK;
+        for(int i = 0; i < 4; i++){
+            XY = values(i);
+            if(GameTable[placeX+XY[0]][placeY+XY[1]] == enemy.playerToPlace()){
+                if(!canBreathHere(GameTable,enemy,placeX+XY[0],placeY+XY[1],placeX+XY[0],placeY+XY[1])){
+                    for(int j = 0; j < size ; j++){
+                        for(int z = 0; z < size; z++){
+                            if(DeleteGameTable[j][z] == GameTable[j][z]){
+                                GameTable[j][z] = PLACE.EMPTY;
+                                DeleteGameTable[j][z] = PLACE.EMPTY;
+                            }
+                            else
+                                DeleteGameTable[j][z] = PLACE.EMPTY;
 
 
+                        }
+                    }
+                }
+            }
+        }
     }
     private boolean checkifempty(PLACE[][] table, PLAYER color, int X, int Y){
         PLACE actuall;

@@ -35,6 +35,8 @@ public class ClientGUI extends JFrame{
     private JButton jStartGame;
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener = new ButtonListener();
+    //private BufferedImage image;
+    //public ImageResize imageResizer;
     //private ImageIcon image;
     //String file;
     //END OF THE OBJECTS NEEDED TO BUILD A GUI WINDOW
@@ -63,6 +65,10 @@ public class ClientGUI extends JFrame{
         return jDrawingBoard;
     }
     private void createWindow(){
+        //jClient.setContentPane(new JLabel(new ImageIcon("C:\\Users\\cp24\\IdeaProjects\\Game\\src\\GoGraphics\\addgraphics.jpg")));
+        //InputStream imageInputStream = jClient.getClass().getResourceAsStream("/GoGraphics/black_button.png");
+        //BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+        //image = imageResizer.scale(bufferedImage,getWidth(),getHeight());
         content = jClient.getContentPane();
         content.setLayout(null);
         //set JFrame look

@@ -33,6 +33,9 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private static int[] StartPoint = new int[2];
     private int[][][] Table_Intersection;
     private BufferedImage black,white;
+    //Temp
+    public boolean color = true;
+    //End Temp
     //Package-public
     int distance;
     boolean drawIntersection = false;
@@ -115,7 +118,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         if(allow_to_drawing == 1)
             drawLines(g2,distance);
         if(drawIntersection){
-            filledCircle(g2,PLAYER.BLACK,intersectionPoint);
+            if(color)
+                filledCircle(g2,PLAYER.BLACK,intersectionPoint);
+            else
+                filledCircle(g2,PLAYER.WHITE,intersectionPoint);
             drawIntersection = false;
         }
         if(allow_to_drawing == 1)

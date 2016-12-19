@@ -20,6 +20,9 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
+    //TEMP
+    boolean color = true;
+    //
 
 
     @Override
@@ -30,7 +33,12 @@ public class BoardOnClickListener extends MouseAdapter{
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
-        obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
+        if(color)
+            obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.BLACK;
+        else
+            obj.gameboard[obj.relasedPoint[0]][obj.relasedPoint[1]] = PLACE.WHITE;
+        color = !color;
+        obj.color = this.color;
         obj.update();
         //End of Temp Code
     }

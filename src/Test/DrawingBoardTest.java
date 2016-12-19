@@ -1,31 +1,16 @@
 package Test;
 
-import GUIGo.ClientGUI;
 import GUIGo.DrawingBoard;
-import com.GO.PLACE;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
 /**
- * Created by Bartłomiej on 2016-11-28.
+ * Created by cp24 on 2016-12-19.
  */
 public class DrawingBoardTest extends DrawingBoard{
+    @Test
+    public void testonClickFillBoard(){
 
-   // ClientGUI app = new ClientGUI();
-   // PLACE[][] GameBoard = new PLACE[19][19];
-
-
-    //@Test
-    //public void testDrawing(){
-       // app.startDrawing(GameBoard);
-   // }
-
-   /* @Test
-    public void howmanyintersections(){
-        app.startDrawing(GameBoard);
-        assertEquals();
-    }*/
-
+    }
 
 }

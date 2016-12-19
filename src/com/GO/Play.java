@@ -117,10 +117,20 @@ public class Play {
 
 
     }
+
+    /**
+     * Method that is responsiable for getting play board
+     * @return play board
+     */
     public Board getPlayBoard()
     {
         return playBoard;
     }
+
+    /**
+     * Getter for player color
+     * @return color of player
+     */
     public PLAYER get_player_color()
     {
         return player_color;

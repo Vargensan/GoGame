@@ -17,9 +17,10 @@ public class Client {
        public PrintWriter out;
        public BufferedReader in;
 
-
-        /**add listener check if server is on*/
-        public void listenSocket(){
+    /**
+     * Method that is responsible for checking if server is turn on
+     */
+    public void listenSocket(){
             try {
                 socket = new Socket("localhost", 4444);
                 out = new PrintWriter(socket.getOutputStream(), true);

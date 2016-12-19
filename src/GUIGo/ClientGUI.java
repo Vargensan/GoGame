@@ -2,6 +2,8 @@ package GUIGo;
 
 import com.GO.Board;
 import com.GO.PLACE;
+import com.GO.PLAYER;
+import com.GO.Play;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +35,7 @@ public class ClientGUI extends JFrame{
     private JPanel jOptionPanel = new JPanel();
     private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionTerritory,jOptionEnd;
+    private Play play;
 
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener = new ButtonListener();
@@ -42,7 +45,8 @@ public class ClientGUI extends JFrame{
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
      */
-    public ClientGUI(Board board) {
+    public ClientGUI(Board board,Play play) {
+        this.play=play;
         this.board=board;
         gameboard=board.getGameTable();
         createWindow();
@@ -69,6 +73,8 @@ public class ClientGUI extends JFrame{
         //image = imageResizer.scale(bufferedImage,getWidth(),getHeight());
         content = jClient.getContentPane();
         content.setLayout(null);
+        if(play.get_player_color()== PLAYER.BLACK)
+            content.setBackground(Color.black);
         //set JFrame look
         jClient.setDefaultCloseOperation(EXIT_ON_CLOSE);
         jClient.setTitle("Go Game");
@@ -118,7 +124,7 @@ public class ClientGUI extends JFrame{
         CenterX = (jClient.getSize().width- X_OF_DRAWPANEL)/2;
         CenterY = (Y_OF_DRAWPANEL- jClient.getWidth())/2;
 
-        jDrawingBoard = new DrawingBoard(board);
+        jDrawingBoard = new DrawingBoard(board,play);
         System.out.println(CenterX);
         jDrawingBoard.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
     }

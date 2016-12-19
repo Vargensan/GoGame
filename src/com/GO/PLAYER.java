@@ -8,8 +8,8 @@ public enum PLAYER {
 
     BLACK, WHITE;
 
-    public PLAYER getEnemyColor(PLAYER color){
-        if(color == PLAYER.BLACK)
+    public PLAYER getEnemyColor(){
+        if(this == PLAYER.BLACK)
             return PLAYER.WHITE;
         else
             return PLAYER.BLACK;

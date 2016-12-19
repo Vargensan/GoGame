@@ -56,18 +56,38 @@ public class GameServer {
             System.out.println("Accept failed: 4444"); System.exit(-1);
         }
 
-
+        int x=-1;
+        int y=-1;
         while(true) {
             try {
                 if(line!=null) {
-                    line = in1.readLine();
-                    if(line.substring(0,1)=="p")
-                        out2.print(line);
+
 
                     line = in2.readLine();
-                    if(line.substring(0,1)=="p")
-                        out1.print(line);
+                    System.out.println(line);
+                   if(line.substring(0,1).equals("p")) {
+                        x=Integer.parseInt(in2.readLine().substring(1));
+                        System.out.println(x);
+                        y=Integer.parseInt(in2.readLine().substring(1));
+                        System.out.println(y);
 
+                        out1.println("p");
+                        out1.println("x"+x);
+                        out1.println("y"+y);
+                    }
+
+                    line = in1.readLine();
+                    if(line.substring(0,1).equals("p"))
+                    {
+                        x=Integer.parseInt(in1.readLine().substring(1));
+                        System.out.println(x);
+                        y=Integer.parseInt(in1.readLine().substring(1));
+                        System.out.println(y);
+
+                        out2.println("p");
+                        out2.println("x"+x);
+                        out2.println("y"+y);
+                    }
 
 
                     //here what to do with signals

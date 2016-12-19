@@ -40,7 +40,6 @@ public class Play {
          }
          if(color.substring(0,1).equals("b"))
         {
-            System.out.println(color);
             player_color=PLAYER.BLACK;
         }
         else
@@ -50,21 +49,57 @@ public class Play {
         clientSocket.out.println("ok");
         playBoard=new Board(19,this);
 
-         window=new ClientGUI(playBoard);
-         //this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+         window=new ClientGUI(playBoard,this);
+         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+         if(player_color==PLAYER.BLACK)
+         {
+             startBlackPlayer();
+         }
 
 
     }
-    public void game()
+    public void startBlackPlayer()
     {
-        int x=-1,y=-1;
+        int x=0,y=0;
+
+        try {
+            if(clientSocket.in.readLine().substring(0,1).equals("p"))
+            {
+                x=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                System.out.println(x);
+                y=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                System.out.println(y);
+            }
+
+        }
+        catch(NumberFormatException ex)
+        {
+
+        }
+        catch(IOException ex)
+        {
+
+        }
+        playBoard.addStone(player_color.getEnemyColor(),x,y);
+        window.getDrawingBoard().update();
+        clickListener.setIsClicable(true);
+    }
+
+    public void game(int x, int y)
+    {
+        clientSocket.out.println("p");
+
+        clientSocket.out.println("x"+x);
+        clientSocket.out.println("y"+y);
 
 
             try {
-                if(clientSocket.in.readLine().substring(0,1)=="p")
+                if(clientSocket.in.readLine().substring(0,1).equals("p"))
                 {
-                    x=Integer.parseInt(clientSocket.in.readLine().substring(1,2));
-                    y=Integer.parseInt(clientSocket.in.readLine().substring(2,3));
+                    x=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                    System.out.println(x);
+                    y=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                    System.out.println(y);
                 }
 
             }
@@ -76,7 +111,8 @@ public class Play {
             {
 
             }
-            playBoard.addStone(PLAYER.BLACK,x,y);
+            playBoard.addStone(player_color.getEnemyColor(),x,y);
+            window.getDrawingBoard().update();
             clickListener.setIsClicable(true);
 
 

@@ -1,9 +1,6 @@
 package GUIGo;
 
-import com.GO.Board;
-import com.GO.DrawingBoardI;
-import com.GO.PLACE;
-import com.GO.PLAYER;
+import com.GO.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +30,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private int[][][] Table_Intersection;
     private BufferedImage black,white;
     private Board board;
+    private Play play;
     //Temp
     //public boolean color = true;
     //End Temp
@@ -44,7 +42,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     int[] relasedPoint;
     DrawMathObject dmo_calculate = new DrawMathObject();
 
-    DrawingBoard(Board board){
+    DrawingBoard(Board board,Play play){
+        this.play=play;
         this.board=board;
 
     }
@@ -137,7 +136,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * set it's properties
      */
     public void initializeMouseListener(){
-        mouseListener = new BoardOnClickListener(this,board);
+        mouseListener = new BoardOnClickListener(this,board,play);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
         mouseListener.initialize();

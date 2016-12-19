@@ -34,7 +34,7 @@ public class BoardOnClickListener extends MouseAdapter{
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
         //System.out.println(obj.relasedPoint[0]+"    gameboard - changes " +obj.relasedPoint[1]);
-        board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
+       // board.canAddHere(PLAYER.BLACK,obj.relasedPoint[0],obj.relasedPoint[1]);
         obj.update();
         //End of Temp Code
     }
@@ -64,9 +64,8 @@ public class BoardOnClickListener extends MouseAdapter{
         this.BoardSize = boardSize;
     }
 
-   public BoardOnClickListener(DrawingBoard obj,){
+   public BoardOnClickListener(DrawingBoard obj){
         this.obj = obj;
-        this.board=player;
     }
 
     /**

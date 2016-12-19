@@ -107,7 +107,7 @@ public class Board implements BoardI {
     private void canEnemyBreath(PLACE[][] GameTable, PLAYER color, int placeX, int placeY){
         PLAYER enemy;
         int XY[] = new int[2];
-        enemy = play.get_player_color().getEnemyColor();
+        enemy = color.getEnemyColor();
         for(int i = 0; i < 4; i++){
             XY = values(i);
             if(GameTable[placeX+XY[0]][placeY+XY[1]] == enemy.playerToPlace()){
@@ -191,7 +191,7 @@ public class Board implements BoardI {
         nullKO_situation();
         //if KO wasn't detected then do normal checkout
         //Set enemy colour
-        enemyplayer = play.get_player_color().getEnemyColor();
+        enemyplayer = color.getEnemyColor();
         for(int i = 0; i<4 ; i++){
             XY = values(i);
             if(canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false){

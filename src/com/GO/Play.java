@@ -61,7 +61,7 @@ public class Play {
     public void startBlackPlayer()
     {
         int x=0,y=0;
-
+        window.getDrawingBoard().update();
         try {
             if(clientSocket.in.readLine().substring(0,1).equals("p"))
             {

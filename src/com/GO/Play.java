@@ -141,7 +141,9 @@ public class Play {
             */
             //window.getDrawingBoard().update();
             window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
-
+            //tutaj chcę żeby wyświetlało na JFrame, czyja tura
+            //coś nie działa xd
+            window.setTurn(player_color.getEnemyColor(),true);
 
 
     }

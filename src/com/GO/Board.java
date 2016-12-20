@@ -6,12 +6,15 @@
 package com.GO;
 
 
+import GUIGo.Neighboor;
+
 public class Board implements BoardI {
 
     private int size;
     public Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
+    private PLACE IgnoreTable[][];
     private int[] nextCoordinates;
     //------------------------------
     int[] koSituationXY = new int[2];
@@ -22,6 +25,7 @@ public class Board implements BoardI {
         this.play=play;
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
+        IgnoreTable = new PLACE[size][size];
         initialize();
         nextCoordinates=new int[4];
     }
@@ -52,7 +56,13 @@ public class Board implements BoardI {
     private boolean canBreathHere(PLACE[][] table,PLAYER color, int placeX,int placeY,int IgnoreX,int IgnoreY) {
 
         PLACE actuall;
-        int[] XY = new int[2];
+        int XY[] = new int[2];
+        int tempX;
+        int tempY;
+        Neighboor x[] = new Neighboor[4];
+        int counter = 0;
+        boolean checkifavaliable = false;
+        DeleteGameTable[placeX][placeY] = GameTable[placeX][placeY];
         /*
         Edit: Let's assume we have point placeX=11 placeY=11
         Check around points should be: as bellow
@@ -60,26 +70,69 @@ public class Board implements BoardI {
          (10,11)(11,11)(12,11)
                 (11,12)
          */
-        for(int i = 0; i<4 ; i++){
+        /*
+        Dlaczego nie działa: #GODKILLMEPLX
+        Imagine:
+        Przy wykryciu wroga na polu X,Y, gdzie ten wróg ma oddech, ale ten zamiast sprawdzenia
+        wszystkich swoich pól i pójścia do następnego swojego sprzymierzeńca, robi coś innego, a mianowicie
+        sprawdza po kolei pola jeśli napotka na swojego to robi rekurencje od niego
+        ale jeśli ta rekurencja zwraca brak oddechu, to również to pole przyjmuje brak oddechu
+        pomimo tego że go ma, tylko nie sprawdziło wszystkich swoich pól.
+
+        ROZWIĄZANIE PROBLEMU:?
+        priorityQueque ?
+        if -> moje puste pola to null to
+        if -> mam sąsiada -> idę do niego
+        pytanie -> co gdy mam dwoch sasiadow i wejde w tego z brakiem oddechu?
+        wejdzie w niego i zwroci null
+        wtedy trzeba zrobic countera od liczby sasiadow, jakas strukture ktora przechowuje
+
+         */
+        //Sprawdz wszystkich otaczających i zobacz czy to są puste pola, jeśli tak zwróc true
+        /*
+        Question: Problem czy bedzie trzeba zastosowac Array List ze wzgledu gdy sasiedzi beda obok siebie
+        Bo wtedy sasiad moze ignorowac tylko tego ktory przekazal rekurencje do niego
+        Answer: No jasne ;-;
+         */
+        for(int i = 0; i < 4 ; i++){
             XY = values(i);
-            try {
-                actuall = table[placeX + XY[0]][placeY + XY[1]];
-                System.out.println("X: "+(placeX+XY[0])+" Y: "+(placeY+XY[1])+" PLACE: "+table[placeX+XY[0]][placeY+XY[1]]);
-                if (actuall == PLACE.EMPTY){
-                    System.out.println("I can breath");
+            tempX = placeX+XY[0];
+            tempY = placeY+XY[1];
+            try{
+                actuall = table[tempX][tempY];
+                x[i] = new Neighboor();
+                if(actuall.equals(color.playerToPlace())){
+                    if((IgnoreX != tempX) || (IgnoreY != tempY)){
+                        counter++;
+                        x[i].setPosition(actuall);
+                        x[i].setPosX(tempX);
+                        x[i].setPosY(tempY);
+                        x[i].setStatus(true);
+                    }
+                } else{
+                    x[i].setStatus(false);
+                }
+                if(actuall.equals(PLACE.EMPTY)){
                     return true;
                 }
-                else if(actuall == color.playerToPlace()) {
-                    //Implement deletetable
-                    DeleteGameTable[placeX+XY[0]][placeY+XY[1]] = GameTable[placeX+XY[0]][placeY+XY[1]];
-                    if(placeX+XY[0] != IgnoreX && placeY+XY[1] != IgnoreY)
-                        return canBreathHere(table,color,placeX+XY[0],placeY+XY[1],placeX,placeY);
-                }
-
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                //we go to wall
             }
+            catch(ArrayIndexOutOfBoundsException ex){
 
+            }
+        }
+        //jeśli jednak nie ma tam pustych pól wejdź w sąsiada, ustal counter
+        for(int i = 0; i < 4 ; i++){
+            //Sprawdz czy sasiad jest "dobry" XD
+            if(x[i].getStatus()){
+                //I sprawdz czy moze oddychac
+                checkifavaliable = canBreathHere(table,color,x[i].getPosX(),x[i].getPosY(),placeX,placeY);
+            }
+            //Jesli moze oddychac to koniec
+            if(checkifavaliable){
+                //ustal x[i] zeby w niego wiecej nie wkroczyc
+                x[i].setStatus(false);
+                return checkifavaliable;
+            }
         }
         return false;
     }
@@ -108,22 +161,71 @@ public class Board implements BoardI {
         PLAYER enemy;
         int XY[] = new int[2];
         enemy = color.getEnemyColor();
+        int tempX;
+        int tempY;
+        boolean state = true;
         for(int i = 0; i < 4; i++){
             XY = values(i);
-            if(GameTable[placeX+XY[0]][placeY+XY[1]] == enemy.playerToPlace()){
-                if(canBreathHere(GameTable,enemy,placeX+XY[0],placeY+XY[1],placeX+XY[0],placeY+XY[1])){
-                    for(int j = 0; j < size ; j++){
-                        for(int z = 0; z < size; z++){
-                            if(DeleteGameTable[j][z] == GameTable[j][z])
-                                GameTable[j][z] = PLACE.EMPTY;
-                            DeleteGameTable[j][z] = PLACE.EMPTY;
-
-
-                        }
-                    }
+            tempX = placeX+XY[0];
+            tempY = placeY+XY[1];
+            //Dla wszystkich sąsiadów takich, że sąsiad to wróg
+            if(GameTable[tempX][tempY] == enemy.playerToPlace()){
+                System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
+                //Sprawdź czy sąsiad może oddychać ignorujuj przeskok, do samego siebie
+                //Can breathe here sprawdza czy moge postawić na X, Y a nie czy oddycha
+                //Wyzeruj tablice usuwan
+                deleteTableNuller();
+                //I wejdz w pole ktore trzeba sprawdzic czy oddycha
+                state = canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY);
+                //jeśli nie oddycha wywal to
+                if(state == false){
+                    deleteFromTable();
+                }
+                //if(canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY) == false){
+                //    System.out.println("Gonna kick your ass: X: "+tempX+" Y: "+tempY);
+                //    DeleteGameTable[tempX][tempY] = GameTable[tempX][tempY];
+                //}
+            }
+        }
+        //wynuluj tablice po zakonczeniu pracy
+        deleteTableNuller();
+    }
+    private void deleteFromTable(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (DeleteGameTable[i][j] == GameTable[i][j])
+                    GameTable[i][j] = PLACE.EMPTY;
+                DeleteGameTable[i][j] = PLACE.EMPTY;
+            }
+        }
+    }
+    private void deleteTableNuller(){
+        for(int j = 0; j < size ; j++) {
+            for (int z = 0; z < size; z++) {
+                DeleteGameTable[j][z] = PLACE.EMPTY;
+            }
+        }
+    }
+    private boolean canBreathAtXY(PLACE[][] table,PLAYER color, int placeX,int placeY,int IgnoreX,int IgnoreY){
+        PLACE actual;
+        actual = table[placeX][placeY];
+        int XY[] = new int[2];
+        int tempX,tempY;
+        for(int i = 0; i<4 ; i++) {
+            XY = values(i);
+            tempX = placeX +XY[0];
+            tempY = placeY +XY[1];
+            if(table[tempX][tempY] == PLACE.EMPTY){
+                return true;
+            }
+            if(table[tempX][tempY] == color.playerToPlace()){
+                if(tempX != IgnoreX && tempY != IgnoreY){
+                    return canBreathAtXY(table,color,tempX,tempY,placeX,placeY);
                 }
             }
         }
+        return false;
+
     }
 
     /**

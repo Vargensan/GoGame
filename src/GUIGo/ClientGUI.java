@@ -41,6 +41,7 @@ public class ClientGUI extends JFrame{
     private ButtonListener bonl_ClickListener = new ButtonListener();
     private Board board;
     private PLACE[][] gameboard;
+    private JLabel turn;
     /**
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
@@ -57,7 +58,12 @@ public class ClientGUI extends JFrame{
         jDrawingBoard.startDrawing(gameboard);
     }
 
-
+    public void setTurn(PLAYER player, boolean active){
+        if(board.getPLayerColor().equals(player) && (active == true))
+            turn.setText("Your Turn!");
+        else if(board.getPLayerColor().equals(player) && (active == false) )
+            turn.setText("Turn of Enemy!");
+    }
     /**
      * Method responsiable for creating window
      *
@@ -83,14 +89,20 @@ public class ClientGUI extends JFrame{
         setStartButtons();
         setjOptionPanel();
         setjDrawPanel();
+        setJLabel();
         addjOptionPanelButtons();
         //add components to GUI of User
+        content.add(turn);
         content.add(jOptionPanel);
         content.add(jDrawingBoard);
         content.add(jBoardSelect);
         jClient.setLocationRelativeTo(null);
         jClient.setVisible(true);
 
+    }
+    private void setJLabel(){
+        turn = new JLabel("JLabel");
+        turn.setBounds(120,10,50,50);
     }
 
     private static void setIconImage(JFrame window){

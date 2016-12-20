@@ -310,6 +310,7 @@ public class Board implements BoardI {
     public boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
            System.out.println("KO Situation detected!");
+           ko_detected = true;
            return false;
        }
        return true;

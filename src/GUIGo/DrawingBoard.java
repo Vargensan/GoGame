@@ -121,6 +121,15 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             g2.setColor(new Color(120, 120, 120));
 
         }
+        /*
+         poniższe wywołanie metody w celu odświeżania natychmiastowego obrazka
+        Adnote: tutaj g2 chyba nigdy nie będzie nullem, bo jeżeli
+        image = null, to tworzymy image, dodajemy do niego grafikę i więcej razy nie wchodzimy
+        w image == null, bo nigdzie go nie zerujemy, tak samo nigdy nie zerujemy grafiki
+        ale trzeba to sprawdzić, żeby usunąć update() i wszędzie zamiast niej wywoływać
+        metodę paintImmedietntly()
+         */
+        g2.drawImage(gettempimage(),0,0,null);
         if(allow_to_drawing == 1)
             drawLines(g2,distance);
         if(drawIntersection){
@@ -239,7 +248,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
         }
-
+        //paintImmediately(0,0,getWidth(),getHeight());
         repaint();
     }
 

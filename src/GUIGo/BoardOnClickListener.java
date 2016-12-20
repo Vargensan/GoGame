@@ -22,9 +22,6 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
-    //TEMP
-    boolean color = true;
-    //
 
 BoardOnClickListener(DrawingBoard obj,Board board,Play play)
 {
@@ -43,7 +40,26 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
         if (board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1])) {
             board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+            /*
+            Zakreskowane pola, to te zbite, ale nie odświeżone, cd z nieodpowiednim odświeżaniem planszy
+            zakreskowane -> przecięcie lini "na" kamyku, teraz odświeżają się co "kolejny ruch"
+            tj. jak przeciwnik wykona ruch i zbije nasze, to widzimy kreski, jak my wykonamy ruch to odswieży nam
+            planszę i jest ok, możliwe odświeżenie planszy w trakcie wykonania naszego ruchu, przez przeciągnięcie
+            myszy w celu umieszczenia kamienia. Powód: wyowływana metoda update() przez MouseDragged
+
+            Pomysł poradzenia sobie z problemem: repaint() po stronie klienta od razu po dodaniu kamienia.
+            Metoda repaint() nie może być wywoływana od strony Board - nie ma dostępu
+            Adnote: NIEDZIAŁĄ
+
+            Adnote 2: Dodane do paintComponent wywołanie rysowanie tła -> gdy wywołamy paintImmediently musimy wszystko
+            przerysować, tło też
+
+            Adnote 3: Trzeba to synchronizować ale działa to teraz na tyle poprawnie (patrz pozostałe dodane komentarze)
+            że można się pokusić o poprawnę zformuowanie logiki i odczytanie z niej co nie gra
+             */
+            obj.drawIntersection = true;
             obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
+            obj.update();
            // obj.paintComponent(obj.getGraphics());
             play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
 

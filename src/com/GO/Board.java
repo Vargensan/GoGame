@@ -111,7 +111,7 @@ public class Board implements BoardI {
         for(int i = 0; i < 4; i++){
             XY = values(i);
             if(GameTable[placeX+XY[0]][placeY+XY[1]] == enemy.playerToPlace()){
-                if(!canBreathHere(GameTable,enemy,placeX+XY[0],placeY+XY[1],placeX+XY[0],placeY+XY[1])){
+                if(canBreathHere(GameTable,enemy,placeX+XY[0],placeY+XY[1],placeX+XY[0],placeY+XY[1])){
                     for(int j = 0; j < size ; j++){
                         for(int z = 0; z < size; z++){
                             if(DeleteGameTable[j][z] == GameTable[j][z])

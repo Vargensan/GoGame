@@ -110,7 +110,36 @@ public class Play {
             {
 
             }
+            /*Metoda nam "poprawnie" oblicza obiekty do kasacji
+            Przez poprawnie mam na myśli tak samo dla obu plansz
+            Pytanie teraz dlaczego?
+            Bo nie przekazujemy punktów z tabeli-do-usunięcia clienta 1 do clienta 2, więc musimy je obliczyć
+            to obliczanie jej silnie powiązane z metodąmi canBreatheHere(), która w dużym uproszczeniu jeżeli
+            kamień może oddychać po uduszeniu kamieni przeciwnika, to można go dodać ale trzeba kamienie gracza
+            przeciwnego, więc tworzy nam które kamienie przeciwnika trzeba usunąć
+             */
+            playBoard.canAddHere(player_color.getEnemyColor(),x,y);
+            /*
+            I po wywołaniu, czy też zdecydowaniu że chcemy postawić ten kamień usuwa wszystkie kamienie przeciwnika
+             */
             playBoard.addStone(player_color.getEnemyColor(),x,y);
+            /*
+            Dlaczego nie działa?
+            Najpierw musimy przerysować obrazek - na nowo.
+            Metoda paint Immadiately tego nie robi, ona po prostu rysuje linie i kółka i póżniej nie odświeża
+            obrazka i dalej rysuje linie na kółkach, gdzie tych kółek już nie ma
+            Sposób poradzenia: repaint planszy albo w paint commponent albo wywoływanie metody update
+
+             Update nie działa... może działa i jest lepiej ale nie tak jak powinien
+
+             TODO: Add note 2: trzeba zrobić odświeżanie 2 plansz na raz, metoda poniższa działa prawie poprawnie
+             TODO: gdy w paintComponent dodałem g2.drawimage() od obrazka który funkcjonuje jako dodanie tła
+             TODO: wtedy zasada działania jest taka jak w update tyle że "na stałe"
+
+             TODO: Ad note 3: zamienić wszystkie update() na paintImmedientely() i poprzez skomplikowanie tej metody
+             TODO: nie matrwić się o synchornizacje update() z paintImmedientyly()
+            */
+            //window.getDrawingBoard().update();
             window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
 
 

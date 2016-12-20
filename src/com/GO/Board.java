@@ -16,6 +16,7 @@ public class Board implements BoardI {
     private int[] nextCoordinates;
     //------------------------------
     int[] koSituationXY = new int[2];
+    boolean ko_detected;
     //------------------------------
     public Board(int size,Play play)
     {
@@ -306,7 +307,7 @@ public class Board implements BoardI {
      * @param placeY takes a coordinate Y of specific point
      * @return status of
      */
-    private boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
+    public boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
            System.out.println("KO Situation detected!");
            return false;
@@ -353,8 +354,20 @@ public class Board implements BoardI {
      * null KO situation
      */
     private void nullKO_situation(){
+        ko_detected = false;
         koSituationXY[0] = -1;
         koSituationXY[1] = -1;
+    }
+
+    /**
+     * Getter for point where KO SITUATION OCCURS
+     * @return point where ko situation occurs
+     */
+    public int[] getKO_Points(){
+        return koSituationXY;
+    }
+    public boolean getKO_Status(){
+        return ko_detected;
     }
 
     @Override

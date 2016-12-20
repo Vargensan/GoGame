@@ -28,16 +28,18 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private int allow_to_drawing = 0;
     private static int[] StartPoint = new int[2];
     private int[][][] Table_Intersection;
-    private BufferedImage black,white;
+    private BufferedImage black,white,ko;
     private Board board;
     private Play play;
+    private boolean ko_detected = false;
+    private int[] KO_Points;
     //Temp
     //public boolean color = true;
     //End Temp
     //Package-public
     int distance;
     boolean drawIntersection = false;
-    PLACE[][] gameboard;
+    private PLACE[][] gameboard;
     int[] intersectionPoint;
     int[] relasedPoint;
     DrawMathObject dmo_calculate = new DrawMathObject();
@@ -64,6 +66,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
         }else
             g2.drawImage(white,Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],null);
+    }
+
+    private void allertKO(Graphics2D g2){
+        int from[] = {Table_Intersection[KO_Points[0]][KO_Points[1]][0], Table_Intersection[KO_Points[0]][KO_Points[1]][1]};
+        //int to[] = {Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][0],Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][1]};
+        g2.drawImage(ko,from[0],from[1],null);
     }
 
     @Override
@@ -139,6 +147,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
         if(allow_to_drawing == 1)
             fillBoard(g2,sizeGameBoard,gameboard);
+        if(ko_detected)
+            allertKO(g2);
         g.drawImage(image, 0, 0, null);
     }
 
@@ -148,7 +158,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * Method that initialize custom MouseListener
      * set it's properties
      */
-    public void initializeMouseListener(){
+    private void initializeMouseListener(){
         mouseListener = new BoardOnClickListener(this,board,play);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
@@ -176,7 +186,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * Method which sets start values of drawing such as distance, start point of drawing
      * table of intersections of lines ect.
      */
-    public void setStartValues(){
+    private void setStartValues(){
         sizeGameBoard = gameboard.length;
         distance = dmo_calculate.calculateDistance(this.getHeight(),sizeGameBoard);
         StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
@@ -184,10 +194,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
         intersectionPoint = new int[2];
         setBlackandWhite(this);
-        //gameboard[0][0] = PLACE.BLACK;
-        //gameboard[0][3] = PLACE.WHITE;
-        //gameboard[1][2] = PLACE.BLACK;
-        //gameboard[3][3] = PLACE.WHITE;
         allow_to_drawing = 1;
         initializeMouseListener();
         update();
@@ -210,6 +216,9 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.jpg");
             bufferedImage = ImageIO.read(imageInputStream);
             controlerImage = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
+            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
+            bufferedImage = ImageIO.read(imageInputStream);
+            ko = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
         } catch (IOException exception){
             exception.printStackTrace();
         }
@@ -250,6 +259,22 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
         //paintImmediately(0,0,getWidth(),getHeight());
         repaint();
+    }
+
+    /**
+     * Method that initialize KO Situation
+     * @param ko_detected boolean which says if ko situation was detected
+     */
+    public void set_KO_Situation(boolean ko_detected){
+        this.ko_detected = ko_detected;
+    }
+
+    /**
+     * Setter for ko situation
+     * @param KO_Points takes a point where KO situation was detected
+     */
+    public void set_KO_Points(int[] KO_Points){
+        this.KO_Points = KO_Points;
     }
 
 }

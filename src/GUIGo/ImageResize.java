@@ -20,7 +20,7 @@ public class ImageResize {
      * @return rescaled image
      */
 
-    public static BufferedImage scale(BufferedImage image, int areaWidth, int areaHeight){
+    public BufferedImage scale(BufferedImage image, int areaWidth, int areaHeight){
         double scaleX = (double) areaWidth/image.getWidth();
         double scaleY = (double) areaHeight/image.getHeight();
         double scale  = Math.min(scaleX,scaleY);

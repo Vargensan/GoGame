@@ -141,8 +141,13 @@ public class Play {
             */
             //window.getDrawingBoard().update();
             window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
-            //tutaj chcę żeby wyświetlało na JFrame, czyja tura
-            //coś nie działa xd
+            //tutaj sytuacja KO
+            if(playBoard.getKO_Status()) {
+                window.getDrawingBoard().set_KO_Points(playBoard.getKO_Points());
+                window.getDrawingBoard().set_KO_Situation(playBoard.ko_detected);
+                window.showWarningKO_Situation();
+            }
+            //tutaj tura
             window.setTurn(player_color.getEnemyColor(),true);
 
 

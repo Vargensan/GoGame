@@ -53,11 +53,27 @@ public class ClientGUI extends JFrame{
         createWindow();
         startDrawing();
     }
+    /**
+     * Method that shows warning if KO Situation was detected in game
+     */
+    public void showWarningKO_Situation(){
+        JOptionPane.showMessageDialog(content,"Situation KO has been detected," +
+                " please make diffrent move!","KO Detected!",JOptionPane.WARNING_MESSAGE);
+    }
+
+    /**
+     * Method responsiable for initialize jDrawing Board
+     */
 
     public void startDrawing() {
         jDrawingBoard.startDrawing(gameboard);
     }
 
+    /**
+     * Method that modify JLabel, to inform users whom turn it is
+     * @param player takes a color of player
+     * @param active modify message YourTurn/EnemyTurn
+     */
     public void setTurn(PLAYER player, boolean active){
         if(board.getPLayerColor().equals(player) && (active == true))
             turn.setText("Your Turn!");

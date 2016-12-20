@@ -6,8 +6,6 @@
 package com.GO;
 
 
-import GUIGo.Neighboor;
-
 public class Board implements BoardI {
 
     private int size;
@@ -59,10 +57,8 @@ public class Board implements BoardI {
         int XY[] = new int[2];
         int tempX;
         int tempY;
-        Neighboor x[] = new Neighboor[4];
-        int counter = 0;
         boolean checkifavaliable = false;
-        DeleteGameTable[placeX][placeY] = GameTable[placeX][placeY];
+        DeleteGameTable[placeX][placeY] = table[placeX][placeY];
         /*
         Edit: Let's assume we have point placeX=11 placeY=11
         Check around points should be: as bellow
@@ -99,19 +95,7 @@ public class Board implements BoardI {
             tempX = placeX+XY[0];
             tempY = placeY+XY[1];
             try{
-                actuall = table[tempX][tempY];
-                x[i] = new Neighboor();
-                if(actuall.equals(color.playerToPlace())){
-                    if((IgnoreX != tempX) || (IgnoreY != tempY)){
-                        counter++;
-                        x[i].setPosition(actuall);
-                        x[i].setPosX(tempX);
-                        x[i].setPosY(tempY);
-                        x[i].setStatus(true);
-                    }
-                } else{
-                    x[i].setStatus(false);
-                }
+               actuall = table[tempX][tempY];
                 if(actuall.equals(PLACE.EMPTY)){
                     return true;
                 }
@@ -120,18 +104,18 @@ public class Board implements BoardI {
 
             }
         }
-        //jeśli jednak nie ma tam pustych pól wejdź w sąsiada, ustal counter
         for(int i = 0; i < 4 ; i++){
-            //Sprawdz czy sasiad jest "dobry" XD
-            if(x[i].getStatus()){
-                //I sprawdz czy moze oddychac
-                checkifavaliable = canBreathHere(table,color,x[i].getPosX(),x[i].getPosY(),placeX,placeY);
-            }
-            //Jesli moze oddychac to koniec
-            if(checkifavaliable){
-                //ustal x[i] zeby w niego wiecej nie wkroczyc
-                x[i].setStatus(false);
-                return checkifavaliable;
+            XY = values(i);
+            tempX = placeX+XY[0];
+            tempY = placeY+XY[1];
+            actuall = table[tempX][tempY];
+            if(actuall.equals(color.playerToPlace())){
+                if(table[tempX][tempY] != DeleteGameTable[tempX][tempY]){
+                    checkifavaliable = canBreathHere(table,color,tempX,tempY,placeX,placeY);
+                }
+                if(checkifavaliable){
+                    return true;
+                }
             }
         }
         return false;

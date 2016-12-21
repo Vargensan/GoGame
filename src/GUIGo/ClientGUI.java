@@ -42,6 +42,7 @@ public class ClientGUI extends JFrame{
     private Board board;
     private PLACE[][] gameboard;
     private JLabel turn;
+    private boolean ismine = true;
     /**
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
@@ -71,14 +72,21 @@ public class ClientGUI extends JFrame{
 
     /**
      * Method that modify JLabel, to inform users whom turn it is
-     * @param player takes a color of player
-     * @param active modify message YourTurn/EnemyTurn
+     //* @param player takes a color of player
      */
-    public void setTurn(PLAYER player, boolean active){
-        if(board.getPLayerColor().equals(player) && (active == true))
+    /*
+    play daje do przeciwnika, czyli wywołujemy zawsze u przeciwnika, nie zmieniamy u siebie
+
+     */
+    public void setTurn(PLAYER player){
+        if(play.getPlayBoard().getPLayerColor() == player){
             turn.setText("Your Turn!");
-        else if(board.getPLayerColor().equals(player) && (active == false) )
+            //ismine = false;
+        }
+        else{
             turn.setText("Turn of Enemy!");
+            //ismine = true;
+        }
     }
     /**
      * Method responsiable for creating window
@@ -118,7 +126,10 @@ public class ClientGUI extends JFrame{
     }
     private void setJLabel(){
         turn = new JLabel("JLabel");
-        turn.setBounds(120,10,50,50);
+        turn.setBounds(120,10,150,50);
+        turn.setBackground(new Color(249, 224, 75));
+        turn.setForeground(Color.BLACK);
+        turn.setFont(new Font("Times New Roman", Font.PLAIN, 12));
     }
 
     private static void setIconImage(JFrame window){

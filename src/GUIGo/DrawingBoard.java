@@ -4,10 +4,7 @@ import com.GO.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +40,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     int[] intersectionPoint;
     int[] relasedPoint;
     DrawMathObject dmo_calculate = new DrawMathObject();
-
+    String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
+    String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
     DrawingBoard(Board board,Play play){
         this.play=play;
         this.board=board;
@@ -73,6 +71,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         //int to[] = {Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][0],Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][1]};
         g2.drawImage(ko,from[0],from[1],null);
     }
+    private void drawLetters(){}
 
     @Override
     public int getXofPoint() {
@@ -99,7 +98,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
         for(int i=0; i < sizeGameBoard; i++){
             g2.drawLine(X[i],Y[sizeGameBoard-1],X[i],Y[0]);
+            g2.drawString(abc[i],X[i],Y[sizeGameBoard-1]+distance);
+            g2.drawString(abc[i],X[i],Y[0]-criclefilled/2);
             g2.drawLine(X[sizeGameBoard-1],Y[i],X[0],Y[i]);
+            g2.drawString(numbers[i],X[sizeGameBoard-1]+criclefilled/2,Y[i]);
+            g2.drawString(numbers[i],X[0]-distance,Y[i]);
         }
     }
 
@@ -117,7 +120,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                     image = gettempimage();
                 }
                 else{
-                    InputStream imageInputStream = this.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.jpg");
+                    InputStream imageInputStream = this.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.png");
                     BufferedImage bufferedImage = ImageIO.read(imageInputStream);
                     image = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
                 }
@@ -125,6 +128,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 e.printStackTrace();
             }
             g2 = (Graphics2D) image.getGraphics();
+            g2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(120, 120, 120));
 
@@ -180,6 +184,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     public void startDrawing(PLACE GameBoard[][]){
         this.gameboard = GameBoard;
         setStartValues();
+        repaint();
+        //paintImmediately(this.get,this.getWidth(),this.getHeight());
     }
 
     /**
@@ -196,7 +202,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         setBlackandWhite(this);
         allow_to_drawing = 1;
         initializeMouseListener();
-        update();
+        //paintImmediately(0,0,this.getWidth(),this.getHeight());
+        //update();
     }
 
     /**
@@ -213,7 +220,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/white_button2.png");
             bufferedImage = ImageIO.read(imageInputStream);
             white = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.jpg");
+            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.png");
             bufferedImage = ImageIO.read(imageInputStream);
             controlerImage = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
@@ -246,7 +253,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
     }
 
-    @Override
+   /* @Override
     public void update() {
         if(g2 != null) {
             g2.setColor(new Color(160, 160, 160));
@@ -259,7 +266,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
         //paintImmediately(0,0,getWidth(),getHeight());
         repaint();
-    }
+    }*/
 
     /**
      * Method that initialize KO Situation

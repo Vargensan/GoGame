@@ -20,7 +20,7 @@ public class DrawMathObject implements GUIMathClass{
     @Override
     public int calculateDistance(int height, int boardSize) {
 
-        return (int) Math.round((double)height/(double)boardSize);
+        return (((int) Math.round((double)height/(double)boardSize)) * 11/12);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
-
+    boolean puttingStone;
 BoardOnClickListener(DrawingBoard obj,Board board,Play play)
 {
     this.play=play;
@@ -38,8 +38,10 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
         mouse_coordinates[0] = e.getX();
         mouse_coordinates[1] = e.getY();
         obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-        if (board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1])) {
+        puttingStone = board.canAddHere(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]);
+        if (puttingStone) {
             board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+            play.informKO();
             /*
             Zakreskowane pola, to te zbite, ale nie odświeżone, cd z nieodpowiednim odświeżaniem planszy
             zakreskowane -> przecięcie lini "na" kamyku, teraz odświeżają się co "kolejny ruch"
@@ -59,10 +61,17 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
              */
             obj.drawIntersection = true;
             obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
-            obj.update();
+            //obj.update();
            // obj.paintComponent(obj.getGraphics());
             play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
+            //play.informTurnChange();
 
+        }
+        else if(play.getPlayBoard().getKO_Status()){
+            play.informKO();
+            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
+        }else{
+            System.out.println("It is not your turn!");
         }
 
         //End of Temp Code
@@ -109,7 +118,8 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
             mouse_coordinates[0] = e.getX();
             mouse_coordinates[1] = e.getY();
             obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-            obj.update();
+            //obj.update();
+            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
     }
 
 }

@@ -233,6 +233,9 @@ public class Board implements BoardI {
     @Override
     public boolean canAddHere(PLAYER color, int placeX, int placeY) {
         //Can only add on empty place
+        if(!isItNotA_KO(color,placeX,placeY)){
+            return false;
+        }
         if(!checkifempty(GameTable,color,placeX,placeY)){
             return false;
         }
@@ -316,6 +319,12 @@ public class Board implements BoardI {
        return true;
     }
 
+    private void nullKO_situation(){
+        ko_detected = false;
+        koSituationXY[0] = -1;
+        koSituationXY[1] = -1;
+    }
+
     /**
      * Method that in dependence of value from 1 to 4 returns borderer of
      * specific pawn
@@ -350,15 +359,6 @@ public class Board implements BoardI {
      and after diffrent move of that player we need to null integer ko_situationXY
      (by saying null, assume to set it to -1) so it does not attach any field on game board
      */
-
-    /**
-     * null KO situation
-     */
-    private void nullKO_situation(){
-        ko_detected = false;
-        koSituationXY[0] = -1;
-        koSituationXY[1] = -1;
-    }
 
     /**
      * Getter for point where KO SITUATION OCCURS

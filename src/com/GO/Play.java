@@ -80,7 +80,7 @@ public class Play {
 
         }
         playBoard.addStone(player_color.getEnemyColor(),x,y);
-        window.getDrawingBoard().update();
+        window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
 
     }
 
@@ -141,18 +141,21 @@ public class Play {
             */
             //window.getDrawingBoard().update();
             window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
-            //tutaj sytuacja KO
-            if(playBoard.getKO_Status()) {
-                window.getDrawingBoard().set_KO_Points(playBoard.getKO_Points());
-                window.getDrawingBoard().set_KO_Situation(playBoard.ko_detected);
-                window.showWarningKO_Situation();
-            }
-            //tutaj tura
-            window.setTurn(player_color.getEnemyColor(),true);
-
-
     }
 
+    public void informTurnChange(){
+
+    }
+    /**
+     * If KO situation is detected it prints it to the client
+     */
+    public void informKO(){
+        window.getDrawingBoard().set_KO_Points(playBoard.getKO_Points());
+        window.getDrawingBoard().set_KO_Situation(playBoard.getKO_Status());
+        if(playBoard.getKO_Status()){
+            window.showWarningKO_Situation();
+        }
+    }
     /**
      * Method that is responsiable for getting play board
      * @return play board
@@ -166,10 +169,7 @@ public class Play {
      * Getter for player color
      * @return color of player
      */
-    public PLAYER get_player_color()
-    {
-        return player_color;
-    }
+    public PLAYER get_player_color() {return player_color;}
 
 
 

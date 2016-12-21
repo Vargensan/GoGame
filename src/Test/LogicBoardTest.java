@@ -21,21 +21,46 @@ public class LogicBoardTest{
     Play play;
     PLACE[][] GameTable;
     @Test
-    public void test_ko_situation(){
+    public void test_canaddaftersimmeric_situation(){
+        setstone();
         boolean canadd;
-        GameTable[4][3] = player.playerToPlace();
-        GameTable[4][5] = player.playerToPlace();
-        GameTable[3][4] = player.playerToPlace();
-        GameTable[5][4] = player.playerToPlace();
+        likeKO();
 
-        GameTable[5][3] = player2.playerToPlace();
-        GameTable[5][5] = player2.playerToPlace();
-        GameTable[6][4] = player2.playerToPlace();
-        canadd = gameboard.canAddHere(player2,4,4);
-        if(canadd){
-            GameTable[4][4] = player2.playerToPlace();
+        canadd = gameboard.canAddHere(player.getEnemyColor(),4,4);
+        assertTrue(canadd);
+    }
+    @Test
+    public void test_ko_situation(){
+        setstone();
+        boolean canadd;
+        likeKO();
+
+        gameboard.canAddHere(player.getEnemyColor(),4,4);
+        gameboard.addStone(player.getEnemyColor(),4,4);
+        canadd = gameboard.canAddHere(player,5,4);
+        assertFalse(canadd);
+    }
+    @Test
+    public void test_getterKO(){
+        test_ko_situation();
+        assertTrue(gameboard.getKO_Status());
+    }
+    @Test
+    public void test_null_KO_afterVaildMove(){
+        setstone();
+        boolean canadd;
+        likeKO();
+        gameboard.canAddHere(player.getEnemyColor(),4,4);
+        gameboard.addStone(player.getEnemyColor(),4,4);
+        canadd = gameboard.canAddHere(player,5,4);
+        if(canadd == false) {
+            gameboard.canAddHere(player.getEnemyColor(), 4, 8);
+            gameboard.addStone(player.getEnemyColor(), 4, 8);
         }
-        canadd = gameboard.canAddHere(player,4,4);
+        canadd = gameboard.canAddHere(player,5,4);
+        if(canadd){
+            canadd = gameboard.getKO_Status();
+        }
         assertFalse(canadd);
     }
 
@@ -119,6 +144,16 @@ public class LogicBoardTest{
         player2 = PLAYER.WHITE;
         gameboard = new Board(19,play);
         GameTable = gameboard.getGameTable();
+    }
+    public void likeKO(){
+        gameboard.addStone(player,4,3);
+        gameboard.addStone(player,4,5);
+        gameboard.addStone(player,3,4);
+        gameboard.addStone(player,5,4);
+
+        gameboard.addStone(player.getEnemyColor(),5,5);
+        gameboard.addStone(player.getEnemyColor(),5,3);
+        gameboard.addStone(player.getEnemyColor(),6,4);
     }
 
 

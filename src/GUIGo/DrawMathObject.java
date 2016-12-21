@@ -5,6 +5,9 @@ package GUIGo;
  */
 public class DrawMathObject implements GUIMathClass{
     protected static final double SCALE = 4.0/5.0;
+    int height;
+    int startpointX;
+    int startpointY;
 
     @Override
     public int calculateSizeOfCircle(int distance) {
@@ -37,21 +40,30 @@ public class DrawMathObject implements GUIMathClass{
 
     @Override
     public int[] calculateIntersection(int[] coordinates, int size, int[] startPoint, int distance) {
-        if(coordinates[0]<=0 )
-            coordinates[0] = 0;
-        if(coordinates[1]<=0)
-            coordinates[1] = 0;
+        boolean nope=false;
+        if(coordinates[0]<=startPoint[0] - distance/2 || coordinates[0] >= height - startPoint[0]+distance/2)
+            nope = true;
+        if(coordinates[1]<=startPoint[1] - distance/2 || coordinates[1] >= height - startPoint[1]+distance/2)
+            nope = true;
         int[] tempCor = new int[2];
-        tempCor[0] = (int) Math.round((((double) coordinates[0]- (double) startPoint[0])/((double) distance)));
-        tempCor[1] = (int) Math.round((((double) coordinates[1]- (double)startPoint[1])/((double) distance)));
+        if(nope == false){
+            tempCor[0] = (int) Math.round((((double) coordinates[0]- (double) startPoint[0])/((double) distance)));
+            tempCor[1] = (int) Math.round((((double) coordinates[1]- (double) startPoint[1])/((double) distance)));
+        } else {
+            tempCor[0] = 0;
+            tempCor[1] = 0;
+        }
         return tempCor;
     }
 
     @Override
     public int[] calculateStartPoint(int height, int size, int distance){
+        this.height = height;
         int[] X = new int[2];
         X[0] = (int) (height - ((size-1) * distance))/2;
         X[1] = (int) (height - ((size-1) * distance))/2;
+        this.startpointX = X[0];
+        this.startpointY = X[1];
         return X;
     }
 

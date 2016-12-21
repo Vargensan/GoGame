@@ -119,7 +119,7 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
             mouse_coordinates[1] = e.getY();
             obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
             //obj.update();
-            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
+            obj.repaint();
     }
 
 }

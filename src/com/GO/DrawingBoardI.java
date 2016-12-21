@@ -36,7 +36,7 @@ public interface DrawingBoardI {
      *
      */
 
-    //public void update();
+    public void update();
 
     /**
      *

@@ -253,6 +253,10 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
     }
 
+    @Override
+    public void update(){
+        repaint();
+    }
    /* @Override
     public void update() {
         if(g2 != null) {

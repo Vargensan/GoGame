@@ -12,7 +12,8 @@ public class Board implements BoardI {
     public Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
-    private PLACE IgnoreTable[][];
+    private PLACE BlackTerritoryTable[][];
+    private PLACE WhiteTerritoryTable[][];
     private int[] nextCoordinates;
     //------------------------------
     int[] koSituationXY = new int[2];
@@ -24,7 +25,8 @@ public class Board implements BoardI {
         this.play=play;
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
-        IgnoreTable = new PLACE[size][size];
+        BlackTerritoryTable = new PLACE[size][size];
+        WhiteTerritoryTable = new PLACE[size][size];
         initialize();
         nextCoordinates=new int[4];
     }
@@ -59,6 +61,9 @@ public class Board implements BoardI {
         int tempX;
         int tempY;
         boolean checkifavaliable = false;
+        if(!lessandhighbool(placeX,placeY)){
+            return false;
+        }
         DeleteGameTable[placeX][placeY] = table[placeX][placeY];
         /*
         Edit: Let's assume we have point placeX=11 placeY=11
@@ -95,27 +100,31 @@ public class Board implements BoardI {
             XY = values(i);
             tempX = placeX+XY[0];
             tempY = placeY+XY[1];
-            try{
-               actuall = table[tempX][tempY];
-                if(actuall.equals(PLACE.EMPTY)){
-                    return true;
+            if(lessandhighbool(tempX,tempY)){
+                try{
+                    actuall = table[tempX][tempY];
+                    if(actuall.equals(PLACE.EMPTY)){
+                        return true;
+                    }
                 }
-            }
-            catch(ArrayIndexOutOfBoundsException ex){
+                catch(ArrayIndexOutOfBoundsException ex){
 
+                }
             }
         }
         for(int i = 0; i < 4 ; i++){
             XY = values(i);
             tempX = placeX+XY[0];
             tempY = placeY+XY[1];
-            actuall = table[tempX][tempY];
-            if(actuall.equals(color.playerToPlace())){
-                if(table[tempX][tempY] != DeleteGameTable[tempX][tempY]){
-                    checkifavaliable = canBreathHere(table,color,tempX,tempY,placeX,placeY);
-                }
-                if(checkifavaliable){
-                    return true;
+            if(lessandhighbool(tempX,tempY)){
+                actuall = table[tempX][tempY];
+                if(actuall.equals(color.playerToPlace())) {
+                    if (table[tempX][tempY] != DeleteGameTable[tempX][tempY]) {
+                        checkifavaliable = canBreathHere(table, color, tempX, tempY, placeX, placeY);
+                    }
+                    if (checkifavaliable) {
+                        return true;
+                    }
                 }
             }
         }
@@ -154,22 +163,24 @@ public class Board implements BoardI {
             tempX = placeX+XY[0];
             tempY = placeY+XY[1];
             //Dla wszystkich sąsiadów takich, że sąsiad to wróg
-            if(GameTable[tempX][tempY] == enemy.playerToPlace()){
-                System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
-                //Sprawdź czy sąsiad może oddychać ignorujuj przeskok, do samego siebie
-                //Can breathe here sprawdza czy moge postawić na X, Y a nie czy oddycha
-                //Wyzeruj tablice usuwan
-                deleteTableNuller();
-                //I wejdz w pole ktore trzeba sprawdzic czy oddycha
-                state = canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY);
-                //jeśli nie oddycha wywal to
-                if(state == false){
-                    deleteFromTable();
+            if(lessandhighbool(tempX,tempY)){
+                if(GameTable[tempX][tempY] == enemy.playerToPlace()){
+                    System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
+                    //Sprawdź czy sąsiad może oddychać ignorujuj przeskok, do samego siebie
+                    //Can breathe here sprawdza czy moge postawić na X, Y a nie czy oddycha
+                    //Wyzeruj tablice usuwan
+                    deleteTableNuller();
+                    //I wejdz w pole ktore trzeba sprawdzic czy oddycha
+                    state = canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY);
+                    //jeśli nie oddycha wywal to
+                    if(state == false){
+                        deleteFromTable();
+                    }
+                    //if(canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY) == false){
+                    //    System.out.println("Gonna kick your ass: X: "+tempX+" Y: "+tempY);
+                    //    DeleteGameTable[tempX][tempY] = GameTable[tempX][tempY];
+                    //}
                 }
-                //if(canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY) == false){
-                //    System.out.println("Gonna kick your ass: X: "+tempX+" Y: "+tempY);
-                //    DeleteGameTable[tempX][tempY] = GameTable[tempX][tempY];
-                //}
             }
         }
         //wynuluj tablice po zakonczeniu pracy
@@ -233,6 +244,9 @@ public class Board implements BoardI {
     @Override
     public boolean canAddHere(PLAYER color, int placeX, int placeY) {
         //Can only add on empty place
+        if(!lessandhighbool(placeX,placeY)){
+            return false;
+        }
         if(!isItNotA_KO(color,placeX,placeY)){
             return false;
         }
@@ -387,6 +401,58 @@ public class Board implements BoardI {
         return 0;
     }
 
+    /*
+    Algorytm:
+    1.Gracz wybiera punkt, i przekazuje siebie(jako kolor)
+    Sprawdzamy wszystkich sąsiadów danego punktu, jeżeli
+    jest to gracz przeciwny lub pole puste to przypisujemy dane pole
+    do tabeli tymczasowej i dalej wywołujemy rekurencje aż do natrafienia na
+    kolor gracza, pole to dodajemy do tabeli tymczasowej o nazwie obwód, gdy cała rekurncja się skończy
+    sprawdzamy czy pola z tabeli obwód tworzą go rzeczywiście tj.
+
+    a) wybieramy punkt o najmniejszym X i Y (taki istnieje tylko jeden) i sprawdzamy czy ma sąsiadów
+    sąsiadów. Dodajemy to wszystko do tabeli tymczasowej żeby ponownie nie wejść do nich.
+
+    b) Waruenk jeżeli dowolne pole z sąsiadem różni się dokładnie o jedną wartość X/Y oraz
+     ma co najmniej dwóch sąsiadów to mamy obwód: Złożoność: O(n), dokładniej 4n
+        1.b) Wybieramy po kolei każde pole i sprawdzamy, z czym że sąsiad będzie oznaczało również pole po
+        przekątnej
+
+        (a,b)       (a+1,b)         (a+2,b)
+        (a,b-1)     (/a+1/,/b-1/)   (a+2,b-1)
+        (a,b-2)     (a+1,b-2)       (a+2,b-2)
+
+        2.b) Druga implementacja:
+            2.b) 1. Jeżeli mamy dany punkt najmniejszy, to wśród sąsiadów wybieramy najbliżej jemu pasujący
+            (o najmniejszych wartościach X,Y) i idziemy do niego -> powtarzamy rekurencje
+            Gdyby powyższa metoda była nie prawdziwa to nie mielibyśmy do czynienia z obwodem, a ten zakładamy.
+            Czyli gdy coś pójdzie nie tak to wiemy że to nie jest obwód.
+            Adnote: Osobny przypadek dla obwodów, tworzonych również z osiami X oraz Y planszy gry, wtedy trzeba
+            założyć że istnieje linia która łączy dowolne dwa kamienie po tej osi.
+                 2. Priorytet kładziemy na przejściu do współrzędnej która jest mniejsza w punkcie najmniejszym
+                 3. Jeżeli współrzędne są sobie równe w punkcie o najmniejszych współrzędnych, dowolność wyboru
+                 Złożoność: W najgorszym przypadku n/2 a dokładniej wykonamy mniej więcej
+                 |x[1] - b[1]| + |x[2] - b[2]| przejść, gdzie "x" - to współrzędne punktu o najmniejszych wartościach
+                 a gdzie "b" to współrzędne dowolnego punktu, wartość zmniejszona jeżeli przeskakujemy po przekątnej.
+
+     */
+    @Override
+    public void giveToMyTerritory(PLAYER player, int placeX, int placeY) {
+        boolean isEmpty = GameTable[placeX][placeY] == PLACE.EMPTY;
+        if(isEmpty){
+            if(player == PLAYER.BLACK){
+                //if(isInAreaOfControl())
+                BlackTerritoryTable[placeX][placeY] = GameTable[placeX][placeY];
+            }
+            else {
+                WhiteTerritoryTable[placeX][placeY] = GameTable[placeX][placeY];
+            }
+        }
+    }
+    public boolean showTerritory(){
+        return true;
+    }
+
     @Override
     public PLACE[][] getGameTable() {
         return GameTable;
@@ -399,5 +465,9 @@ public class Board implements BoardI {
     public PLAYER getPLayerColor()
     {
         return play.get_player_color();
+    }
+
+    private boolean lessandhighbool(int tempX, int tempY){
+        return ((tempX>=0 && tempX <=(size-1)) && (tempY >=0 && tempY <=(size-1)));
     }
 }

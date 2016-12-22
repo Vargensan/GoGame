@@ -1,5 +1,7 @@
 package GUIGo;
 
+import com.GO.Play;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,13 +11,18 @@ import java.awt.event.ActionListener;
 public class ButtonListener implements ActionListener{
 
     private String butt;
+    private Play play;
+    ButtonListener(Play play)
+    {
+        this.play=play;
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         butt=e.getActionCommand();
        switch(butt)
        {
            case "Pass":
-
+               play.passGame();
              break;
            case "Territory":
             break;

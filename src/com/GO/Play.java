@@ -50,7 +50,7 @@ public class Play {
             System.out.println("Problem z polaczeniem");
             exit(-1);
          }
-         if(color.substring(0,1).equals("b"))
+         if(color.equals("b"))
         {
             player_color=PLAYER.BLACK;
 

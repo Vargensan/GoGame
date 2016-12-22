@@ -38,7 +38,7 @@ public class ClientGUI extends JFrame{
     private Play play;
 
     private JComboBox<String> jBoardSelect;
-    private ButtonListener bonl_ClickListener = new ButtonListener();
+    private ButtonListener bonl_ClickListener;
     private Board board;
     private PLACE[][] gameboard;
     private JLabel turn;
@@ -51,6 +51,7 @@ public class ClientGUI extends JFrame{
     public ClientGUI(Board board,Play play) {
         this.play=play;
         this.board=board;
+        bonl_ClickListener = new ButtonListener(play);
         gameboard=board.getGameTable();
         createWindow();
         startDrawing();

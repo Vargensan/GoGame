@@ -133,7 +133,7 @@ public class ClientGUI extends JFrame{
 
     }
     private void setJLabel(){
-        turn = new JLabel("JLabel");
+        turn = new JLabel("Waiting for enemy");
         turn.setBounds(120,10,150,50);
         turn.setBackground(new Color(249, 224, 75));
         turn.setForeground(Color.BLACK);

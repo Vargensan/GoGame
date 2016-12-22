@@ -24,13 +24,17 @@ public class Play {
 
     Play()
     {
-
+        String color="";
+        String turn ="";
+        boolean active=false;
 
          clientSocket=new Client();
          clientSocket.listenSocket();
-         String color="";
-         String turn ="";
-         boolean active=false;
+
+        playBoard=new Board(19,this);
+
+        window=new ClientGUI(playBoard,this);
+        this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
 
          try {
               color=clientSocket.in.readLine();
@@ -57,12 +61,9 @@ public class Play {
 
         }
         clientSocket.out.println("ok");
-        playBoard=new Board(19,this);
-
-        window=new ClientGUI(playBoard,this);
-        this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
         window.getDrawingBoard().setterMouseListener(active);
         window.setTurn(active);
+
          if(player_color==PLAYER.WHITE)
          {
              recivefromOther();
@@ -70,31 +71,7 @@ public class Play {
 
 
     }
-    public void startBlackPlayer()
-    {
-        int x=0,y=0;
 
-
-        try {
-            if(clientSocket.in.readLine().substring(0,1).equals("p"))
-            {
-                x=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                y=Integer.parseInt(clientSocket.in.readLine().substring(1));
-            }
-
-        }
-        catch(NumberFormatException ex)
-        {
-
-        }
-        catch(IOException ex)
-        {
-
-        }
-        playBoard.addStone(player_color.getEnemyColor(),x,y);
-        window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
-
-    }
 
     public void changeplayer(String abc){
         clientSocket.out.println(abc);

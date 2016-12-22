@@ -42,6 +42,7 @@ public class ClientGUI extends JFrame{
     private Board board;
     private PLACE[][] gameboard;
     private JLabel turn;
+    private JLabel color_of_player;
     private boolean ismine = true;
     private boolean onetime = true;
     /**
@@ -87,10 +88,10 @@ public class ClientGUI extends JFrame{
      */
     public void setTurn(boolean active){
         if(active == true){
-            turn.setText("Your Turn!");
+            turn.setText("Your Turn! PLAYER: "+play.get_player_color());
         }
         else if(active == false){
-            turn.setText("Turn of Enemy!");
+            turn.setText("Turn of Enemy! PLAYER: "+play.get_player_color());
         }
         if(!onetime){
             turn.paintImmediately(turn.getVisibleRect());
@@ -135,7 +136,7 @@ public class ClientGUI extends JFrame{
     }
     private void setJLabel(){
         turn = new JLabel("Waiting for enemy");
-        turn.setBounds(120,10,150,50);
+        turn.setBounds(120,10,250,50);
         turn.setBackground(new Color(249, 224, 75));
         turn.setForeground(Color.BLACK);
         turn.setFont(new Font("Times New Roman", Font.PLAIN, 12));

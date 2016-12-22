@@ -166,7 +166,7 @@ public class Board implements BoardI {
             if(lessandhighbool(tempX,tempY)){
                 if(GameTable[tempX][tempY] == enemy.playerToPlace()){
                     System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
-                    //Sprawdź czy sąsiad może oddychać ignorujuj przeskok, do samego siebie
+                    //Sprawdź czy sąsiad może oddychać ignoruj przeskok, do samego siebie
                     //Can breathe here sprawdza czy moge postawić na X, Y a nie czy oddycha
                     //Wyzeruj tablice usuwan
                     deleteTableNuller();
@@ -202,27 +202,6 @@ public class Board implements BoardI {
             }
         }
     }
-    private boolean canBreathAtXY(PLACE[][] table,PLAYER color, int placeX,int placeY,int IgnoreX,int IgnoreY){
-        PLACE actual;
-        actual = table[placeX][placeY];
-        int XY[] = new int[2];
-        int tempX,tempY;
-        for(int i = 0; i<4 ; i++) {
-            XY = values(i);
-            tempX = placeX +XY[0];
-            tempY = placeY +XY[1];
-            if(table[tempX][tempY] == PLACE.EMPTY){
-                return true;
-            }
-            if(table[tempX][tempY] == color.playerToPlace()){
-                if(tempX != IgnoreX && tempY != IgnoreY){
-                    return canBreathAtXY(table,color,tempX,tempY,placeX,placeY);
-                }
-            }
-        }
-        return false;
-
-    }
 
     /**
      * Method that checks if position on X,Y is empty if yes, then it allows to
@@ -247,20 +226,23 @@ public class Board implements BoardI {
         if(!lessandhighbool(placeX,placeY)){
             return false;
         }
-        if(!isItNotA_KO(color,placeX,placeY)){
-            return false;
-        }
         if(!checkifempty(GameTable,color,placeX,placeY)){
             return false;
         }
-       if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
+        if(!isItNotA_KO(color,placeX,placeY)){
+            return false;
+        }
+        if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
            nullKO_situation();
+           System.out.println("\nI can breathe at here <3\n");
            return true;
-       }
+        }
        //Check sicmering
-       if(canBreatheAfterSicmering(color, placeX, placeY))
+        if(canBreatheAfterSicmering(color, placeX, placeY)) {
+            System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
-       return false;
+        }
+        return false;
     }
 
     /**
@@ -436,7 +418,7 @@ public class Board implements BoardI {
                  a gdzie "b" to współrzędne dowolnego punktu, wartość zmniejszona jeżeli przeskakujemy po przekątnej.
 
      */
-    @Override
+    //@Override
     public void giveToMyTerritory(PLAYER player, int placeX, int placeY) {
         boolean isEmpty = GameTable[placeX][placeY] == PLACE.EMPTY;
         if(isEmpty){
@@ -467,6 +449,13 @@ public class Board implements BoardI {
         return play.get_player_color();
     }
 
+    /**
+     * Method responsiable for checking if putted stone is on right position
+     * and doesnt not overflow
+     * @param tempX get X of point
+     * @param tempY get Y of point
+     * @return boolean which tells is operation of insert legal
+     */
     private boolean lessandhighbool(int tempX, int tempY){
         return ((tempX>=0 && tempX <=(size-1)) && (tempY >=0 && tempY <=(size-1)));
     }

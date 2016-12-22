@@ -36,6 +36,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     //Package-public
     int distance;
     boolean drawIntersection = false;
+    boolean isClicable;
     private PLACE[][] gameboard;
     int[] intersectionPoint;
     int[] relasedPoint;
@@ -157,13 +158,20 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     }
 
 
+    public boolean getterMouseListener(){
+        return isClicable;
+    }
+    public void setterMouseListener(boolean bla){
+        System.out.println("\n1.state of bla a-active u->unactive : " + bla);
+        this.isClicable = bla;
+    }
 
     /**
      * Method that initialize custom MouseListener
      * set it's properties
      */
     private void initializeMouseListener(){
-        mouseListener = new BoardOnClickListener(this,board,play);
+        mouseListener = new BoardOnClickListener(this,board,play,isClicable);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
         mouseListener.initialize();

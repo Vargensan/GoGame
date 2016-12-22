@@ -43,6 +43,7 @@ public class ClientGUI extends JFrame{
     private PLACE[][] gameboard;
     private JLabel turn;
     private boolean ismine = true;
+    private boolean onetime = true;
     /**
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
@@ -62,6 +63,11 @@ public class ClientGUI extends JFrame{
                 " please make diffrent move!","KO Detected!",JOptionPane.WARNING_MESSAGE);
     }
 
+    public void WarnningMessage(){
+        JOptionPane.showMessageDialog(content,"It is not your turn! ","I" +
+                "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
+    }
+
     /**
      * Method responsiable for initialize jDrawing Board
      */
@@ -78,15 +84,17 @@ public class ClientGUI extends JFrame{
     play daje do przeciwnika, czyli wywołujemy zawsze u przeciwnika, nie zmieniamy u siebie
 
      */
-    public void setTurn(PLAYER player){
-        if(play.getPlayBoard().getPLayerColor() == player){
+    public void setTurn(boolean active){
+        if(active == true){
             turn.setText("Your Turn!");
-            //ismine = false;
         }
-        else{
+        else if(active == false){
             turn.setText("Turn of Enemy!");
-            //ismine = true;
         }
+        if(!onetime){
+            turn.paintImmediately(turn.getVisibleRect());
+        }
+        onetime = false;
     }
     /**
      * Method responsiable for creating window

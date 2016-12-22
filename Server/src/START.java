@@ -6,7 +6,7 @@ public class START {
 
     public static void main(String argv[])
     {
-        serverSocket=new GameServer();
-        serverSocket.listenSocket();
+        serverSocket=new GameServer(4444);
+        //serverSocket.listenSocket();
     }
 }

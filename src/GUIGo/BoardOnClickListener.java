@@ -23,11 +23,13 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
     boolean puttingStone;
-BoardOnClickListener(DrawingBoard obj,Board board,Play play)
+    boolean isClicable;
+BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
 {
     this.play=play;
     this.obj = obj;
     this.board=board;
+    this.isClicable = isClicable;
 
 }
     @Override
@@ -35,46 +37,38 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
 
         //Temp Code - to do checkout
         //if game logic accepts point then it will be drown
-        mouse_coordinates[0] = e.getX();
-        mouse_coordinates[1] = e.getY();
-        obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-        puttingStone = board.canAddHere(board.getPLayerColor(),obj.relasedPoint[0],obj.relasedPoint[1]);
-        if (puttingStone) {
-            board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-            play.informKO();
-            /*
-            Zakreskowane pola, to te zbite, ale nie odświeżone, cd z nieodpowiednim odświeżaniem planszy
-            zakreskowane -> przecięcie lini "na" kamyku, teraz odświeżają się co "kolejny ruch"
-            tj. jak przeciwnik wykona ruch i zbije nasze, to widzimy kreski, jak my wykonamy ruch to odswieży nam
-            planszę i jest ok, możliwe odświeżenie planszy w trakcie wykonania naszego ruchu, przez przeciągnięcie
-            myszy w celu umieszczenia kamienia. Powód: wyowływana metoda update() przez MouseDragged
-
-            Pomysł poradzenia sobie z problemem: repaint() po stronie klienta od razu po dodaniu kamienia.
-            Metoda repaint() nie może być wywoływana od strony Board - nie ma dostępu
-            Adnote: NIEDZIAŁĄ
-
-            Adnote 2: Dodane do paintComponent wywołanie rysowanie tła -> gdy wywołamy paintImmediently musimy wszystko
-            przerysować, tło też
-
-            Adnote 3: Trzeba to synchronizować ale działa to teraz na tyle poprawnie (patrz pozostałe dodane komentarze)
-            że można się pokusić o poprawnę zformuowanie logiki i odczytanie z niej co nie gra
-             */
-            obj.drawIntersection = true;
-            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
-            //obj.update();
-           // obj.paintComponent(obj.getGraphics());
-            play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
-            //play.informTurnChange();
-
+        if(!obj.getterMouseListener()){
+            play.giveWarningMessage();
+            obj.repaint();
         }
-        else if(play.getPlayBoard().getKO_Status()){
+
+        /*
+        There is a bug, cant resolve where, cause i don't know if it is error in not-blocking mouse
+        signals or in logic, to be ensure, that it is not logic, need to create double-check condition...
+        ---CAN'T DEBUG PROGRAM CAUSE ERROR OCUERS---
+         */
+        System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
+        if (obj.getterMouseListener()) {
+            mouse_coordinates[0] = e.getX();
+            mouse_coordinates[1] = e.getY();
+            obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+            puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+            if (puttingStone) {
+                board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+                play.informKO();
+                obj.drawIntersection = true;
+                obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
+                play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
+            }
+        } else if (play.getPlayBoard().getKO_Status()) {
             play.informKO();
-            obj.paintImmediately(0,0,obj.getWidth(),obj.getHeight());
-        }else{
+            obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
+        } else {
             System.out.println("It is not your turn!");
         }
 
-        //End of Temp Code
+            //End of Temp Code
+
     }
 
 
@@ -113,13 +107,12 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play)
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-
-            obj.drawIntersection = true;
-            mouse_coordinates[0] = e.getX();
-            mouse_coordinates[1] = e.getY();
-            obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-            //obj.update();
-            obj.repaint();
+        obj.drawIntersection = true;
+        mouse_coordinates[0] = e.getX();
+        mouse_coordinates[1] = e.getY();
+        obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+        //obj.update();
+        obj.repaint();
     }
 
 }

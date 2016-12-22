@@ -8,6 +8,7 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import java.io.IOException;
 
 import static java.lang.System.exit;
+import static java.lang.System.lineSeparator;
 
 /**
  * Kinga Krata 2016-12-05.
@@ -28,9 +29,16 @@ public class Play {
          clientSocket=new Client();
          clientSocket.listenSocket();
          String color="";
+         String turn ="";
+         boolean active=false;
 
          try {
               color=clientSocket.in.readLine();
+              turn=clientSocket.in.readLine();
+             if(turn.substring(0,1).equals("u"))
+                 active = false;
+             else
+                 active = true;
 
          }
          catch(IOException ex)
@@ -41,19 +49,23 @@ public class Play {
          if(color.substring(0,1).equals("b"))
         {
             player_color=PLAYER.BLACK;
+
         }
         else
         {
             player_color=PLAYER.WHITE;
+
         }
         clientSocket.out.println("ok");
         playBoard=new Board(19,this);
 
-         window=new ClientGUI(playBoard,this);
-         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
-         if(player_color==PLAYER.BLACK)
+        window=new ClientGUI(playBoard,this);
+        this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+        window.getDrawingBoard().setterMouseListener(active);
+        window.setTurn(active);
+         if(player_color==PLAYER.WHITE)
          {
-             startBlackPlayer();
+             recivefromOther();
          }
 
 
@@ -84,63 +96,98 @@ public class Play {
 
     }
 
+    public void changeplayer(String abc){
+        clientSocket.out.println(abc);
+
+        try{
+            if(clientSocket.in.readLine().substring(0,1).equals("p")){
+
+           }
+        }catch(IOException e){
+            System.out.println("Error");
+        }
+    }
+
+    /*
+    abc -> zrobimy z tego opcję
+    i-> insert czyli wstawienie
+    Dobra czarny wykonuje ruch -> wysyła a później nasłuchuje
+    W tym czasie biały musi być cały czas w stanie nasłuchiwania -> przy inicjalizacji damy go do tego stanu
+    jak już wysłucha co ma do powiedzenia serwer, to będzie wiedział że ma ruch
+    Wykona ruch czyli zrobi senda() a później znowu będzie nasłuchiwał, czyli wszystko git!
+     */
     public void game(int x, int y)
     {
-         clientSocket.out.println("p");
+        //This send
+        sendToOther(x,y);
+        //change your state
+        reciveTurn();
+        //And wait for the answer from other player
+        recivefromOther();
+    }
+    private void sendToOther(int x, int y){
 
+        clientSocket.out.println("p");
         clientSocket.out.println("x"+x);
         clientSocket.out.println("y"+y);
 
+    }
+    private void reciveTurn(){
+        String turn = "";
+        try{
+            turn = clientSocket.in.readLine();
+            //System.out.println("I have recived: "+ turn);
+            turn.substring(0,1);
+            setTurn(turn);
 
-            try {
-                if(clientSocket.in.readLine().substring(0,1).equals("p"))
-                {
-                    x=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                    System.out.println(x);
-                    y=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                    System.out.println(y);
-                }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
+    private void setTurn(String turn){
+        System.out.println("I change your status to "+ turn);
+        if(turn.equals("a")){
+            System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
+            window.setTurn(true);
+            window.getDrawingBoard().setterMouseListener(true);
+        }else {
+            System.out.println("let's set my turn to false");
+            window.setTurn(false);
+            window.getDrawingBoard().setterMouseListener(false);
+        }
+    }
+
+    private void recivefromOther(){
+        String line = "";
+        String turn = "";
+        int x = -1;
+        int y = -1;
+        try {
+            //Otrzymaj teskt
+            line = clientSocket.in.readLine();
+            //Utnij go do 1 znaku
+            line.substring(0,1);
+
+            //Jeśli to "p"
+            if(line.equals("p")){
+                x=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                System.out.println(x);
+                y=Integer.parseInt(clientSocket.in.readLine().substring(1));
+                System.out.println(y);
+                turn = clientSocket.in.readLine().substring(0,1);
             }
-            catch(NumberFormatException ex)
-            {
-
+            //Tego nie rozumiem, nie lepiej wyslac, odebrac u innego klienta i zmienic u innego kliena, i dac mu ture?
+            //Możliwe Bugi
+            if(playBoard.canAddHere(player_color.getEnemyColor(),x,y)){
+                playBoard.addStone(player_color.getEnemyColor(),x,y);
             }
-            catch(IOException ex)
-            {
-
-            }
-            /*Metoda nam "poprawnie" oblicza obiekty do kasacji
-            Przez poprawnie mam na myśli tak samo dla obu plansz
-            Pytanie teraz dlaczego?
-            Bo nie przekazujemy punktów z tabeli-do-usunięcia clienta 1 do clienta 2, więc musimy je obliczyć
-            to obliczanie jej silnie powiązane z metodąmi canBreatheHere(), która w dużym uproszczeniu jeżeli
-            kamień może oddychać po uduszeniu kamieni przeciwnika, to można go dodać ale trzeba kamienie gracza
-            przeciwnego, więc tworzy nam które kamienie przeciwnika trzeba usunąć
-             */
-            playBoard.canAddHere(player_color.getEnemyColor(),x,y);
-            /*
-            I po wywołaniu, czy też zdecydowaniu że chcemy postawić ten kamień usuwa wszystkie kamienie przeciwnika
-             */
-            playBoard.addStone(player_color.getEnemyColor(),x,y);
-            /*
-            Dlaczego nie działa?
-            Najpierw musimy przerysować obrazek - na nowo.
-            Metoda paint Immadiately tego nie robi, ona po prostu rysuje linie i kółka i póżniej nie odświeża
-            obrazka i dalej rysuje linie na kółkach, gdzie tych kółek już nie ma
-            Sposób poradzenia: repaint planszy albo w paint commponent albo wywoływanie metody update
-
-             Update nie działa... może działa i jest lepiej ale nie tak jak powinien
-
-             TODO: Add note 2: trzeba zrobić odświeżanie 2 plansz na raz, metoda poniższa działa prawie poprawnie
-             TODO: gdy w paintComponent dodałem g2.drawimage() od obrazka który funkcjonuje jako dodanie tła
-             TODO: wtedy zasada działania jest taka jak w update tyle że "na stałe"
-
-             TODO: Ad note 3: zamienić wszystkie update() na paintImmedientely() i poprzez skomplikowanie tej metody
-             TODO: nie matrwić się o synchornizacje update() z paintImmedientyly()
-            */
-            //window.getDrawingBoard().update();
             window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+            setTurn(turn);
+
+        }catch(IOException e){
+
+        }
     }
 
     public void informTurnChange(){
@@ -155,6 +202,9 @@ public class Play {
         if(playBoard.getKO_Status()){
             window.showWarningKO_Situation();
         }
+    }
+    public void giveWarningMessage(){
+        window.WarnningMessage();
     }
     /**
      * Method that is responsiable for getting play board

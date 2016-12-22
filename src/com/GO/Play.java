@@ -77,7 +77,7 @@ public class Play {
         clientSocket.out.println(abc);
 
         try{
-            if(clientSocket.in.readLine().substring(0,1).equals("p")){
+            if(clientSocket.in.readLine().equals("play")){
 
            }
         }catch(IOException e){
@@ -102,9 +102,31 @@ public class Play {
         //And wait for the answer from other player
         recivefromOther();
     }
+    public void passGame() {
+        clientSocket.out.println("pass");
+        //System.out.println("pass");
+        try {
+            setTurn(clientSocket.in.readLine());
+        }catch(IOException ex)
+        {
+
+        }
+        String line;
+        try {
+            if((line=clientSocket.in.readLine()).equals("pass"))
+                System.out.println("Game ended");
+                else
+                System.out.println(line);
+        }
+        catch(IOException ex)
+        {
+            System.out.println("problem z polaczeniem");
+        }
+    }
+
     private void sendToOther(int x, int y){
 
-        clientSocket.out.println("p");
+        clientSocket.out.println("play");
         clientSocket.out.println("x"+x);
         clientSocket.out.println("y"+y);
 
@@ -114,7 +136,6 @@ public class Play {
         try{
             turn = clientSocket.in.readLine();
             //System.out.println("I have recived: "+ turn);
-            turn.substring(0,1);
             setTurn(turn);
 
         }catch(IOException e){
@@ -123,13 +144,13 @@ public class Play {
     }
 
     private void setTurn(String turn){
-        System.out.println("I change your status to "+ turn);
+      //  System.out.println("I change your status to "+ turn);
         if(turn.equals("a")){
-            System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
+        //    System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
             window.setTurn(true);
             window.getDrawingBoard().setterMouseListener(true);
         }else {
-            System.out.println("let's set my turn to false");
+         //   System.out.println("let's set my turn to false");
             window.setTurn(false);
             window.getDrawingBoard().setterMouseListener(false);
         }
@@ -143,23 +164,28 @@ public class Play {
         try {
             //Otrzymaj teskt
             line = clientSocket.in.readLine();
-            //Utnij go do 1 znaku
-            line.substring(0,1);
 
-            //Jeśli to "p"
-            if(line.equals("p")){
+
+            //Jeśli to "play"
+            if(line.equals("play")){
                 x=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                System.out.println(x);
+                //System.out.println(x);
                 y=Integer.parseInt(clientSocket.in.readLine().substring(1));
-                System.out.println(y);
-                turn = clientSocket.in.readLine().substring(0,1);
+               // System.out.println(y);
+
+                turn = clientSocket.in.readLine();
+                if(playBoard.canAddHere(player_color.getEnemyColor(),x,y)){
+                    playBoard.addStone(player_color.getEnemyColor(),x,y);
+                }
+                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+            }else if(line.equals("pass")){
+                turn = clientSocket.in.readLine();
+
             }
+
             //Tego nie rozumiem, nie lepiej wyslac, odebrac u innego klienta i zmienic u innego kliena, i dac mu ture?
             //Możliwe Bugi
-            if(playBoard.canAddHere(player_color.getEnemyColor(),x,y)){
-                playBoard.addStone(player_color.getEnemyColor(),x,y);
-            }
-            window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+
             setTurn(turn);
 
         }catch(IOException e){

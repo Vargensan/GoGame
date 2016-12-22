@@ -50,7 +50,7 @@ class GamePlay{
             clientOutput2 = new PrintWriter(Client2.getOutputStream(), true);
             //Implementacja wylosowania gracza co do koloru
             i =  randnum.nextInt(2);
-            System.out.println("Wartość i: "+i);
+           // System.out.println("Wartość i: "+i);
             if(i == 1){
                 color[0] = "b";
                 color[1] = "w";
@@ -78,7 +78,7 @@ class GamePlay{
             //Tutaj wysyłana jest od klienta wiadomość "OK"
             clientInput1.readLine();
 
-            System.out.println("Checker: "+color[0]);
+           // System.out.println("Checker: "+color[0]);
             if(color[0].equals("b")) {
                 whoisblack = "Klient Pierwszy jest czarny!";
                 blackplayer_int_checker = 1;
@@ -89,7 +89,7 @@ class GamePlay{
             }
 
 
-            System.out.println("Send values to client 1");
+           // System.out.println("Send values to client 1");
 
             clientOutput2.println(color[1]);
             if(color[1].equals("b"))
@@ -99,11 +99,11 @@ class GamePlay{
             //Tutaj wysyłana jest od klienta wiadomość "OK"
             clientInput2.readLine();
 
-            System.out.println("Send values to client 2");
+            //System.out.println("Send values to client 2");
             x=-1;
             y=-1;
 
-            System.out.println(whoisblack);
+          //  System.out.println(whoisblack);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -142,8 +142,16 @@ class GamePlay{
         try {
 
             line = clientInput1.readLine();
-            if (line.substring(0, 1).equals("p")) {
+            if (line.equals("play")) {
+                System.out.println("play");
                 sendBoardMove(clientInput1, clientOutput2);
+                sendChangeTurn("u", clientOutput1);
+            }
+            else if(line.equals("pass"))
+            {
+                //System.out.println("pass");
+                clientOutput2.println("pass");
+                clientOutput1.println("a");
                 sendChangeTurn("u", clientOutput1);
             }
 
@@ -156,8 +164,16 @@ class GamePlay{
     private void readPlayerSecound(){
         try {
             line = clientInput2.readLine();
-            if (line.substring(0, 1).equals("p")) {
+            if (line.equals("play")) {
+                System.out.println("play");
                 sendBoardMove(clientInput2, clientOutput1);
+                sendChangeTurn("u", clientOutput2);
+            }
+            else if(line.equals("pass"))
+            {
+                //System.out.println("pass");
+                clientOutput1.println("pass");
+                clientOutput1.println("a");
                 sendChangeTurn("u", clientOutput2);
             }
         }catch (IOException e){
@@ -174,7 +190,7 @@ class GamePlay{
             x=Integer.parseInt(cin.readLine().substring(1));
             y=Integer.parseInt(cin.readLine().substring(1));
 
-            cout.println("p");
+            cout.println("play");
             cout.println("x"+x);
             cout.println("y"+y);
             //Last line for changing turn

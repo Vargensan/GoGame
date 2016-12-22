@@ -46,7 +46,9 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     DrawingBoard(Board board,Play play){
         this.play=play;
         this.board=board;
-
+        intersectionPoint = new int[2];
+        intersectionPoint[0]=-1;
+        intersectionPoint[1] =-1;
     }
 
     /**
@@ -61,10 +63,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     }
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
-         if(player.equals(PLAYER.BLACK)) {
-            g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
-        }else
-            g2.drawImage(white,Table_Intersection[cordinates[0]][cordinates[1]][0],Table_Intersection[cordinates[0]][cordinates[1]][1],null);
+        if ((cordinates[0] > 0) && (cordinates[1] > 0)) {
+            if (player.equals(PLAYER.BLACK)) {
+                g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
+            } else
+                g2.drawImage(white, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
+        }
     }
 
     private void allertKO(Graphics2D g2){
@@ -206,7 +210,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
         criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
-        intersectionPoint = new int[2];
         setBlackandWhite(this);
         allow_to_drawing = 1;
         initializeMouseListener();

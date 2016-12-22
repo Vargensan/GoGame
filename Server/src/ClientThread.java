@@ -36,7 +36,7 @@ class ClientThread extends Thread{
                             if (threads[i].game.getNumberofPlayer() == false) {
                                 activegame = true;
                                 numberofthread_active = i;
-                                System.out.println("Found active game on thread: "+i);
+                               // System.out.println("Found active game on thread: "+i);
                             }
                         }
                     }
@@ -44,10 +44,10 @@ class ClientThread extends Thread{
             }
 
             if (activegame) {
-                System.out.println("I am coming to game of thread: "+numberofthread_active);
+              //  System.out.println("I am coming to game of thread: "+numberofthread_active);
                 threads[numberofthread_active].game.setClient(clientSocket);
             } else {
-                System.out.println("I am hosting game...");
+                //System.out.println("I am hosting game...");
                 game = new GamePlay(threads);
                 bussy = true;
                 game.setClient(clientSocket);

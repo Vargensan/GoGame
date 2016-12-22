@@ -30,7 +30,7 @@ public class GameServer {
         catch(IOException e){
 
         }
-        System.out.println("Waiting for connections!");
+      //  System.out.println("Waiting for connections!");
     }
     public void serverListen(){
         while(true){

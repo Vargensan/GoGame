@@ -165,7 +165,7 @@ public class Board implements BoardI {
             //Dla wszystkich sąsiadów takich, że sąsiad to wróg
             if(lessandhighbool(tempX,tempY)){
                 if(GameTable[tempX][tempY] == enemy.playerToPlace()){
-                    System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
+                    //System.out.println("FOUND ENEMY AT: X: "+tempX+" Y: "+tempY);
                     //Sprawdź czy sąsiad może oddychać ignoruj przeskok, do samego siebie
                     //Can breathe here sprawdza czy moge postawić na X, Y a nie czy oddycha
                     //Wyzeruj tablice usuwan
@@ -234,12 +234,12 @@ public class Board implements BoardI {
         }
         if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
            nullKO_situation();
-           System.out.println("\nI can breathe at here <3\n");
+          // System.out.println("\nI can breathe at here <3\n");
            return true;
         }
        //Check sicmering
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-            System.out.println("\nI can breathe here - Simmeric <3\n");
+           // System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
         }
         return false;
@@ -283,7 +283,7 @@ public class Board implements BoardI {
             if(canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false){
                 //then ++ ko_state_counter
                 //Unused-Dunno-Where-To-Put
-                System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));
+              //  System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {
                     koSituationXY[0] = placeX + XY[0];
@@ -308,7 +308,7 @@ public class Board implements BoardI {
      */
     public boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
-           System.out.println("KO Situation detected!");
+          // System.out.println("KO Situation detected!");
            ko_detected = true;
            return false;
        }

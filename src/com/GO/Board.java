@@ -241,6 +241,8 @@ public class Board implements BoardI {
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
             System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
+        }else{
+            GameTable[placeX][placeY] = PLACE.EMPTY;
         }
         return false;
     }

@@ -229,12 +229,15 @@ public class Play {
 
                 for(int i=0;i<19;++i){
                     for(int j=0;j<19;++j){
-                        line=clientSocket.in.readLine();
-                        playBoard.setDeadTable(i,j,Boolean.parseBoolean(line));
-                        if(line.equals("true"))
-                        System.out.print(line);
+                        line=clientSocket.in.readLine().substring(0,1);
+                        if(Integer.parseInt(line)==1)
+                            playBoard.setDeadTable(i,j,true);
                         else
-                            System.out.print("F\t");
+                            playBoard.setDeadTable(i,j,false);
+                        if(Integer.parseInt(line)==1)
+                            System.out.print(line);
+                        else
+                            System.out.print(line);
                     }
                     System.out.println();
                 }
@@ -249,8 +252,8 @@ public class Play {
 
             setTurn(turn);
 
-        }catch(IOException e){
-
+        }catch(Exception e){
+            System.exit(-1);
         }
     }
 

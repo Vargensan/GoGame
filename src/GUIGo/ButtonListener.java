@@ -51,11 +51,13 @@ public class ButtonListener implements ActionListener{
                    play.setPlayState(STATE.ADD_DEAD_GROUPS);
                }
 
+
                break;
            case "RemoveDeadGroup":
                if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.ADD_DEAD_GROUPS)){
                    play.setPlayState(STATE.REMOVE_DEAD_GROUPS);
                }
+
 
                break;
            case "GiveUp":

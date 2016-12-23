@@ -113,7 +113,6 @@ public class Board implements BoardI {
     public void markAsDead(int X, int Y){
         if(GameTable[X][Y] != PLACE.EMPTY)
             TableofDeath[X][Y] = true;
-
     }
 
     /**

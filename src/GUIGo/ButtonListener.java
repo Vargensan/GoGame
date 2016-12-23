@@ -2,6 +2,7 @@ package GUIGo;
 
 import com.GO.Play;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,6 +30,18 @@ public class ButtonListener implements ActionListener{
             break;
            case "RemoveTerritory":
 
+               break;
+           case "Start":
+               int selectedOption = JOptionPane.showConfirmDialog(null,
+                       "Do you want to play with player?",
+                       "Start Game",
+                       JOptionPane.YES_NO_OPTION);
+               if(selectedOption == 1){
+                   //sendBotGame();
+               }
+               else{
+                   //sendPlayerGame();
+               }
                break;
            case "AddDeadGroup":
 

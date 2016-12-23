@@ -25,15 +25,21 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private int allow_to_drawing = 0;
     private static int[] StartPoint = new int[2];
     private int[][][] Table_Intersection;
-    private BufferedImage black,white,ko;
+    private BufferedImage im_black,im_white,im_ko,im_dead,im_territoryBlack,im_territoryWhite;
     private Board board;
     private Play play;
     private boolean ko_detected = false;
     private int[] KO_Points;
-    //Temp
-    //public boolean color = true;
-    //End Temp
-    //Package-public
+    //
+    private boolean drawDeadPools = true;
+    private boolean drawTerritory = true;
+
+    private boolean DeadTable[][];
+    private PLACE TerritoryTable[][];
+
+    private boolean firsttime_setTerritory = true;
+    private boolean firsttime_setDead = true;
+    //
     int distance;
     boolean drawIntersection = false;
     boolean isClicable;
@@ -43,12 +49,22 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     DrawMathObject dmo_calculate = new DrawMathObject();
     String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
     String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+
+
+
     DrawingBoard(Board board,Play play){
         this.play=play;
         this.board=board;
         intersectionPoint = new int[2];
         intersectionPoint[0]=-1;
         intersectionPoint[1] =-1;
+    }
+
+    public void SetterDeadTable(){
+        this.DeadTable = play.getPlayBoard().getDeadTable();
+    }
+    public void SetterTerritoryTable(){
+        this.TerritoryTable = play.getPlayBoard().getTerritoryTable();
     }
 
     /**
@@ -63,20 +79,19 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     }
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
-        if ((cordinates[0] > 0) && (cordinates[1] > 0)) {
+        if ((cordinates[0] >= 0) && (cordinates[1] >= 0)) {
             if (player.equals(PLAYER.BLACK)) {
-                g2.drawImage(black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
+                g2.drawImage(im_black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
             } else
-                g2.drawImage(white, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
+                g2.drawImage(im_white, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
         }
     }
 
     private void allertKO(Graphics2D g2){
         int from[] = {Table_Intersection[KO_Points[0]][KO_Points[1]][0], Table_Intersection[KO_Points[0]][KO_Points[1]][1]};
         //int to[] = {Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][0],Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][1]};
-        g2.drawImage(ko,from[0],from[1],null);
+        g2.drawImage(im_ko,from[0],from[1],null);
     }
-    private void drawLetters(){}
 
     @Override
     public int getXofPoint() {
@@ -111,6 +126,40 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
     }
 
+    @Override
+    public void drawTerritory(Graphics2D g2) {
+        if(firsttime_setTerritory){
+            SetterTerritoryTable();
+            firsttime_setTerritory=false;
+        }
+        for(int i = 0; i < sizeGameBoard; i++){
+            for(int j = 0; j < sizeGameBoard; j++){
+                if(TerritoryTable[i][j] == PLACE.BLACK){
+                    g2.drawImage(im_territoryBlack,Table_Intersection[i][j][0],Table_Intersection[i][j][1],null);
+                }
+                else if(TerritoryTable[i][j] == PLACE.WHITE){
+                    g2.drawImage(im_territoryWhite,Table_Intersection[i][j][0],Table_Intersection[i][j][1], null);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void drawDeadPools(Graphics2D g2) {
+        if(firsttime_setDead){
+            SetterDeadTable();
+            firsttime_setDead = false;
+        }
+        for(int i = 0; i < sizeGameBoard ; i++){
+            for(int j = 0 ; j < sizeGameBoard; j++){
+                if(DeadTable[i][j] == true){
+                    g2.drawImage(im_dead,Table_Intersection[i][j][0]+criclefilled/4,Table_Intersection[i][j][1]+criclefilled/4,null);
+                }
+            }
+        }
+    }
+
     /**
      * Method which allows to draw on the picture, create image
      * and also initialize the other drawing functions
@@ -136,8 +185,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             g2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(120, 120, 120));
-
         }
+
         /*
          poniższe wywołanie metody w celu odświeżania natychmiastowego obrazka
         Adnote: tutaj g2 chyba nigdy nie będzie nullem, bo jeżeli
@@ -158,6 +207,12 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             fillBoard(g2,sizeGameBoard,gameboard);
         if(ko_detected)
             allertKO(g2);
+        if(drawDeadPools){
+            drawDeadPools(g2);
+        }
+        if(drawTerritory){
+            drawTerritory(g2);
+        }
         g.drawImage(image, 0, 0, null);
     }
 
@@ -227,16 +282,25 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             imageResizer = new ImageResize();
             InputStream imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/black_button.png");
             BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-            black = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
+            im_black = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/white_button2.png");
             bufferedImage = ImageIO.read(imageInputStream);
-            white = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
+            im_white = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.png");
             bufferedImage = ImageIO.read(imageInputStream);
             controlerImage = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
             imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
             bufferedImage = ImageIO.read(imageInputStream);
-            ko = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
+            im_ko = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
+            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
+            bufferedImage = ImageIO.read(imageInputStream);
+            im_dead = imageResizer.scale(bufferedImage,(criclefilled*1/2),(criclefilled*1/2));
+            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/Territory_Black.png");
+            bufferedImage = ImageIO.read(imageInputStream);
+            im_territoryBlack = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
+            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/Territory_White.png");
+            bufferedImage = ImageIO.read(imageInputStream);
+            im_territoryWhite = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
         } catch (IOException exception){
             exception.printStackTrace();
         }

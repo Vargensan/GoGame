@@ -24,6 +24,8 @@ public class BoardOnClickListener extends MouseAdapter{
     private DrawingBoard obj;
     boolean puttingStone;
     boolean isClicable;
+    int error;
+
 BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
 {
     this.play=play;
@@ -32,6 +34,9 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
     this.isClicable = isClicable;
 
 }
+    public void setError(){
+        this.error = play.getPlayBoard().getErrorMessage();
+    }
     @Override
     public void mouseReleased(MouseEvent e) {
 
@@ -52,7 +57,9 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
             mouse_coordinates[0] = e.getX();
             mouse_coordinates[1] = e.getY();
             obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+            //System.out.println("rel point X: "+obj.relasedPoint[0] + " rel point Y: "+obj.relasedPoint[1]);
             puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+            //System.out.println(puttingStone);
             if (puttingStone) {
                 board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
                 play.informKO();
@@ -60,10 +67,12 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
                 obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
                 play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
             }
-        } else if (play.getPlayBoard().getKO_Status()) {
+        } else if (error == 2) {
             play.informKO();
             obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
-        } else {
+        } else if (error == 1){
+            System.out.println("Can't place stone at not-empty field");
+        } else{
             System.out.println("It is not your turn!");
         }
 

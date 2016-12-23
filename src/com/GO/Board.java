@@ -9,15 +9,26 @@ package com.GO;
 public class Board implements BoardI {
 
     private int size;
-    public Play play;
+    private double pointsBlack;
+    private double pointsWhite;
+    private Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
     private PLACE BlackTerritoryTable[][];
     private PLACE WhiteTerritoryTable[][];
+    //Who's Territory
+    private boolean isWhom[][];
+    //Table of death pools
+    private boolean TableofDeath[][];
+    //Table of Territory of Player
+    private PLACE TerritoryTable[][];
+
     private int[] nextCoordinates;
     //------------------------------
-    int[] koSituationXY = new int[2];
-    boolean ko_detected;
+    private int[] koSituationXY = new int[2];
+    private boolean ko_detected;
+    private int error_option;
+    private boolean one_time_calculate = true;
     //------------------------------
     public Board(int size,Play play)
     {
@@ -25,10 +36,35 @@ public class Board implements BoardI {
         this.play=play;
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
-        BlackTerritoryTable = new PLACE[size][size];
-        WhiteTerritoryTable = new PLACE[size][size];
+        //BlackTerritoryTable = new PLACE[size][size];
+        //WhiteTerritoryTable = new PLACE[size][size];
+        //Czyje Terytorium true - Czarny false - Biały
+        isWhom = new boolean[size][size];
+        //Tablica Martwych Pól
+        /*
+        Tablica martwych pól:
+        pole martwe -> pole martwe = czarne -> +1 dla białego
+        pole martwe -> pole martwe = białe -> +1 dla czarnego
+        + Grafika dla rysowania martwych pól -> jeżeli martwe -> narysuj jakąś kropke,
+        martwe to gdy nie równa się EMPTY;
+         */
+        //+6.5 points to black player
+        pointsBlack = 6.5;
+        pointsWhite = 0.0;
+        TableofDeath = new boolean[size][size];
+        //Table of Territory
+        TerritoryTable = new PLACE[size][size];
+
         initialize();
         nextCoordinates=new int[4];
+
+        //Tests
+        //TerritoryTable[2][2] = PLACE.BLACK;
+        //TableofDeath[1][1] = true;
+        //TableofDeath[2][2] = true;
+
+        koSituationXY[0] = -1;
+        koSituationXY[1] = -1;
     }
 
     /**
@@ -43,10 +79,122 @@ public class Board implements BoardI {
 
                 GameTable[i][j]=PLACE.EMPTY;
                 DeleteGameTable[i][j]=PLACE.EMPTY;
+                TableofDeath[i][j] = false;
+                isWhom[i][j] = false;
             }
         }
     }
 
+    /**
+     * Method that calculates points for player for each dead-group
+     */
+    public void deleteDeadFromGameTable(){
+        for(int i = 0; i < size; i++){
+            for(int j=0; j< size; j++){
+                if(TableofDeath[i][j]){
+                    if(GameTable[i][j] == PLACE.BLACK){
+                        pointsWhite+=1.0;
+                    }
+                    if(GameTable[i][j] == PLACE.WHITE){
+                        pointsBlack+=1.0;
+                    }
+                    GameTable[i][j] = PLACE.EMPTY;
+                    TableofDeath[i][j] = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * Method that sets a selected point as dead
+     * @param X takes coordinate X of point
+     * @param Y takes coordinate Y of point
+     */
+    public void markAsDead(int X, int Y){
+        if(GameTable[X][Y] != PLACE.EMPTY)
+            TableofDeath[X][Y] = true;
+
+    }
+
+    /**
+     * Method that sets selected point as not dead
+     * @param X takes coordinate X of point
+     * @param Y takes coordinate Y of point
+     */
+    public void unMarkAsDead(int X, int Y){
+        TableofDeath[X][Y] = false;
+    }
+
+    /**
+     * Getter for table of dead points
+     * @return table of dead points
+     */
+    public boolean[][] getDeadTable(){
+        return TableofDeath;
+    }
+
+    /**
+     * Method that marks selected point as Territory of player
+     * @param player takes a color of player
+     * @param X takes a coordinate X of point
+     * @param Y takes a coordinate Y of point
+     */
+    public void markAsTerritory(PLAYER player, int X, int Y){
+        if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
+            TerritoryTable[X][Y] = player.playerToPlace();
+        }
+    }
+
+    /**
+     * Method that unmark selected point as Territory of player
+     * @param X takes a coordinate X of selected point
+     * @param Y takes a coordinate Y of selected point
+     */
+    public void unMarkAsTerritory(int X, int Y){
+        if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
+            isWhom[X][Y] = false;
+
+        }
+    }
+
+    /**
+     * Getter for Territory Table
+     * @return table of whos is this territory
+     */
+    public PLACE[][] getTerritoryTable(){
+        return TerritoryTable;
+    }
+
+    public void calculateTerritory(){
+        if(one_time_calculate) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (TerritoryTable[i][j] == PLACE.BLACK) {
+                        pointsBlack++;
+                    } else if (TerritoryTable[i][j] == PLACE.WHITE) {
+                        pointsWhite++;
+                    }
+                    //Nulling Table
+                    //TerritoryTable[i][j] = PLACE.EMPTY;
+                }
+            }
+            one_time_calculate = false;
+        }
+    }
+
+
+    /**
+     * Getter for ammount of points White player
+     * @return number of points white player
+    */
+
+    public double getPoints(PLAYER player){
+        if(player == PLAYER.BLACK){
+            return pointsBlack;
+        }else{
+            return pointsWhite;
+        }
+    }
     /**
      *
      * @param color color of player=stone for which we are asking
@@ -227,9 +375,11 @@ public class Board implements BoardI {
             return false;
         }
         if(!checkifempty(GameTable,color,placeX,placeY)){
+            error_option = 1;
             return false;
         }
         if(!isItNotA_KO(color,placeX,placeY)){
+            error_option = 2;
             return false;
         }
         if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
@@ -242,9 +392,18 @@ public class Board implements BoardI {
            // System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
         }else{
+            error_option = 3;
             GameTable[placeX][placeY] = PLACE.EMPTY;
         }
         return false;
+    }
+
+    /**
+     * Getter for Error Message
+     * @return error option
+     */
+    public int getErrorMessage(){
+        return error_option;
     }
 
     /**

@@ -41,44 +41,58 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
-        //Temp Code - to do checkout
-        //if game logic accepts point then it will be drown
-        if(!obj.getterMouseListener()){
-            play.giveWarningMessage();
-            obj.repaint();
-        }
+        switch(play.getPlayState()) {
+            case GAME:
+                //Temp Code - to do checkout
+                //if game logic accepts point then it will be drown
+                if(!obj.getterMouseListener()){
+                    play.giveWarningMessage();
+                    obj.repaint();
+                }
 
         /*
         There is a bug, cant resolve where, cause i don't know if it is error in not-blocking mouse
         signals or in logic, to be ensure, that it is not logic, need to create double-check condition...
         ---CAN'T DEBUG PROGRAM CAUSE ERROR OCUERS---
          */
-        System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
-        if (obj.getterMouseListener()) {
-            mouse_coordinates[0] = e.getX();
-            mouse_coordinates[1] = e.getY();
-            obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-            //System.out.println("rel point X: "+obj.relasedPoint[0] + " rel point Y: "+obj.relasedPoint[1]);
-            puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-            //System.out.println(puttingStone);
-            if (puttingStone) {
-                board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-                play.informKO();
-                obj.drawIntersection = true;
-                obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
-                play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
-            }
-        } else if (error == 2) {
-            play.informKO();
-            obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
-        } else if (error == 1){
-            System.out.println("Can't place stone at not-empty field");
-        } else{
-            System.out.println("It is not your turn!");
+                System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
+                if (obj.getterMouseListener()) {
+                    mouse_coordinates[0] = e.getX();
+                    mouse_coordinates[1] = e.getY();
+                    obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+                    //System.out.println("rel point X: "+obj.relasedPoint[0] + " rel point Y: "+obj.relasedPoint[1]);
+                    puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+                    //System.out.println(puttingStone);
+                    if (puttingStone) {
+                        board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+                        play.informKO();
+                        obj.drawIntersection = true;
+                        obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
+                        play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
+                    }
+                } else if (error == 2) {
+                    play.informKO();
+                    obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
+                } else if (error == 1){
+                    System.out.println("Can't place stone at not-empty field");
+                } else{
+                    System.out.println("It is not your turn!");
+                }
+
+                //End of Temp Code
+
+                break;
+            case ADD_DEAD_GROUPS:
+                play.sendDeadGroups();
+
+
+                break;
+            case REMOVE_DEAD_GROUPS:
+                play.sendDeadGroups();
+                break;
         }
 
-            //End of Temp Code
+
 
     }
 

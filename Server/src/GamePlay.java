@@ -154,6 +154,22 @@ class GamePlay{
                 clientOutput1.println("a");
                 sendChangeTurn("u", clientOutput1);
             }
+            else if(line.equals("dead")) {
+                clientOutput2.println("dead");
+
+                for (int i = 0; i < 19; ++i) {
+                    for (int j = 0; j < 19; ++j) {
+                        line = clientInput1.readLine();
+                        clientOutput2.println(line);
+                        System.out.println(line);
+                    }
+                    clientOutput2.println("a");
+
+                    sendChangeTurn("u", clientOutput2);
+
+
+                }
+            }
 
         }catch(IOException e){
             System.out.println("Read Failed");
@@ -177,6 +193,23 @@ class GamePlay{
                 clientOutput1.println("pass");
                 clientOutput1.println("a");
                 sendChangeTurn("u", clientOutput2);
+            }
+            else if(line.equals("dead")) {
+                clientOutput1.println("dead");
+
+                for (int i = 0; i < 19; ++i) {
+                    for (int j = 0; j < 19; ++j) {
+                        line = clientInput2.readLine();
+                       clientOutput1.println(line);
+                        //System.out.print(line);
+                    }
+                   // System.out.println();
+                    clientOutput1.println("a");
+
+                    sendChangeTurn("u", clientOutput2);
+
+
+                }
             }
         }catch (IOException e){
             //e.printStackTrace();

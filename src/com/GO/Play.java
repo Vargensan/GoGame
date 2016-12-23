@@ -86,6 +86,32 @@ public class Play {
     public void setPlayState(STATE state){
         playState=state;
     }
+    public void sendDeadGroups()
+    {
+        clientSocket.out.println("dead");
+        boolean help[][]=playBoard.getDeadTable();
+        for(int i=0;i<19;++i){
+            for(int j=0;j<19;++j){
+                if(help[i][j]==true)
+                    clientSocket.out.println(1);
+                else
+                    clientSocket.out.println(0);
+
+                if(help[i][j]==true)
+                    System.out.print(help[i][j]);
+                else
+                    System.out.print("F\t");
+
+            }
+            System.out.println();
+        }
+
+        try {
+           setTurn(clientSocket.in.readLine());
+        }catch(IOException ex){
+
+        }
+    }
 
 
     public void changeplayer(String abc){
@@ -195,6 +221,26 @@ public class Play {
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }else if(line.equals("pass")){
                 turn = clientSocket.in.readLine();
+
+            }
+            else if(line.equals("dead"))
+            {
+                setPlayState(STATE.ADD_DEAD_GROUPS);
+
+                for(int i=0;i<19;++i){
+                    for(int j=0;j<19;++j){
+                        line=clientSocket.in.readLine();
+                        playBoard.setDeadTable(i,j,Boolean.parseBoolean(line));
+                        if(line.equals("true"))
+                        System.out.print(line);
+                        else
+                            System.out.print("F\t");
+                    }
+                    System.out.println();
+                }
+                turn = clientSocket.in.readLine();
+                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+
 
             }
 

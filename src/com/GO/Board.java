@@ -131,6 +131,9 @@ public class Board implements BoardI {
     public boolean[][] getDeadTable(){
         return TableofDeath;
     }
+    public void setDeadTable(int x, int y,boolean quantity){
+        TableofDeath[x][y]=quantity;
+    }
 
     /**
      * Method that marks selected point as Territory of player

@@ -31,9 +31,14 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
     this.isClicable = isClicable;
 
 }
+
+    /**
+     * Setter for error messages
+     */
     public void setError(){
         this.error = play.getPlayBoard().getErrorMessage();
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
         switch(play.getPlayState()) {
@@ -136,18 +141,22 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
                 obj.repaint();
                 break;
             case ADD_DEAD_GROUPS:
+                obj.drawIntersection = false;
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
                 board.markAsDead(obj.intersectionPoint[0],obj.intersectionPoint[1]);
+                obj.repaint();
 
 
                 break;
             case REMOVE_DEAD_GROUPS:
+                obj.drawIntersection = false;
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
                 board.unMarkAsDead(obj.intersectionPoint[0],obj.intersectionPoint[1]);
+                obj.repaint();
                 break;
         }
     }

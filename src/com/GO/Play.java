@@ -86,6 +86,23 @@ public class Play {
     public void setPlayState(STATE state){
         playState=state;
     }
+    public void sendDeadGroups()
+    {
+        clientSocket.out.println("dead");
+        boolean help[][]=playBoard.getDeadTable();
+        for(int i=0;i<19;++i){
+            for(int j=0;j<19;++j){
+                clientSocket.out.println(help[i][j]);
+            }
+
+        }
+
+        try {
+           setTurn(clientSocket.in.readLine());
+        }catch(IOException ex){
+
+        }
+    }
 
 
     public void changeplayer(String abc){
@@ -196,6 +213,18 @@ public class Play {
             }else if(line.equals("pass")){
                 turn = clientSocket.in.readLine();
 
+            }
+            else if(line.equals("dead"))
+            {
+                setPlayState(STATE.ADD_DEAD_GROUPS);
+                turn = clientSocket.in.readLine();
+                for(int i=0;i<19;++i){
+                    for(int j=0;j<19;++j){
+                        line=clientSocket.in.readLine();
+                        playBoard.setDeadTable(i,j,Boolean.parseBoolean(line));
+                    }
+
+                }
             }
 
             //Tego nie rozumiem, nie lepiej wyslac, odebrac u innego klienta i zmienic u innego kliena, i dac mu ture?

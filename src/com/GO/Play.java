@@ -20,37 +20,46 @@ public class Play {
     private ClientGUI window;
     private PLAYER player_color;
     private BoardOnClickListener clickListener;
+    private STATE playState;
     
 
     Play()
     {
-        String color="";
-        String turn ="";
-        boolean active=false;
-
-         clientSocket=new Client();
-         clientSocket.listenSocket();
+        playState=STATE.BEFORE_GAME;
 
         playBoard=new Board(19,this);
 
         window=new ClientGUI(playBoard,this);
         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
 
-         try {
-              color=clientSocket.in.readLine();
-              turn=clientSocket.in.readLine();
-             if(turn.substring(0,1).equals("u"))
-                 active = false;
-             else
-                 active = true;
 
-         }
-         catch(IOException ex)
-         {
+
+    }
+    public void inicializeGameWithServer()
+    {
+        playState=STATE.GAME;
+        String color="";
+        String turn ="";
+        boolean active=false;
+
+        clientSocket=new Client();
+        clientSocket.listenSocket();
+
+        try {
+            color=clientSocket.in.readLine();
+            turn=clientSocket.in.readLine();
+            if(turn.substring(0,1).equals("u"))
+                active = false;
+            else
+                active = true;
+
+        }
+        catch(IOException ex)
+        {
             System.out.println("Problem z polaczeniem");
             exit(-1);
-         }
-         if(color.equals("b"))
+        }
+        if(color.equals("b"))
         {
             player_color=PLAYER.BLACK;
 
@@ -64,12 +73,18 @@ public class Play {
         window.getDrawingBoard().setterMouseListener(active);
         window.setTurn(active);
 
-         if(player_color==PLAYER.WHITE)
-         {
-             recivefromOther();
-         }
+        if(player_color==PLAYER.WHITE)
+        {
+            recivefromOther();
+        }
 
-
+    }
+    public STATE getPlayState()
+    {
+        return playState;
+    }
+    public void setPlayState(STATE state){
+        playState=state;
     }
 
 

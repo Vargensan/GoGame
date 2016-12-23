@@ -157,9 +157,11 @@ class GamePlay{
 
         }catch(IOException e){
             System.out.println("Read Failed");
-            e.printStackTrace();
+           // e.printStackTrace();
             System.exit(1);
+
         }
+
     }
     private void readPlayerSecound(){
         try {
@@ -177,7 +179,7 @@ class GamePlay{
                 sendChangeTurn("u", clientOutput2);
             }
         }catch (IOException e){
-            e.printStackTrace();
+            //e.printStackTrace();
             System.exit(1);
         }
     }

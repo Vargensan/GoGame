@@ -34,7 +34,7 @@ public class ClientGUI extends JFrame{
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
     private DrawingBoard jDrawingBoard;
-    private JButton jOptionPass,jOptionTerritory,jOptionEnd;
+    private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup;
     private Play play;
 
     private JComboBox<String> jBoardSelect;
@@ -182,7 +182,10 @@ public class ClientGUI extends JFrame{
 
     private void addjOptionPanelButtons(){
         setJOptionButtonsNames();
-        jOptionPanel.add(jOptionTerritory);
+        content.add(jOptionAddDeadGroup);
+        content.add(jOptionRemoveDeadGroup);
+        content.add(jOptionAddTerritory);
+        content.add(jOptionRemoveTerritory);
         jOptionPanel.add(jOptionPass);
         jOptionPanel.add(jOptionEnd);
     }
@@ -201,16 +204,30 @@ public class ClientGUI extends JFrame{
      */
     private void setJOptionButtonsNames(){
         int height = jOptionPanel.getHeight();
+        int h1=30;
+
         jOptionPass = new JButton("Pass");
         setButtonLook(jOptionPass, "Pass");
         jOptionPass.setBounds(10, height - 40, 110,30);
 
-        jOptionTerritory = new JButton("Territory");
-        setButtonLook(jOptionTerritory, "Territory");
-        jOptionTerritory.setBounds(130, height - 40, 110,30);
+        jOptionAddTerritory = new JButton("AddTerritory");
+        setButtonLook(jOptionAddTerritory, "AddTerritory");
+        jOptionAddTerritory.setBounds(10, 40, 110,30);
 
-        jOptionEnd = new JButton("End");
-        setButtonLook(jOptionEnd, "End Game");
+        jOptionRemoveTerritory = new JButton("RemoveTerritory");
+        setButtonLook(jOptionRemoveTerritory, "RemoveTerritory");
+        jOptionRemoveTerritory.setBounds(10,4*h1 , 110,30);
+
+        jOptionAddDeadGroup = new JButton("AddDeadGroup");
+        setButtonLook(jOptionAddDeadGroup, "AddDeadGroup");
+        jOptionAddDeadGroup.setBounds(10, 6*h1, 110,30);
+
+        jOptionRemoveDeadGroup = new JButton("RemoveDeadGroup");
+        setButtonLook(jOptionRemoveDeadGroup, "RemoveDeadGroup");
+        jOptionRemoveDeadGroup.setBounds(130, 8*h1, 110,30);
+
+        jOptionEnd = new JButton("GiveUp");
+        setButtonLook(jOptionEnd, "GiveUp");
         jOptionEnd.setBounds(250, height - 40, 110,30);
     }
 

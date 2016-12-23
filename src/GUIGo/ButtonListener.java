@@ -24,9 +24,19 @@ public class ButtonListener implements ActionListener{
            case "Pass":
                play.passGame();
              break;
-           case "Territory":
+           case "AddTerritory":
+
             break;
-           case "End":
+           case "RemoveTerritory":
+
+               break;
+           case "AddDeadGroup":
+
+               break;
+           case "RemoveDeadGroup":
+
+               break;
+           case "GiveUp":
                break;
 
 

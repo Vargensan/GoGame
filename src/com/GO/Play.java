@@ -252,8 +252,8 @@ public class Play {
 
             setTurn(turn);
 
-        }catch(IOException e){
-
+        }catch(Exception e){
+            System.exit(-1);
         }
     }
 

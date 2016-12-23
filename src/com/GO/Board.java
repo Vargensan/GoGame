@@ -9,9 +9,9 @@ package com.GO;
 public class Board implements BoardI {
 
     private int size;
-    double pointsBlack;
-    double pointsWhite;
-    public Play play;
+    private double pointsBlack;
+    private double pointsWhite;
+    private Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
     private PLACE BlackTerritoryTable[][];
@@ -25,9 +25,10 @@ public class Board implements BoardI {
 
     private int[] nextCoordinates;
     //------------------------------
-    int[] koSituationXY = new int[2];
-    boolean ko_detected;
-    int error_option;
+    private int[] koSituationXY = new int[2];
+    private boolean ko_detected;
+    private int error_option;
+    private boolean one_time_calculate = true;
     //------------------------------
     public Board(int size,Play play)
     {
@@ -84,6 +85,9 @@ public class Board implements BoardI {
         }
     }
 
+    /**
+     * Method that calculates points for player for each dead-group
+     */
     public void deleteDeadFromGameTable(){
         for(int i = 0; i < size; i++){
             for(int j=0; j< size; j++){
@@ -159,6 +163,23 @@ public class Board implements BoardI {
      */
     public PLACE[][] getTerritoryTable(){
         return TerritoryTable;
+    }
+
+    public void calculateTerritory(){
+        if(one_time_calculate) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (TerritoryTable[i][j] == PLACE.BLACK) {
+                        pointsBlack++;
+                    } else if (TerritoryTable[i][j] == PLACE.WHITE) {
+                        pointsWhite++;
+                    }
+                    //Nulling Table
+                    //TerritoryTable[i][j] = PLACE.EMPTY;
+                }
+            }
+            one_time_calculate = false;
+        }
     }
 
 

@@ -50,6 +50,14 @@ public class Board implements BoardI {
 
         initialize();
         nextCoordinates=new int[4];
+
+        //Tests
+        //TerritoryTable[2][2] = PLACE.BLACK;
+        //TableofDeath[1][1] = true;
+        //TableofDeath[2][2] = true;
+
+        koSituationXY[0] = -1;
+        koSituationXY[1] = -1;
     }
 
     /**

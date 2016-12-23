@@ -79,7 +79,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     }
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
-        if ((cordinates[0] > 0) && (cordinates[1] > 0)) {
+        if ((cordinates[0] >= 0) && (cordinates[1] >= 0)) {
             if (player.equals(PLAYER.BLACK)) {
                 g2.drawImage(im_black, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
             } else
@@ -154,7 +154,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         for(int i = 0; i < sizeGameBoard ; i++){
             for(int j = 0 ; j < sizeGameBoard; j++){
                 if(DeadTable[i][j] == true){
-                    g2.drawImage(im_dead,Table_Intersection[i][j][0],Table_Intersection[i][j][1],null);
+                    g2.drawImage(im_dead,Table_Intersection[i][j][0]+criclefilled/4,Table_Intersection[i][j][1]+criclefilled/4,null);
                 }
             }
         }

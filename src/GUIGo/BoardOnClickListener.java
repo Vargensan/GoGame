@@ -52,7 +52,9 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
             mouse_coordinates[0] = e.getX();
             mouse_coordinates[1] = e.getY();
             obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+            //System.out.println("rel point X: "+obj.relasedPoint[0] + " rel point Y: "+obj.relasedPoint[1]);
             puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+            //System.out.println(puttingStone);
             if (puttingStone) {
                 board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
                 play.informKO();

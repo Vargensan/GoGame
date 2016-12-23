@@ -156,6 +156,10 @@ public class LogicBoardTest{
         gameboard.addStone(player.getEnemyColor(),6,4);
     }
 
+    @Test
+    public void testDrawingTerritory(){
+        setstone();
+    }
 
 
 

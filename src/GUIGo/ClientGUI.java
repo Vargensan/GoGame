@@ -34,7 +34,7 @@ public class ClientGUI extends JFrame{
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
     private DrawingBoard jDrawingBoard;
-    private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup;
+    private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup,jOptionStart;
     private Play play;
 
     private JComboBox<String> jBoardSelect;

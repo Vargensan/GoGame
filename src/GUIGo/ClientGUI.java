@@ -34,7 +34,7 @@ public class ClientGUI extends JFrame{
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
     private DrawingBoard jDrawingBoard;
-    private JButton jOptionPass,jOptionTerritory,jOptionEnd;
+    private JButton jOptionPass,jOptionTerritory,jOptionEnd,jOptionStart;
     private Play play;
 
     private JComboBox<String> jBoardSelect;
@@ -57,6 +57,7 @@ public class ClientGUI extends JFrame{
         createWindow();
         startDrawing();
     }
+
     /**
      * Method that shows warning if KO Situation was detected in game
      */
@@ -127,6 +128,7 @@ public class ClientGUI extends JFrame{
         addjOptionPanelButtons();
         //add components to GUI of User
         content.add(turn);
+        content.add(jOptionStart);
         content.add(jOptionPanel);
         content.add(jDrawingBoard);
         content.add(jBoardSelect);
@@ -159,6 +161,9 @@ public class ClientGUI extends JFrame{
         String[] boards = new String[]{"19x19","9x9","7x7"};
         jBoardSelect = new JComboBox<>(boards);
         jBoardSelect.setBounds(10,90,100,30);
+        jOptionStart = new JButton("Start");
+        setButtonLook(jOptionStart,"Start");
+        jOptionStart.setBounds(10,50,100,30);
 
     }
     /**

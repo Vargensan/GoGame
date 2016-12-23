@@ -83,6 +83,7 @@ public class Board implements BoardI {
             for(int j=0; j< size; j++){
                 if(TableofDeath[i][j]){
                     GameTable[i][j] = PLACE.EMPTY;
+                    TableofDeath[i][j] = false;
                 }
             }
         }

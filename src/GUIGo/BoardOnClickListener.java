@@ -34,9 +34,14 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
     this.isClicable = isClicable;
 
 }
+
+    /**
+     * Setter for error messages
+     */
     public void setError(){
         this.error = play.getPlayBoard().getErrorMessage();
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
 

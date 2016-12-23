@@ -389,13 +389,15 @@ public class Board implements BoardI {
         }
        //Check sicmering
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-           // System.out.println("\nI can breathe here - Simmeric <3\n");
+            System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
         }else{
-            error_option = 3;
+            System.out.println("Inavild");
             GameTable[placeX][placeY] = PLACE.EMPTY;
+            error_option = 3;
+            return false;
         }
-        return false;
+        //return false;
     }
 
     /**
@@ -429,6 +431,7 @@ public class Board implements BoardI {
         int ko_state_counter = 0;
         boolean one_time = true;
         boolean dead = false;
+        boolean cantBreath;
         //if KO situation
         if(!isItNotA_KO(color,placeX,placeY)){
             //if yes
@@ -441,7 +444,9 @@ public class Board implements BoardI {
         enemyplayer = color.getEnemyColor();
         for(int i = 0; i<4 ; i++){
             XY = values(i);
-            if(canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false){
+            cantBreath = canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false;
+            System.out.println("State: "+cantBreath);
+            if(cantBreath){
                 //then ++ ko_state_counter
                 //Unused-Dunno-Where-To-Put
               //  System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));

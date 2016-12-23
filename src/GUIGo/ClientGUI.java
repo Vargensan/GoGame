@@ -58,6 +58,18 @@ public class ClientGUI extends JFrame{
         startDrawing();
     }
 
+    public void showEndDialog(int option){
+        if(option == 1){
+            JOptionPane.showMessageDialog(content,"Game Over", "Congratulations!\n" +
+                    "You have won with ammount of points: "+play.getPlayBoard().getPoints(play.get_player_color()),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(content,"Game Over", "We are sorry!\n" +
+                            "You have lost. With points: "+play.getPlayBoard().getPoints(play.get_player_color()),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     /**
      * Method that shows warning if KO Situation was detected in game
      */

@@ -9,6 +9,8 @@ package com.GO;
 public class Board implements BoardI {
 
     private int size;
+    double pointsBlack;
+    double pointsWhite;
     public Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
@@ -25,6 +27,7 @@ public class Board implements BoardI {
     //------------------------------
     int[] koSituationXY = new int[2];
     boolean ko_detected;
+    int error_option;
     //------------------------------
     public Board(int size,Play play)
     {
@@ -44,6 +47,9 @@ public class Board implements BoardI {
         + Grafika dla rysowania martwych pól -> jeżeli martwe -> narysuj jakąś kropke,
         martwe to gdy nie równa się EMPTY;
          */
+        //+6.5 points to black player
+        pointsBlack = 6.5;
+        pointsWhite = 0.0;
         TableofDeath = new boolean[size][size];
         //Table of Territory
         TerritoryTable = new PLACE[size][size];
@@ -82,6 +88,12 @@ public class Board implements BoardI {
         for(int i = 0; i < size; i++){
             for(int j=0; j< size; j++){
                 if(TableofDeath[i][j]){
+                    if(GameTable[i][j] == PLACE.BLACK){
+                        pointsWhite+=1.0;
+                    }
+                    if(GameTable[i][j] == PLACE.WHITE){
+                        pointsBlack+=1.0;
+                    }
                     GameTable[i][j] = PLACE.EMPTY;
                     TableofDeath[i][j] = false;
                 }
@@ -149,9 +161,19 @@ public class Board implements BoardI {
         return TerritoryTable;
     }
 
-    //public int getCountofTerritory(){
-    //    if()
 
+    /**
+     * Getter for ammount of points White player
+     * @return number of points white player
+    */
+
+    public double getPoints(PLAYER player){
+        if(player == PLAYER.BLACK){
+            return pointsBlack;
+        }else{
+            return pointsWhite;
+        }
+    }
     /**
      *
      * @param color color of player=stone for which we are asking
@@ -332,9 +354,11 @@ public class Board implements BoardI {
             return false;
         }
         if(!checkifempty(GameTable,color,placeX,placeY)){
+            error_option = 1;
             return false;
         }
         if(!isItNotA_KO(color,placeX,placeY)){
+            error_option = 2;
             return false;
         }
         if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
@@ -347,9 +371,18 @@ public class Board implements BoardI {
            // System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
         }else{
+            error_option = 3;
             GameTable[placeX][placeY] = PLACE.EMPTY;
         }
         return false;
+    }
+
+    /**
+     * Getter for Error Message
+     * @return error option
+     */
+    public int getErrorMessage(){
+        return error_option;
     }
 
     /**

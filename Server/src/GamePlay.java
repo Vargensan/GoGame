@@ -156,12 +156,14 @@ class GamePlay{
             }
             else if(line.equals("dead")) {
                 clientOutput2.println("dead");
-                clientOutput2.println("a");
+
                 for (int i = 0; i < 19; ++i) {
                     for (int j = 0; j < 19; ++j) {
                         line = clientInput1.readLine();
                         clientOutput2.println(line);
+                        System.out.println(line);
                     }
+                    clientOutput2.println("a");
 
                     sendChangeTurn("u", clientOutput2);
 
@@ -194,12 +196,15 @@ class GamePlay{
             }
             else if(line.equals("dead")) {
                 clientOutput1.println("dead");
-                clientOutput1.println("a");
+
                 for (int i = 0; i < 19; ++i) {
                     for (int j = 0; j < 19; ++j) {
                         line = clientInput2.readLine();
                        clientOutput1.println(line);
+                        //System.out.print(line);
                     }
+                   // System.out.println();
+                    clientOutput1.println("a");
 
                     sendChangeTurn("u", clientOutput2);
 

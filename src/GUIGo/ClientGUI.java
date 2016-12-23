@@ -222,6 +222,7 @@ public class ClientGUI extends JFrame{
     private void setJOptionButtonsNames(){
         int height = jOptionPanel.getHeight();
         int h1=30;
+        int start_height=70;
 
         jOptionPass = new JButton("Pass");
         setButtonLook(jOptionPass, "Pass");
@@ -229,19 +230,19 @@ public class ClientGUI extends JFrame{
 
         jOptionAddTerritory = new JButton("AddTerritory");
         setButtonLook(jOptionAddTerritory, "AddTerritory");
-        jOptionAddTerritory.setBounds(10, 40, 110,30);
+        jOptionAddTerritory.setBounds(5, start_height+2*h1, 110,30);
 
         jOptionRemoveTerritory = new JButton("RemoveTerritory");
         setButtonLook(jOptionRemoveTerritory, "RemoveTerritory");
-        jOptionRemoveTerritory.setBounds(10,4*h1 , 110,30);
+        jOptionRemoveTerritory.setBounds(5,start_height+4*h1 , 110,30);
 
         jOptionAddDeadGroup = new JButton("AddDeadGroup");
         setButtonLook(jOptionAddDeadGroup, "AddDeadGroup");
-        jOptionAddDeadGroup.setBounds(10, 6*h1, 110,30);
+        jOptionAddDeadGroup.setBounds(5, start_height+6*h1, 110,30);
 
         jOptionRemoveDeadGroup = new JButton("RemoveDeadGroup");
         setButtonLook(jOptionRemoveDeadGroup, "RemoveDeadGroup");
-        jOptionRemoveDeadGroup.setBounds(130, 8*h1, 110,30);
+        jOptionRemoveDeadGroup.setBounds(5, start_height+8*h1, 110,30);
 
         jOptionEnd = new JButton("GiveUp");
         setButtonLook(jOptionEnd, "GiveUp");

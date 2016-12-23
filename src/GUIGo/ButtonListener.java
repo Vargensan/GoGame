@@ -1,6 +1,7 @@
 package GUIGo;
 
 import com.GO.Play;
+import com.GO.STATE;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,6 +24,7 @@ public class ButtonListener implements ActionListener{
        switch(butt)
        {
            case "Pass":
+               if(play.getPlayState()== STATE.GAME)
                play.passGame();
              break;
            case "AddTerritory":
@@ -32,21 +34,28 @@ public class ButtonListener implements ActionListener{
 
                break;
            case "Start":
-               int selectedOption = JOptionPane.showConfirmDialog(null,
-                       "Do you want to play with player?",
-                       "Start Game",
-                       JOptionPane.YES_NO_OPTION);
-               if(selectedOption == 1){
-                   //sendBotGame();
-               }
-               else{
-                   //sendPlayerGame();
+               if(play.getPlayState()==STATE.BEFORE_GAME) {
+                   int selectedOption = JOptionPane.showConfirmDialog(null,
+                           "Do you want to play with player?",
+                           "Start Game",
+                           JOptionPane.YES_NO_OPTION);
+                   if (selectedOption == 1) {
+                       //sendBotGame();
+                   } else {
+                       play.inicializeGameWithServer();
+                   }
                }
                break;
            case "AddDeadGroup":
+               if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.REMOVE_DEAD_GROUPS)){
+                   play.setPlayState(STATE.ADD_DEAD_GROUPS);
+               }
 
                break;
            case "RemoveDeadGroup":
+               if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.ADD_DEAD_GROUPS)){
+                   play.setPlayState(STATE.REMOVE_DEAD_GROUPS);
+               }
 
                break;
            case "GiveUp":

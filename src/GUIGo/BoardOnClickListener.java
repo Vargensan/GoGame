@@ -1,11 +1,8 @@
 package GUIGo;
 
-import com.GO.Board;
+import com.GO.*;
 
 import java.awt.event.MouseAdapter;
-import com.GO.PLACE;
-import com.GO.PLAYER;
-import com.GO.Play;
 
 import java.awt.event.MouseEvent;
 
@@ -116,12 +113,20 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-        obj.drawIntersection = true;
-        mouse_coordinates[0] = e.getX();
-        mouse_coordinates[1] = e.getY();
-        obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
-        //obj.update();
-        obj.repaint();
+        switch(play.getPlayState()) {
+            case GAME:
+                obj.drawIntersection = true;
+                mouse_coordinates[0] = e.getX();
+                mouse_coordinates[1] = e.getY();
+                obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+                //obj.update();
+                obj.repaint();
+                break;
+            case ADD_DEAD_GROUPS:
+                break;
+            case REMOVE_DEAD_GROUPS:
+                break;
+        }
     }
 
 }

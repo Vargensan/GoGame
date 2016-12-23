@@ -92,7 +92,11 @@ public class Play {
         boolean help[][]=playBoard.getDeadTable();
         for(int i=0;i<19;++i){
             for(int j=0;j<19;++j){
-                clientSocket.out.println(help[i][j]);
+                if(help[i][j]==true)
+                    clientSocket.out.println(1);
+                else
+                    clientSocket.out.println(0);
+
                 if(help[i][j]==true)
                     System.out.print(help[i][j]);
                 else

@@ -32,6 +32,10 @@ public interface DrawingBoardI {
      */
     public void filledCircle(Graphics2D g2, PLAYER player, int[] cordinates);
 
+    public void drawTerritory(Graphics2D g2);
+
+    public void drawDeadPools(Graphics2D g2);
+
     /**
      *
      */

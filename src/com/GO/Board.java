@@ -14,6 +14,13 @@ public class Board implements BoardI {
     private PLACE DeleteGameTable[][];
     private PLACE BlackTerritoryTable[][];
     private PLACE WhiteTerritoryTable[][];
+    //Who's Territory
+    private boolean isWhom[][];
+    //Table of death pools
+    private boolean TableofDeath[][];
+    //Table of Territory of Player
+    private PLACE TerritoryTable[][];
+
     private int[] nextCoordinates;
     //------------------------------
     int[] koSituationXY = new int[2];
@@ -25,8 +32,22 @@ public class Board implements BoardI {
         this.play=play;
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
-        BlackTerritoryTable = new PLACE[size][size];
-        WhiteTerritoryTable = new PLACE[size][size];
+        //BlackTerritoryTable = new PLACE[size][size];
+        //WhiteTerritoryTable = new PLACE[size][size];
+        //Czyje Terytorium true - Czarny false - Biały
+        isWhom = new boolean[size][size];
+        //Tablica Martwych Pól
+        /*
+        Tablica martwych pól:
+        pole martwe -> pole martwe = czarne -> +1 dla białego
+        pole martwe -> pole martwe = białe -> +1 dla czarnego
+        + Grafika dla rysowania martwych pól -> jeżeli martwe -> narysuj jakąś kropke,
+        martwe to gdy nie równa się EMPTY;
+         */
+        TableofDeath = new boolean[size][size];
+        //Table of Territory
+        TerritoryTable = new PLACE[size][size];
+
         initialize();
         nextCoordinates=new int[4];
     }
@@ -43,9 +64,84 @@ public class Board implements BoardI {
 
                 GameTable[i][j]=PLACE.EMPTY;
                 DeleteGameTable[i][j]=PLACE.EMPTY;
+                TableofDeath[i][j] = false;
+                isWhom[i][j] = false;
             }
         }
     }
+
+    public void deleteDeadFromGameTable(){
+        for(int i = 0; i < size; i++){
+            for(int j=0; j< size; j++){
+                if(TableofDeath[i][j]){
+                    GameTable[i][j] = PLACE.EMPTY;
+                }
+            }
+        }
+    }
+
+    /**
+     * Method that sets a selected point as dead
+     * @param X takes coordinate X of point
+     * @param Y takes coordinate Y of point
+     */
+    public void markAsDead(int X, int Y){
+        if(GameTable[X][Y] != PLACE.EMPTY)
+            TableofDeath[X][Y] = true;
+
+    }
+
+    /**
+     * Method that sets selected point as not dead
+     * @param X takes coordinate X of point
+     * @param Y takes coordinate Y of point
+     */
+    public void unMarkAsDead(int X, int Y){
+        TableofDeath[X][Y] = false;
+    }
+
+    /**
+     * Getter for table of dead points
+     * @return table of dead points
+     */
+    public boolean[][] getDeadTable(){
+        return TableofDeath;
+    }
+
+    /**
+     * Method that marks selected point as Territory of player
+     * @param player takes a color of player
+     * @param X takes a coordinate X of point
+     * @param Y takes a coordinate Y of point
+     */
+    public void markAsTerritory(PLAYER player, int X, int Y){
+        if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
+            TerritoryTable[X][Y] = player.playerToPlace();
+        }
+    }
+
+    /**
+     * Method that unmark selected point as Territory of player
+     * @param X takes a coordinate X of selected point
+     * @param Y takes a coordinate Y of selected point
+     */
+    public void unMarkAsTerritory(int X, int Y){
+        if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
+            isWhom[X][Y] = false;
+
+        }
+    }
+
+    /**
+     * Getter for Territory Table
+     * @return table of whos is this territory
+     */
+    public PLACE[][] getTerritoryTable(){
+        return TerritoryTable;
+    }
+
+    //public int getCountofTerritory(){
+    //    if()
 
     /**
      *

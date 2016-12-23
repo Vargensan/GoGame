@@ -82,6 +82,10 @@ public class ClientGUI extends JFrame{
         JOptionPane.showMessageDialog(content,"It is not your turn! ","I" +
                 "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
     }
+    public void InvaildMove(){
+        JOptionPane.showMessageDialog(content,"You cant place a stone on non-empty place! ","I" +
+                "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
+    }
 
     /**
      * Method responsiable for initialize jDrawing Board
@@ -101,15 +105,21 @@ public class ClientGUI extends JFrame{
      */
     public void setTurn(boolean active){
         if(active == true){
+            ismine = true;
             turn.setText("Your Turn! PLAYER: "+play.get_player_color());
         }
         else if(active == false){
+            ismine = false;
             turn.setText("Turn of Enemy! PLAYER: "+play.get_player_color());
         }
         if(!onetime){
             turn.paintImmediately(turn.getVisibleRect());
         }
         onetime = false;
+    }
+
+    public boolean getTurn(){
+        return ismine;
     }
     /**
      * Method responsiable for creating window

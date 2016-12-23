@@ -208,6 +208,8 @@ public class Board implements BoardI {
         int tempX;
         int tempY;
         boolean checkifavaliable = false;
+        //System.out.println("X: "+placeX+" Y: "+placeY);
+        //System.out.println("Ch: "+!lessandhighbool(placeX,placeY));
         if(!lessandhighbool(placeX,placeY)){
             return false;
         }
@@ -369,15 +371,18 @@ public class Board implements BoardI {
 
     @Override
     public boolean canAddHere(PLAYER color, int placeX, int placeY) {
-        //Can only add on empty place
         if(!lessandhighbool(placeX,placeY)){
             return false;
         }
         if(!checkifempty(GameTable,color,placeX,placeY)){
-            error_option = 1;
+            play.turnRepaint();
+            play.informInvaildMove();
+            //play.turnRepaint();
             return false;
         }
         if(!isItNotA_KO(color,placeX,placeY)){
+            play.turnRepaint();
+            play.informKO();
             error_option = 2;
             return false;
         }
@@ -388,10 +393,10 @@ public class Board implements BoardI {
         }
        //Check sicmering
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-            System.out.println("\nI can breathe here - Simmeric <3\n");
+            //System.out.println("\nI can breathe here - Simmeric <3\n");
             return true;
         }else{
-            System.out.println("Inavild");
+            //System.out.println("Inavild");
             GameTable[placeX][placeY] = PLACE.EMPTY;
             error_option = 3;
             return false;
@@ -421,6 +426,8 @@ public class Board implements BoardI {
         //pentla for na tempboard[][]
         PLACE tempboard[][] = GameTable;
         int[] XY = new int[2];
+        int tempX;
+        int tempY;
         for(int i = 0; i <size ; i++) {
             for(int j =0; j < size; j++) {
                 tempboard[i][j] = GameTable[i][j];
@@ -436,6 +443,9 @@ public class Board implements BoardI {
             //if yes
             return false;
         }
+        //if(!canBreathHere(tempboard,color,placeX,placeY,placeX,placeY)){
+        //    return false;
+        //}
         //nuller to KO
         nullKO_situation();
         //if KO wasn't detected then do normal checkout
@@ -443,7 +453,9 @@ public class Board implements BoardI {
         enemyplayer = color.getEnemyColor();
         for(int i = 0; i<4 ; i++){
             XY = values(i);
-            cantBreath = canBreathHere(tempboard,enemyplayer, placeX+XY[0],placeY+XY[1],placeX,placeY) == false;
+            tempX = XY[0] +placeX;
+            tempY = XY[1] +placeY;
+            cantBreath = canBreathHere(tempboard,enemyplayer, tempX,tempY,placeX,placeY) == false;
             System.out.println("State: "+cantBreath);
             if(cantBreath){
                 //then ++ ko_state_counter
@@ -451,8 +463,8 @@ public class Board implements BoardI {
               //  System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {
-                    koSituationXY[0] = placeX + XY[0];
-                    koSituationXY[1] = placeY + XY[1];
+                    koSituationXY[0] = tempX;
+                    koSituationXY[1] = tempY;
                     one_time = false;
                 } else if (ko_state_counter > 1){
                     nullKO_situation();
@@ -622,6 +634,8 @@ public class Board implements BoardI {
      * @return boolean which tells is operation of insert legal
      */
     private boolean lessandhighbool(int tempX, int tempY){
-        return ((tempX>=0 && tempX <=(size-1)) && (tempY >=0 && tempY <=(size-1)));
+        boolean condition = ((tempX>=0 && tempX <=(size-1)) && (tempY >=0 && tempY <=(size-1)));
+        //System.out.println("In: "+condition);
+        return condition;
     }
 }

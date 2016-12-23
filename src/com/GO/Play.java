@@ -221,6 +221,17 @@ public class Play {
             window.showWarningKO_Situation();
         }
     }
+    public void informInvaildMove(){
+        window.InvaildMove();
+    }
+
+    public boolean getTurn(){
+        return window.getTurn();
+    }
+    public void turnRepaint(){
+        //window.getDrawingBoard().repaint();
+        window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+    }
     public void giveWarningMessage(){
         window.WarnningMessage();
     }

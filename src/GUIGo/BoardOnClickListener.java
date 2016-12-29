@@ -31,8 +31,8 @@ public class BoardOnClickListener extends MouseAdapter{
 BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
 {
     this.play=play;
-    this.obj = play.getDrawingBoard();
-    this.board = play.getPlayBoard();
+    this.obj = obj;
+    this.board = board;
     this.isClicable = isClicable;
 
 }

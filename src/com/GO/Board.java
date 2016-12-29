@@ -330,7 +330,7 @@ public class Board implements BoardI {
         GameTable[placeX][placeY] = color.playerToPlace();
         canEnemyBreath(GameTable,color,placeX,placeY);
         //deleteTempTableDeleted();
-        nullKO_situation();
+        //nullKO_situation();
     }
 
     /**
@@ -515,11 +515,13 @@ public class Board implements BoardI {
                 //Dodajemy ko_state, ale po sprawdzeniu innego symerica, możemy mieć więcej niż jedną ko-like-sytuacje
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {
+                    System.out.println("Setting KO: X: "+tempX+" Y: "+tempY);
                     koSituationXY[0] = tempX;
                     koSituationXY[1] = tempY;
                     one_time = false;
                 } else if (ko_state_counter > 1){
                     //if(ko_detected==false)
+                    System.out.println("I am a nuller");
                     nullKO_situation();
                 }
                 //nullKO_situation();
@@ -567,16 +569,14 @@ public class Board implements BoardI {
         return koSituationXY;
     }
 
-    /**
-     * Setter for KO points
-     * @param koPoints takes Coordinates of KO situation
-     */
-    public void setKoSituationXY(int[] koPoints){
-        koSituationXY[0] = koPoints[0];
-        koSituationXY[1] = koPoints[1];
+
+    public void setKoSituationXY(int koPointsX, int koPointsY){
+        koSituationXY[0] = koPointsX;
+        koSituationXY[1] = koPointsY;
     }
 
     private void nullKO_situation(){
+        System.out.println("\nNulling KO\n");
         ko_detected = false;
         koSituationXY[0] = -1;
         koSituationXY[1] = -1;

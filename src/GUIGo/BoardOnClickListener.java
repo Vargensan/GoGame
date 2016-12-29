@@ -19,15 +19,20 @@ public class BoardOnClickListener extends MouseAdapter{
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
     private DrawingBoard obj;
-    boolean puttingStone;
-    boolean isClicable;
-    int error;
+    private boolean puttingStone;
+    private boolean isClicable;
+    private int error;
 
-BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
+    //Skoro implementujemy play, implementacja board może być zaniechana...
+    //Dostaniemy board przez play, zmniejszone dziedziczenie i tylko klasa play bedzie powiazana,
+    //z logika
+    //isClicable, do usunięcia bo nie działa
+    //
+BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
 {
     this.play=play;
-    this.obj = obj;
-    this.board=board;
+    this.obj = play.getDrawingBoard();
+    this.board = play.getPlayBoard();
     this.isClicable = isClicable;
 
 }
@@ -43,18 +48,10 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
     public void mouseReleased(MouseEvent e) {
         switch(play.getPlayState()) {
             case GAME:
-                //Temp Code - to do checkout
-                //if game logic accepts point then it will be drown
                 if(!obj.getterMouseListener()){
                     play.giveWarningMessage();
                     obj.repaint();
                 }
-
-        /*
-        There is a bug, cant resolve where, cause i don't know if it is error in not-blocking mouse
-        signals or in logic, to be ensure, that it is not logic, need to create double-check condition...
-        ---CAN'T DEBUG PROGRAM CAUSE ERROR OCUERS---
-         */
                 System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
                 if (obj.getterMouseListener()) {
                     mouse_coordinates[0] = e.getX();
@@ -70,17 +67,7 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
                         obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
                         play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
                     }
-                } else if (error == 2) {
-                    play.informKO();
-                    obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
-                } else if (error == 1){
-                    System.out.println("Can't place stone at not-empty field");
-                } else{
-                    System.out.println("It is not your turn!");
                 }
-
-                //End of Temp Code
-
                 break;
             case ADD_DEAD_GROUPS:
                 play.sendDeadGroups();
@@ -104,6 +91,10 @@ BoardOnClickListener(DrawingBoard obj,Board board,Play play,boolean isClicable)
     public void initialize(){
         this.distance = obj.distance;
         StartPoint = obj.dmo_calculate.calculateStartPoint(height, BoardSize, distance);
+        //Usunąć setera set Size
+        //BoardSize = play.getPlayBoard().getSize();
+        //Usunąć settera set Height
+        //I dodac jakos set height przy inicjalizacji, automatyczna werfyfikacja z playem
     }
 
     /**

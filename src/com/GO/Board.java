@@ -9,11 +9,13 @@ package com.GO;
 public class Board implements BoardI {
 
     private int size;
+    private int error_option;
     private double pointsBlack;
     private double pointsWhite;
     private Play play;
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
+    private PLACE TempDeleteGameTable[][];
     private PLACE BlackTerritoryTable[][];
     private PLACE WhiteTerritoryTable[][];
     //Who's Territory
@@ -24,18 +26,23 @@ public class Board implements BoardI {
     private PLACE TerritoryTable[][];
 
     private int[] nextCoordinates;
+    private int[] stoneCoordinates;
     //------------------------------
     private int[] koSituationXY = new int[2];
     private boolean ko_detected;
-    private int error_option;
     private boolean one_time_calculate = true;
+    private boolean suicide_move = false;
+    private boolean check_sic_once = true;
     //------------------------------
+    //Nie sprawdzac simmerica zawsze -> dopiero po braku oddechu?
+    //
     public Board(int size,Play play)
     {
         this.size=size;
         this.play=play;
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
+        TempDeleteGameTable = new PLACE[size][size];
         //BlackTerritoryTable = new PLACE[size][size];
         //WhiteTerritoryTable = new PLACE[size][size];
         //Czyje Terytorium true - Czarny false - Biały
@@ -49,14 +56,17 @@ public class Board implements BoardI {
         martwe to gdy nie równa się EMPTY;
          */
         //+6.5 points to black player
-        pointsBlack = 6.5;
-        pointsWhite = 0.0;
+        pointsBlack = 0.0;
+        pointsWhite = 6.5;
         TableofDeath = new boolean[size][size];
         //Table of Territory
         TerritoryTable = new PLACE[size][size];
 
         initialize();
         nextCoordinates=new int[4];
+        stoneCoordinates = new int[2];
+        stoneCoordinates[0] = -1;
+        stoneCoordinates[1] = -1;
 
         //Tests
         //TerritoryTable[2][2] = PLACE.BLACK;
@@ -154,7 +164,7 @@ public class Board implements BoardI {
      */
     public void unMarkAsTerritory(int X, int Y){
         if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
-            isWhom[X][Y] = false;
+            TerritoryTable[X][Y] = PLACE.EMPTY;
 
         }
     }
@@ -197,6 +207,10 @@ public class Board implements BoardI {
             return pointsWhite;
         }
     }
+
+    private boolean checkStoneCoordinates(int tempX, int tempY){
+        return (tempX == stoneCoordinates[0] && tempY == stoneCoordinates[1]);
+    }
     /**
      *
      * @param color color of player=stone for which we are asking
@@ -205,18 +219,23 @@ public class Board implements BoardI {
      * @return returns if stone in given color can breath on given place
      */
     private boolean canBreathHere(PLACE[][] table,PLAYER color, int placeX,int placeY,int IgnoreX,int IgnoreY) {
-
         PLACE actuall;
         int XY[] = new int[2];
         int tempX;
         int tempY;
         boolean checkifavaliable = false;
-        //System.out.println("X: "+placeX+" Y: "+placeY);
-        //System.out.println("Ch: "+!lessandhighbool(placeX,placeY));
         if(!lessandhighbool(placeX,placeY)){
             return false;
         }
         DeleteGameTable[placeX][placeY] = table[placeX][placeY];
+        if(table[placeX][placeY].equals(color.playerToPlace())){
+            TempDeleteGameTable[placeX][placeY] = color.playerToPlace();
+        }else if(table[placeX][placeY].equals(color.getEnemyColor().playerToPlace()))
+            TempDeleteGameTable[placeX][placeY] = color.getEnemyColor().playerToPlace();
+        else
+            TempDeleteGameTable[placeX][placeY] = PLACE.EMPTY;
+
+        //table[placeX][placeY] = color.playerToPlace();
         /*
         Edit: Let's assume we have point placeX=11 placeY=11
         Check around points should be: as bellow
@@ -234,12 +253,10 @@ public class Board implements BoardI {
         pomimo tego że go ma, tylko nie sprawdziło wszystkich swoich pól.
 
         ROZWIĄZANIE PROBLEMU:?
-        priorityQueque ?
         if -> moje puste pola to null to
         if -> mam sąsiada -> idę do niego
         pytanie -> co gdy mam dwoch sasiadow i wejde w tego z brakiem oddechu?
         wejdzie w niego i zwroci null
-        wtedy trzeba zrobic countera od liczby sasiadow, jakas strukture ktora przechowuje
 
          */
         //Sprawdz wszystkich otaczających i zobacz czy to są puste pola, jeśli tak zwróc true
@@ -247,22 +264,33 @@ public class Board implements BoardI {
         Question: Problem czy bedzie trzeba zastosowac Array List ze wzgledu gdy sasiedzi beda obok siebie
         Bo wtedy sasiad moze ignorowac tylko tego ktory przekazal rekurencje do niego
         Answer: No jasne ;-;
+        Rozwiązanie: DeadTable przechowuje pola które zostały dotknięte rekurencją, wystarczy ich nie uwzględniać
          */
         for(int i = 0; i < 4 ; i++){
             XY = values(i);
             tempX = placeX+XY[0];
             tempY = placeY+XY[1];
-            if(lessandhighbool(tempX,tempY)){
-                try{
+            if(!lessandhighbool(tempX,tempY)){
+                continue;
+            }
+            //przed-wstawieniem, żeby nie sprawdzało oddechu w tym punktu
+            //bo tu zamierzam Ciebie wstawić...
+            //Dać warunek czy miejsce jest puste
+            if(IgnoreX == tempX && IgnoreY == tempY){
+                continue;
+            }
+            //else {
+                try {
                     actuall = table[tempX][tempY];
-                    if(actuall.equals(PLACE.EMPTY)){
+                    if (actuall.equals(PLACE.EMPTY)) {
+                        System.out.println("I can breath here: X: "+tempX+" Y:"+tempY);
                         return true;
                     }
-                }
-                catch(ArrayIndexOutOfBoundsException ex){
+                } catch (ArrayIndexOutOfBoundsException ex) {
 
                 }
-            }
+           // }
+
         }
         for(int i = 0; i < 4 ; i++){
             XY = values(i);
@@ -271,10 +299,19 @@ public class Board implements BoardI {
             if(lessandhighbool(tempX,tempY)){
                 actuall = table[tempX][tempY];
                 if(actuall.equals(color.playerToPlace())) {
-                    if (table[tempX][tempY] != DeleteGameTable[tempX][tempY]) {
-                        checkifavaliable = canBreathHere(table, color, tempX, tempY, placeX, placeY);
+                    if (!table[tempX][tempY].equals(DeleteGameTable[tempX][tempY])) {
+                        //sprawdz sasiadow
+                        //placeX,placeY at IgnoreX,IgnoreY
+                        //Błąd implementacji <3 -> stale sprawdza mi jednego
+                        /*
+                        Jak działa, sprawdza mi jednego dodaje ze moze oddychac sprawdza innego
+                        ale nie sprawdza czy ten moze oddychac przez tego ktorego juz sprawdzil, nie pozwala na to
+                        DeleteGameTable Gosh so hard bugggg ;x
+                         */
+                        checkifavaliable = canBreathHere(table, color, tempX, tempY, IgnoreX, IgnoreY);
                     }
                     if (checkifavaliable) {
+                        //jezeli moga oddychac zwroc true
                         return true;
                     }
                 }
@@ -292,6 +329,8 @@ public class Board implements BoardI {
     public void addStone(PLAYER color, int placeX, int placeY) {
         GameTable[placeX][placeY] = color.playerToPlace();
         canEnemyBreath(GameTable,color,placeX,placeY);
+        //deleteTempTableDeleted();
+        nullKO_situation();
     }
 
     /**
@@ -327,6 +366,7 @@ public class Board implements BoardI {
                     //jeśli nie oddycha wywal to
                     if(state == false){
                         deleteFromTable();
+                        //deleteTempTableDeleted();
                     }
                     //if(canBreathHere(GameTable,enemy,tempX,tempY,tempX,tempY) == false){
                     //    System.out.println("Gonna kick your ass: X: "+tempX+" Y: "+tempY);
@@ -372,39 +412,52 @@ public class Board implements BoardI {
         return true;
     }
 
+
     @Override
     public boolean canAddHere(PLAYER color, int placeX, int placeY) {
+        //Wywyłanie metod w zależności od stanu gracza -> nie wywoływać dla bota
+        //Logika nie działa na samobójstwa grupy
+        nullCoordinates();
         if(!lessandhighbool(placeX,placeY)){
             return false;
         }
         if(!checkifempty(GameTable,color,placeX,placeY)){
+            play.informInvaildMove(1);
             play.turnRepaint();
-            play.informInvaildMove();
-            //play.turnRepaint();
             return false;
         }
+        //Wyzerowanie wsp KO dopiero po ruchu
         if(!isItNotA_KO(color,placeX,placeY)){
-            play.turnRepaint();
             play.informKO();
-            error_option = 2;
+            play.turnRepaint();
             return false;
         }
+        stoneCoordinates[0] = placeX;
+        stoneCoordinates[1] = placeY;
         if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
            nullKO_situation();
+           nullCoordinates();
           // System.out.println("\nI can breathe at here <3\n");
            return true;
         }
-       //Check sicmering
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-            //System.out.println("\nI can breathe here - Simmeric <3\n");
+            System.out.println("\nI can breathe here - Simmeric <3\n");
+            nullCoordinates();
             return true;
         }else{
             //System.out.println("Inavild");
             GameTable[placeX][placeY] = PLACE.EMPTY;
-            error_option = 3;
+            play.informInvaildMove(2);
+            play.turnRepaint();
+            nullCoordinates();
             return false;
         }
         //return false;
+    }
+
+    private void nullCoordinates(){
+        stoneCoordinates[0] = -1;
+        stoneCoordinates[1] = -1;
     }
 
     /**
@@ -421,62 +474,73 @@ public class Board implements BoardI {
      * pawn/pawns it will be placed
      * @param color takes a color of player
      * @param placeX takes a X coordinate of pawn, where player demands to place it
-     * @param placeY takes a Y coordiante of pawn, where player demands to place it
+     * @param placeY takes a Y coordinate of pawn, where player demands to place it
      * @return status of checking
      */
     public boolean canBreatheAfterSicmering(PLAYER color, int placeX, int placeY){
         PLAYER enemyplayer;
-        //pentla for na tempboard[][]
-        PLACE tempboard[][] = GameTable;
         int[] XY = new int[2];
         int tempX;
         int tempY;
-        for(int i = 0; i <size ; i++) {
-            for(int j =0; j < size; j++) {
-                tempboard[i][j] = GameTable[i][j];
-            }
-        }
-        tempboard[placeX][placeY] = color.playerToPlace();
+        GameTable[placeX][placeY] = color.playerToPlace();
         int ko_state_counter = 0;
         boolean one_time = true;
         boolean dead = false;
         boolean cantBreath;
-        //if KO situation
+        //Chyba do usunięcia
         if(!isItNotA_KO(color,placeX,placeY)){
-            //if yes
             return false;
         }
-        //if(!canBreathHere(tempboard,color,placeX,placeY,placeX,placeY)){
-        //    return false;
-        //}
-        //nuller to KO
+        //----
         nullKO_situation();
-        //if KO wasn't detected then do normal checkout
-        //Set enemy colour
         enemyplayer = color.getEnemyColor();
         for(int i = 0; i<4 ; i++){
             XY = values(i);
             tempX = XY[0] +placeX;
             tempY = XY[1] +placeY;
-            cantBreath = canBreathHere(tempboard,enemyplayer, tempX,tempY,placeX,placeY) == false;
-            System.out.println("State: "+cantBreath);
+            //Sprawdza czy wchodzimy w nie dozwolone punkty -> jeśli tak to idź do kolejnego wywołania
+            if(!lessandhighbool(tempX,tempY)){
+                continue;
+            }
+            //Sprawdza czy wchodzimy w punkty należące do nas -> jeśli tak to idź do kolejnego wywołania
+            if(GameTable[tempX][tempY].equals(color.playerToPlace())){
+                continue;
+            }
+            deleteTableNuller();
+            cantBreath = canBreathHere(GameTable,enemyplayer, tempX,tempY,placeX,placeY) == false;
+            System.out.println("State: "+cantBreath+ " temp X: "+tempX+" temp Y: "+tempY+" color:"+ enemyplayer);
             if(cantBreath){
-                //then ++ ko_state_counter
-                //Unused-Dunno-Where-To-Put
-              //  System.out.println("X:"+(placeX+XY[0])+ "Y:"+(placeY+XY[1]));
+                //Usunięcie wszystkich pol
+                deleteTempTableDeleted();
+                //Dodajemy ko_state, ale po sprawdzeniu innego symerica, możemy mieć więcej niż jedną ko-like-sytuacje
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {
                     koSituationXY[0] = tempX;
                     koSituationXY[1] = tempY;
                     one_time = false;
                 } else if (ko_state_counter > 1){
+                    //if(ko_detected==false)
                     nullKO_situation();
                 }
+                //nullKO_situation();
                 dead = true;
-            }
+            }//else{
+               // deleteTempTableDeleted();
+            //}
 
         }
         return dead;
+    }
+    //Jak poprawnie zainicjalizować KO_Sytuacje...
+    private void deleteTempTableDeleted(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                if(GameTable[i][j].equals(TempDeleteGameTable[i][j])){
+                    TempDeleteGameTable[i][j] = PLACE.EMPTY;
+                }
+                TempDeleteGameTable[i][j]=PLACE.EMPTY;
+            }
+        }
     }
 
     /**
@@ -488,11 +552,28 @@ public class Board implements BoardI {
      */
     public boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
-          // System.out.println("KO Situation detected!");
+           System.out.println("KO Situation detected!");
            ko_detected = true;
            return false;
        }
        return true;
+    }
+
+    /**
+     * Getter for KO points
+     * @return KO situation coordinates
+     */
+    public int[] getKoPoints(){
+        return koSituationXY;
+    }
+
+    /**
+     * Setter for KO points
+     * @param koPoints takes Coordinates of KO situation
+     */
+    public void setKoSituationXY(int[] koPoints){
+        koSituationXY[0] = koPoints[0];
+        koSituationXY[1] = koPoints[1];
     }
 
     private void nullKO_situation(){
@@ -529,12 +610,6 @@ public class Board implements BoardI {
         }
         return p;
     }
-    //TODO: Add nuller to KO_SITUATION
-    /*
-     Problem: after detecting KO situation it returns that PLACE.color cant be added here
-     and after diffrent move of that player we need to null integer ko_situationXY
-     (by saying null, assume to set it to -1) so it does not attach any field on game board
-     */
 
     /**
      * Getter for point where KO SITUATION OCCURS
@@ -543,66 +618,26 @@ public class Board implements BoardI {
     public int[] getKO_Points(){
         return koSituationXY;
     }
+
+    /**
+     * Getter for KO Status
+     * @return ko status (not) detected
+     */
     public boolean getKO_Status(){
         return ko_detected;
     }
 
     @Override
     public int howMuchteritory(PLAYER color) {
-        /*
-        Opis implementacji:
-        1.Weź dowolny pusty punkt na planszy, rekurencja, wywołanie po wszystkich sąsiadach(4) -> odnotuj punkt
-        2.  a) jeżeli wywołanie rekurencyjne jest niepuste -> odnotuj do innej tabeli, nie rób dalej rekurencji
-        2   b) jeżeli wywołanie rekurencyjne jest puste -> odnotuj, wywołaj rekurencje
-                a .1) jeżeli wywołanie dotyczy pola które zostało już wywołane rekurencyjnie zaniechaj
-        3. jeżeli liczba odnotowanych pól jest mniejsza niż połowa planszy to wyszukaj pasmo blokujące dalszy rozwój
-        rekurencji i określ jego charakter (kolor)
-            a) możliwa automatyczna weryfikacja i przerwanie wykoanania gdy >= polowa planszy
-        4. powtórz operacje dla dowolnego punktu należącego do game board ale nie odnotowanego wśród pustych
-         */
+
         return 0;
     }
 
-    /*
-    Algorytm:
-    1.Gracz wybiera punkt, i przekazuje siebie(jako kolor)
-    Sprawdzamy wszystkich sąsiadów danego punktu, jeżeli
-    jest to gracz przeciwny lub pole puste to przypisujemy dane pole
-    do tabeli tymczasowej i dalej wywołujemy rekurencje aż do natrafienia na
-    kolor gracza, pole to dodajemy do tabeli tymczasowej o nazwie obwód, gdy cała rekurncja się skończy
-    sprawdzamy czy pola z tabeli obwód tworzą go rzeczywiście tj.
-
-    a) wybieramy punkt o najmniejszym X i Y (taki istnieje tylko jeden) i sprawdzamy czy ma sąsiadów
-    sąsiadów. Dodajemy to wszystko do tabeli tymczasowej żeby ponownie nie wejść do nich.
-
-    b) Waruenk jeżeli dowolne pole z sąsiadem różni się dokładnie o jedną wartość X/Y oraz
-     ma co najmniej dwóch sąsiadów to mamy obwód: Złożoność: O(n), dokładniej 4n
-        1.b) Wybieramy po kolei każde pole i sprawdzamy, z czym że sąsiad będzie oznaczało również pole po
-        przekątnej
-
-        (a,b)       (a+1,b)         (a+2,b)
-        (a,b-1)     (/a+1/,/b-1/)   (a+2,b-1)
-        (a,b-2)     (a+1,b-2)       (a+2,b-2)
-
-        2.b) Druga implementacja:
-            2.b) 1. Jeżeli mamy dany punkt najmniejszy, to wśród sąsiadów wybieramy najbliżej jemu pasujący
-            (o najmniejszych wartościach X,Y) i idziemy do niego -> powtarzamy rekurencje
-            Gdyby powyższa metoda była nie prawdziwa to nie mielibyśmy do czynienia z obwodem, a ten zakładamy.
-            Czyli gdy coś pójdzie nie tak to wiemy że to nie jest obwód.
-            Adnote: Osobny przypadek dla obwodów, tworzonych również z osiami X oraz Y planszy gry, wtedy trzeba
-            założyć że istnieje linia która łączy dowolne dwa kamienie po tej osi.
-                 2. Priorytet kładziemy na przejściu do współrzędnej która jest mniejsza w punkcie najmniejszym
-                 3. Jeżeli współrzędne są sobie równe w punkcie o najmniejszych współrzędnych, dowolność wyboru
-                 Złożoność: W najgorszym przypadku n/2 a dokładniej wykonamy mniej więcej
-                 |x[1] - b[1]| + |x[2] - b[2]| przejść, gdzie "x" - to współrzędne punktu o najmniejszych wartościach
-                 a gdzie "b" to współrzędne dowolnego punktu, wartość zmniejszona jeżeli przeskakujemy po przekątnej.
-
-     */
-    //@Override
+    @Override
     public void giveToMyTerritory(PLAYER player, int placeX, int placeY) {
         boolean isEmpty = GameTable[placeX][placeY] == PLACE.EMPTY;
         if(isEmpty){
-            if(player == PLAYER.BLACK){
+            if(player.equals(PLAYER.BLACK)){
                 //if(isInAreaOfControl())
                 BlackTerritoryTable[placeX][placeY] = GameTable[placeX][placeY];
             }
@@ -638,7 +673,6 @@ public class Board implements BoardI {
      */
     private boolean lessandhighbool(int tempX, int tempY){
         boolean condition = ((tempX>=0 && tempX <=(size-1)) && (tempY >=0 && tempY <=(size-1)));
-        //System.out.println("In: "+condition);
         return condition;
     }
 }

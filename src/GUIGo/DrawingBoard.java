@@ -14,41 +14,43 @@ import java.io.InputStream;
  */
 public class DrawingBoard extends JComponent implements DrawingBoardI{
 
-    //Private
-    private BufferedImage controlerImage;
-    private ImageResize imageResizer;
-    private BufferedImage image;
-    private Graphics2D g2;
-    private BoardOnClickListener mouseListener;
-    private int criclefilled;
-    private int sizeGameBoard;
-    private int allow_to_drawing = 0;
-    private static int[] StartPoint = new int[2];
-    private int[][][] Table_Intersection;
-    private BufferedImage im_black,im_white,im_ko,im_dead,im_territoryBlack,im_territoryWhite;
+    //General Objects
+    DrawMathObject dmo_calculate = new DrawMathObject();
     private Board board;
     private Play play;
-    private boolean ko_detected = false;
-    private int[] KO_Points;
-    //
-    private boolean drawDeadPools = true;
-    private boolean drawTerritory = true;
-
+    private BoardOnClickListener mouseListener;
+    //LOGIC INFORMATIONS
     private boolean DeadTable[][];
-    private PLACE TerritoryTable[][];
-
-    private boolean firsttime_setTerritory = true;
-    private boolean firsttime_setDead = true;
-    //
-    int distance;
-    boolean drawIntersection = false;
-    boolean isClicable;
+    private PLACE[][] TerritoryTable;
     private PLACE[][] gameboard;
+    private int[] KO_Points;
+    private boolean ko_detected = false;
+    //Drawing Mouse Informations
+    private int[][][] Table_Intersection;
     int[] intersectionPoint;
     int[] relasedPoint;
-    DrawMathObject dmo_calculate = new DrawMathObject();
-    String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
-    String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+    //Boolean-Drawing Informations
+    boolean drawIntersection = false;
+    private boolean drawDeadPools = true;
+    private boolean drawTerritory = true;
+    //----???---
+    private boolean firsttime_setTerritory = true;
+    private boolean firsttime_setDead = true;
+    //DrawingBoard self-use
+    private BufferedImage image,controlerImage,im_black,im_white,im_ko,im_dead,im_territoryBlack,im_territoryWhite;
+    private ImageResize imageResizer;
+    private Graphics2D g2;
+    private int allow_to_drawing = 0;
+    private final String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
+    private final String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+    //DrawingBoard Informations
+    int distance;
+    private int criclefilled;
+    private static int[] StartPoint = new int[2];
+    //General Informations
+    boolean isClicable;
+    private int sizeGameBoard;
+
 
 
 
@@ -89,7 +91,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
 
     private void allertKO(Graphics2D g2){
         int from[] = {Table_Intersection[KO_Points[0]][KO_Points[1]][0], Table_Intersection[KO_Points[0]][KO_Points[1]][1]};
-        //int to[] = {Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][0],Table_Intersection[KO_Points[0]+1][KO_Points[1]+1][1]};
         g2.drawImage(im_ko,from[0],from[1],null);
     }
 
@@ -230,7 +231,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * set it's properties
      */
     private void initializeMouseListener(){
-        mouseListener = new BoardOnClickListener(this,board,play,isClicable);
+        mouseListener = new BoardOnClickListener(board,this,play,isClicable);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
         mouseListener.initialize();
@@ -242,6 +243,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     {
         return mouseListener;
     }
+
     /**
      * Method which sets game board, and starts method responsible for computing start vales
      * of drawing

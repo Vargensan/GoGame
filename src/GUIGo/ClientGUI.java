@@ -86,6 +86,10 @@ public class ClientGUI extends JFrame{
         JOptionPane.showMessageDialog(content,"You cant place a stone on non-empty place! ","I" +
                 "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
     }
+    public void InvalidMove_isNotEmpty(){
+        JOptionPane.showMessageDialog(content,"You cant place stone here, no breaths detected!","" +
+                "Invalid moce detected!",JOptionPane.WARNING_MESSAGE);
+    }
 
     /**
      * Method responsiable for initialize jDrawing Board
@@ -121,6 +125,7 @@ public class ClientGUI extends JFrame{
     public boolean getTurn(){
         return ismine;
     }
+
     /**
      * Method responsiable for creating window
      *
@@ -130,10 +135,6 @@ public class ClientGUI extends JFrame{
         return jDrawingBoard;
     }
     private void createWindow(){
-        //jClient.setContentPane(new JLabel(new ImageIcon("C:\\Users\\cp24\\IdeaProjects\\Game\\src\\GoGraphics\\addgraphics.jpg")));
-        //InputStream imageInputStream = jClient.getClass().getResourceAsStream("/GoGraphics/black_button.png");
-        //BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-        //image = imageResizer.scale(bufferedImage,getWidth(),getHeight());
         content = jClient.getContentPane();
         content.setLayout(null);
         //set JFrame look
@@ -231,32 +232,33 @@ public class ClientGUI extends JFrame{
      */
     private void setJOptionButtonsNames(){
         int height = jOptionPanel.getHeight();
-        int h1=30;
+        int b_height=30;
+        int b_width=110;
         int start_height=70;
 
         jOptionPass = new JButton("Pass");
         setButtonLook(jOptionPass, "Pass");
-        jOptionPass.setBounds(10, height - 40, 110,30);
+        jOptionPass.setBounds(10, height - 40, b_width,b_height);
 
         jOptionAddTerritory = new JButton("AddTerritory");
         setButtonLook(jOptionAddTerritory, "AddTerritory");
-        jOptionAddTerritory.setBounds(5, start_height+2*h1, 110,30);
+        jOptionAddTerritory.setBounds(5, start_height+2*b_height, b_width,b_height);
 
         jOptionRemoveTerritory = new JButton("RemoveTerritory");
         setButtonLook(jOptionRemoveTerritory, "RemoveTerritory");
-        jOptionRemoveTerritory.setBounds(5,start_height+4*h1 , 110,30);
+        jOptionRemoveTerritory.setBounds(5,start_height+4*b_height , b_width,b_height);
 
         jOptionAddDeadGroup = new JButton("AddDeadGroup");
         setButtonLook(jOptionAddDeadGroup, "AddDeadGroup");
-        jOptionAddDeadGroup.setBounds(5, start_height+6*h1, 110,30);
+        jOptionAddDeadGroup.setBounds(5, start_height+6*b_height, b_width,b_height);
 
         jOptionRemoveDeadGroup = new JButton("RemoveDeadGroup");
         setButtonLook(jOptionRemoveDeadGroup, "RemoveDeadGroup");
-        jOptionRemoveDeadGroup.setBounds(5, start_height+8*h1, 110,30);
+        jOptionRemoveDeadGroup.setBounds(5, start_height+8*b_height, b_width,b_height);
 
         jOptionEnd = new JButton("GiveUp");
         setButtonLook(jOptionEnd, "GiveUp");
-        jOptionEnd.setBounds(250, height - 40, 110,30);
+        jOptionEnd.setBounds(250, height - 40, b_width,b_height);
     }
 
     /**

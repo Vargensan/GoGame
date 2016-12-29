@@ -29,7 +29,7 @@ public class BotClass {
             x = generator.nextInt(19);
             y = generator.nextInt(19);
             canAddHere = play.getPlayBoard().canAddHere(play.get_player_color(), x, y);
-        } while (canAddHere);
+        } while (!canAddHere);
         play.getPlayBoard().addStone(play.get_player_color(),x,y);
     }
 

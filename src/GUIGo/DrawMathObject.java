@@ -50,8 +50,8 @@ public class DrawMathObject implements GUIMathClass{
             tempCor[0] = (int) Math.round((((double) coordinates[0]- (double) startPoint[0])/((double) distance)));
             tempCor[1] = (int) Math.round((((double) coordinates[1]- (double) startPoint[1])/((double) distance)));
         } else {
-            tempCor[0] = 0;
-            tempCor[1] = 0;
+            tempCor[0] = -1;
+            tempCor[1] = -1;
         }
         return tempCor;
     }

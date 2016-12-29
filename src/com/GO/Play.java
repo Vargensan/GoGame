@@ -270,17 +270,37 @@ public class Play {
             window.showWarningKO_Situation();
         }
     }
-    public void informInvaildMove(){
-        window.InvaildMove();
+
+    /**
+     * Prints to the client, that the move which he has done is incorrect
+     * @param option takes the option of incorrect move
+     */
+    public void informInvaildMove(int option){
+        if(option==1)
+            window.InvaildMove();
+        else
+            window.InvalidMove_isNotEmpty();
     }
 
+    /**
+     * Getter for a turn of player
+     * @return actual state of player active/unactive
+     */
     public boolean getTurn(){
         return window.getTurn();
     }
+
+    /**
+     * Repaints drawing board
+     */
     public void turnRepaint(){
         //window.getDrawingBoard().repaint();
         window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
     }
+
+    /**
+     * Sends Warning Message to the Client
+     */
     public void giveWarningMessage(){
         window.WarnningMessage();
     }
@@ -292,6 +312,8 @@ public class Play {
     {
         return playBoard;
     }
+
+    public DrawingBoard getDrawingBoard(){return window.getDrawingBoard();}
 
     /**
      * Getter for player color

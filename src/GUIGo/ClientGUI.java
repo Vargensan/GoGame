@@ -290,7 +290,7 @@ public class ClientGUI extends JFrame{
 
         jDrawingBoard = new DrawingBoard(board,play);
         System.out.println(CenterX);
-        jDrawingBoard.setBounds(CenterX + 40,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
+        jDrawingBoard.setBounds(CenterX + 60,50,X_OF_DRAWPANEL,Y_OF_DRAWPANEL);
     }
     /**
      * Method which add Buttons to JPanel which is added to GUI

@@ -43,6 +43,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private int allow_to_drawing = 0;
     private final String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
     private final String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+    private int strokeOne;
+    private int strokeTwo;
     //DrawingBoard Informations
     int distance;
     private int criclefilled;
@@ -118,13 +120,24 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             Y[i] = Y[0] + i*temp;
         }
         for(int i=0; i < sizeGameBoard; i++){
+            g2.setStroke(new BasicStroke(strokeOne));
             g2.drawLine(X[i],Y[sizeGameBoard-1],X[i],Y[0]);
-            g2.drawString(abc[i],X[i],Y[sizeGameBoard-1]+distance);
+            g2.drawString(abc[i],X[i],Y[sizeGameBoard-1]+criclefilled);
             g2.drawString(abc[i],X[i],Y[0]-criclefilled/2);
             g2.drawLine(X[sizeGameBoard-1],Y[i],X[0],Y[i]);
             g2.drawString(numbers[i],X[sizeGameBoard-1]+criclefilled/2,Y[i]);
-            g2.drawString(numbers[i],X[0]-distance,Y[i]);
+            g2.drawString(numbers[i],X[0]-criclefilled,Y[i]);
         }
+    }
+
+    @Override
+    public void drawBorders(Graphics2D g2) {
+        int offset = strokeTwo/2;
+        g2.setStroke(new BasicStroke(strokeTwo));
+        g2.drawLine(offset,offset,this.getWidth()-offset,offset);
+        g2.drawLine(offset,offset,offset,this.getHeight()-offset);
+        g2.drawLine(this.getWidth()-offset,this.getHeight()-offset,this.getWidth()-offset,offset);
+        g2.drawLine(this.getWidth()-offset,this.getHeight()-offset,offset,this.getHeight()-offset);
     }
 
     @Override
@@ -199,6 +212,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         g2.drawImage(gettempimage(),0,0,null);
         if(allow_to_drawing == 1)
             drawLines(g2,distance);
+            drawBorders(g2);
         if(drawIntersection){
                filledCircle(g2,board.getPLayerColor(),intersectionPoint);
 
@@ -268,6 +282,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
         setBlackandWhite(this);
+        strokeOne = 2;
+        strokeTwo = 2;
         allow_to_drawing = 1;
         initializeMouseListener();
         //paintImmediately(0,0,this.getWidth(),this.getHeight());

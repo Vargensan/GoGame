@@ -36,6 +36,8 @@ public interface DrawingBoardI {
 
     public void drawDeadPools(Graphics2D g2);
 
+    public void drawBorders(Graphics2D g2);
+
     /**
      *
      */

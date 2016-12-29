@@ -6,11 +6,13 @@ import com.GO.PLAYER;
 import com.GO.Play;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -33,6 +35,7 @@ public class ClientGUI extends JFrame{
     private Container content;
     private JFrame jClient = new JFrame();
     private JPanel jOptionPanel = new JPanel();
+    private JPanel GeneralWoodenPicture;
     private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup,jOptionStart;
     private Play play;
@@ -45,17 +48,30 @@ public class ClientGUI extends JFrame{
     private JLabel color_of_player;
     private boolean ismine = true;
     private boolean onetime = true;
+    private int prefferedsize;
+    //
+    BufferedImage background;
+    //
     /**
      * Constructor of the ClientGUI class
      * responsible for Creating GUI, invokes a method createWindow()
      */
-    public ClientGUI(Board board,Play play) {
-        this.play=play;
-        this.board=board;
+    public ClientGUI() {
+        prefferedsize = 19;
+    }
+
+    public void initialize(Board board, Play play){
+        this.board = board;
+        this.play = play;
         bonl_ClickListener = new ButtonListener(play);
-        gameboard=board.getGameTable();
+        gameboard = board.getGameTable();
         createWindow();
         startDrawing();
+
+    }
+
+    public int getSizeOfPlayBoard(){
+        return prefferedsize;
     }
 
     public void showEndDialog(int option){
@@ -78,14 +94,25 @@ public class ClientGUI extends JFrame{
                 " please make diffrent move!","KO Detected!",JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Method that shows warning that it is not turn of player
+     */
     public void WarnningMessage(){
         JOptionPane.showMessageDialog(content,"It is not your turn! ","I" +
                 "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
     }
+
+    /**
+     * Method thats shows the warning, that the move which player made is incorrect
+     */
     public void InvaildMove(){
         JOptionPane.showMessageDialog(content,"You cant place a stone on non-empty place! ","I" +
                 "nvaild move detected!",JOptionPane.WARNING_MESSAGE);
     }
+
+    /**
+     * Method thats shows the warning, that the move which player made is incorrect
+     */
     public void InvalidMove_isNotEmpty(){
         JOptionPane.showMessageDialog(content,"You cant place stone here, no breaths detected!","" +
                 "Invalid moce detected!",JOptionPane.WARNING_MESSAGE);
@@ -110,17 +137,23 @@ public class ClientGUI extends JFrame{
     public void setTurn(boolean active){
         if(active == true){
             ismine = true;
-            turn.setText("Your Turn! PLAYER: "+play.get_player_color());
+            turn.setText("Your Turn!");
         }
         else if(active == false){
             ismine = false;
-            turn.setText("Turn of Enemy! PLAYER: "+play.get_player_color());
+            //turn.setText("Turn of Enemy! PLAYER: "+play.get_player_color());
+            turn.setText("Enemy Turn!");
         }
         if(!onetime){
             turn.paintImmediately(turn.getVisibleRect());
         }
         onetime = false;
     }
+
+    /**
+     * Getter for turn of player
+     * @return turn of player yes/no
+     */
 
     public boolean getTurn(){
         return ismine;
@@ -135,13 +168,12 @@ public class ClientGUI extends JFrame{
         return jDrawingBoard;
     }
     private void createWindow(){
+        setBackground();
+        jClient.setLocationRelativeTo(null);
         content = jClient.getContentPane();
+        //content.setPreferredSize(jClient.getPreferredSize());
+
         content.setLayout(null);
-        //set JFrame look
-        jClient.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        jClient.setTitle("Go Game");
-        jClient.setResizable(false);
-        jClient.setSize(X_WINDOW_SIZE,Y_WINDOW_SIZE);
         setIconImage(jClient);
         //set components
         setStartButtons();
@@ -151,20 +183,58 @@ public class ClientGUI extends JFrame{
         addjOptionPanelButtons();
         //add components to GUI of User
         content.add(turn);
+        //content.add(color_of_player);
         content.add(jOptionStart);
         content.add(jOptionPanel);
         content.add(jDrawingBoard);
         content.add(jBoardSelect);
-        jClient.setLocationRelativeTo(null);
+        //jClient.setLocationRelativeTo(null);
         jClient.setVisible(true);
+
+    }
+    private void setBackground(){
+        InputStream app = getClass().getResourceAsStream("/GoGraphics/BackGroundTable2.jpg");
+        ImageResize resizer = new ImageResize();
+        BufferedImage buff = null;
+        try {
+            buff = ImageIO.read(app);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //
+        Dimension dim_jframe = new Dimension(X_WINDOW_SIZE,Y_WINDOW_SIZE);
+
+        background = resizer.scale(buff,X_WINDOW_SIZE,Y_WINDOW_SIZE);
+        jClient.setContentPane(new JLabel(new ImageIcon(buff)));
+        jClient.getContentPane().setPreferredSize(dim_jframe);
+        jClient.pack();
+        System.out.println("JFrame: "+ jClient.getContentPane().getWidth()+ " "+jClient.getContentPane().getHeight());
+        jClient.setSize(jClient.getContentPane().getWidth(),jClient.getContentPane().getHeight());
+        System.out.println("JFrame2: "+ jClient.getWidth()+ " "+jClient.getHeight());
+        jClient.setResizable(false);
+        jClient.setTitle("Go Game");
+        jClient.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //jClient.setSize(jClient.getContentPane().getWidth(),jClient.getContentPane().getHeight());
+
 
     }
     private void setJLabel(){
         turn = new JLabel("Waiting for enemy");
-        turn.setBounds(120,10,250,50);
+        turn.setBounds(300,0,200,50);
         turn.setBackground(new Color(249, 224, 75));
-        turn.setForeground(Color.BLACK);
-        turn.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+        //turn.setOpaque(true);
+        turn.setForeground(Color.ORANGE);
+        turn.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+    }
+    public void setJPlayerColor(String abc){
+        color_of_player = new JLabel(abc);
+        color_of_player.setBounds(0,0,200,50);
+        color_of_player.setBackground(new Color(249, 224, 75));
+        //turn.setOpaque(true);
+        color_of_player.setForeground(Color.ORANGE);
+        color_of_player.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        content.add(color_of_player);
+        color_of_player.repaint();
     }
 
     private static void setIconImage(JFrame window){
@@ -176,6 +246,9 @@ public class ClientGUI extends JFrame{
             exception.printStackTrace();
         }
     }
+    public void getSizeofBoard(){
+
+    }
     /**
      * Method which add Start game button and list of playable games
      */
@@ -184,6 +257,22 @@ public class ClientGUI extends JFrame{
         String[] boards = new String[]{"19x19","9x9","7x7"};
         jBoardSelect = new JComboBox<>(boards);
         jBoardSelect.setBounds(10,90,100,30);
+        jBoardSelect.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                       JComboBox combo = (JComboBox) e.getSource();
+                       String current = (String) combo.getSelectedItem();
+                       if(current.equals("19x19")){
+                           prefferedsize = 19;
+                       } else if(current.equals("9x9")){
+                           prefferedsize = 9;
+                       } else{
+                           prefferedsize = 7;
+                       }
+                    }
+                }
+        );
         jOptionStart = new JButton("Start");
         setButtonLook(jOptionStart,"Start");
         jOptionStart.setBounds(10,50,100,30);
@@ -224,6 +313,7 @@ public class ClientGUI extends JFrame{
     private void setjOptionPanel(){
         jOptionPanel.setLayout(null);
         jOptionPanel.setBounds(0,530,JPANEL_WIDTH,JPANEL_HEIGHT);
+        jOptionPanel.setOpaque(false);
     }
 
     /**

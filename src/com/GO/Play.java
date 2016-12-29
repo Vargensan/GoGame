@@ -27,9 +27,14 @@ public class Play {
     {
         playState=STATE.BEFORE_GAME;
 
-        playBoard=new Board(19,this);
-
-        window=new ClientGUI(playBoard,this);
+        //playBoard=new Board(5,this);
+        //Gracz musi wybrac plansze z posrod 19x19,9x9,7x7
+        //Dlatego utworzenie ClientaGUI, i pobranie wartości
+        window=new ClientGUI();
+        //a pozniej utworzenie Board
+        playBoard = new Board(window.getSizeOfPlayBoard(),this);
+        //I inicjacja całej reszty
+        window.initialize(playBoard,this);
         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
 
 
@@ -62,11 +67,13 @@ public class Play {
         if(color.equals("b"))
         {
             player_color=PLAYER.BLACK;
+            window.setJPlayerColor("Player Black");
 
         }
         else
         {
             player_color=PLAYER.WHITE;
+            window.setJPlayerColor("Player White");
 
         }
         clientSocket.out.println("ok");

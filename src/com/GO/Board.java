@@ -379,10 +379,19 @@ public class Board implements BoardI {
         deleteTableNuller();
     }
     private void deleteFromTable(){
+        int counter = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (DeleteGameTable[i][j] == GameTable[i][j])
+                if (DeleteGameTable[i][j].equals(GameTable[i][j])) {
+                    if(!DeleteGameTable[i][j].equals(PLACE.EMPTY)){
+                        counter++;
+                        System.out.println("Deleted: "+i+" "+j);
+                    }
                     GameTable[i][j] = PLACE.EMPTY;
+                }
+                if(counter>1){
+                    nullKO_situation();
+                }
                 DeleteGameTable[i][j] = PLACE.EMPTY;
             }
         }

@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 class ClientThread extends Thread
@@ -6,10 +10,13 @@ class ClientThread extends Thread
     private boolean busy = false;
     private boolean activeGame;
     private int numberofthread_active;
+    private int sizeOfGame;
     private Socket clientSocket = null;
     private final ClientThread[] threads;
     private int maxClientCount;
     private GamePlay game;
+    PrintWriter clientOutput;
+    BufferedReader clientInput;
 
     /*
     Add implementation to 1-1 connection between clients
@@ -26,9 +33,18 @@ class ClientThread extends Thread
 
     public void run()
     {
+        String size  = "";
         int maxClientCount = this.maxClientCount;
         ClientThread[] threads = this.threads;
-        
+        try {
+            clientInput = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            clientOutput = new PrintWriter(clientSocket.getOutputStream(), true);
+            size = clientInput.readLine();
+            sizeOfGame = Integer.parseInt(size);
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
             /*Opis
             Dla każdego wątku sprawdź czy posiada nie pustą grę
             jeżeli taką posiada, sprawdź czy jest dostępna
@@ -49,8 +65,10 @@ class ClientThread extends Thread
                         {
                             if (threads[i].game.getNumberOfPlayers() == false)
                             {
-                                activeGame = true;
-                                numberofthread_active = i;
+                                if(sizeOfGame == threads[i].game.preferedSize) {
+                                    activeGame = true;
+                                    numberofthread_active = i;
+                                }
                             }
                         }
                     }
@@ -78,6 +96,7 @@ class ClientThread extends Thread
                     game = new GamePlay(threads);
                     busy = true;
                     game.setClient(clientSocket);
+                    game.setGameBoardSize(sizeOfGame);
                 } catch (Exception e)
                 {
                     game.killGame();

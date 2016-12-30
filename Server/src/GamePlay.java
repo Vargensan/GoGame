@@ -16,6 +16,7 @@ class GamePlay
     String line = "";
     int i;
     int x, y;
+    int preferedSize;
     int blackplayer_int_checker;
     boolean whosturn;
     String whoisblack;
@@ -289,6 +290,10 @@ class GamePlay
     boolean getNumberOfPlayers()
     {
         return gamefull;
+    }
+
+    public void setGameBoardSize(int size){
+        this.preferedSize = size;
     }
 
     public void killGame()

@@ -66,6 +66,7 @@ public class Play {
 
         clientSocket=new Client();
         clientSocket.listenSocket();
+        clientSocket.out.println(window.getSizeOfPlayBoard());
 
         try {
             color=clientSocket.in.readLine();

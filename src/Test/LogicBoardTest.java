@@ -2,10 +2,7 @@ package Test;
 
 import GUIGo.ClientGUI;
 import GUIGo.DrawingBoard;
-import com.GO.Board;
-import com.GO.PLACE;
-import com.GO.PLAYER;
-import com.GO.Play;
+import com.GO.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,6 +16,8 @@ public class LogicBoardTest{
     PLAYER player;
     PLAYER player2;
     Play play;
+    ClientGUI clientGUI;
+    DrawingBoard drawingBoard;
     PLACE[][] GameTable;
     @Test
     public void test_canaddaftersimmeric_situation(){
@@ -98,8 +97,10 @@ public class LogicBoardTest{
         boolean canadd;
         setstone();
         canadd = gameboard.canAddHere(player,10,9);
+        //gameboard.addStone(player,10,9);
         if(canadd){
-            GameTable[10][9] = player.playerToPlace();
+            gameboard.addStone(player,10,9);
+            //GameTable[10][9] = player.playerToPlace();
         }
         canadd = gameboard.canAddHere(player,10,9);
         assertFalse(canadd);
@@ -140,6 +141,7 @@ public class LogicBoardTest{
     }
 
     public void setstone(){
+        //play = new Play();
         player = PLAYER.BLACK;
         player2 = PLAYER.WHITE;
         gameboard = new Board(19,play);

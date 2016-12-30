@@ -23,11 +23,26 @@ public class BotClass {
     //Reagowanie na terytorium -> brak terrytorium
     //...
     //AUTO WIN :D
+    public void sendPass(){
+        play.passGame();
+    }
+
+    public void sendConfirm(){
+
+    }
+
+    public void sendNoTerritory(){
+
+    }
+
+    private int setSize(){
+        return play.getPlayBoard().getSize();
+    }
 
     public void checkVaildMove(){
         do {
-            x = generator.nextInt(19);
-            y = generator.nextInt(19);
+            x = generator.nextInt(setSize());
+            y = generator.nextInt(setSize());
             canAddHere = play.getPlayBoard().canAddHere(play.get_player_color(), x, y);
         } while (!canAddHere);
         play.getPlayBoard().addStone(play.get_player_color(),x,y);

@@ -119,20 +119,21 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
      *
      * Method which refresh actuall position of the mouse
      * and gets the closest intersection of the lines
+     * and depending on state of game can invoke paint of some states
      * @param e mouse event action was made
      */
     @Override
     public void mouseDragged(MouseEvent e) {
         switch(play.getPlayState()) {
             case GAME:
-                obj.drawIntersection = true;
+                obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
                 obj.repaint();
                 break;
             case ADD_DEAD_GROUPS:
-                obj.drawIntersection = false;
+                obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
@@ -142,7 +143,7 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
 
                 break;
             case REMOVE_DEAD_GROUPS:
-                obj.drawIntersection = false;
+                obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);

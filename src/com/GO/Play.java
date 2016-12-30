@@ -6,6 +6,7 @@ import GUIGo.DrawingBoard;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.exit;
 import static java.lang.System.lineSeparator;
@@ -31,17 +32,33 @@ public class Play {
         //Gracz musi wybrac plansze z posrod 19x19,9x9,7x7
         //Dlatego utworzenie ClientaGUI, i pobranie wartości
         window=new ClientGUI();
+        window.initialize(this);
+        requestSizeConfirmation();
         //a pozniej utworzenie Board
         playBoard = new Board(window.getSizeOfPlayBoard(),this);
         //I inicjacja całej reszty
-        window.initialize(playBoard,this);
+        //window.initialize(this);
+        window.createDrawingBoard(playBoard);
         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
 
 
 
     }
+    public void requestSizeConfirmation(){
+        while(!window.getConfirmationofSize()){
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void setConfirmation(){
+        window.confirmSize();
+    }
     public void inicializeGameWithServer()
     {
+        System.out.println("I went here!");
         playState=STATE.GAME;
         String color="";
         String turn ="";

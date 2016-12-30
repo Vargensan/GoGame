@@ -39,6 +39,7 @@ public class ClientGUI extends JFrame{
     private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup,jOptionStart;
     private Play play;
+    private JButton jConfirmSize, jInformations;
 
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener;
@@ -48,6 +49,9 @@ public class ClientGUI extends JFrame{
     private JLabel color_of_player;
     private boolean ismine = true;
     private boolean onetime = true;
+    //Boolean holding the confirmation of the size by user
+    private boolean confirmSize = false;
+    //
     private int prefferedsize;
     //
     BufferedImage background;
@@ -60,20 +64,64 @@ public class ClientGUI extends JFrame{
         prefferedsize = 19;
     }
 
-    public void initialize(Board board, Play play){
-        this.board = board;
+    /**
+     * Method responsiable for initialize Client GUI and also invokes construction of other classes - not directly
+     * @param play takes a object with general methods of playing
+     */
+
+    public void initialize(Play play){
+        //this.board = board;
         this.play = play;
         bonl_ClickListener = new ButtonListener(play);
-        gameboard = board.getGameTable();
+        //gameboard = board.getGameTable();
         createWindow();
-        startDrawing();
+        //createDrawingBoard();
+        //startDrawing();
 
     }
+
+    public void createDrawingBoard(Board board){
+        this.board = board;
+        gameboard = board.getGameTable();
+        setjDrawPanel();
+        content.add(jDrawingBoard);
+        content.repaint();
+        startDrawing();
+    }
+
+    /**
+     * Setting Boolean to true which holds confirmation of the size
+     */
+    public void confirmSize(){
+        confirmSize = true;
+        removeButton(jConfirmSize);
+        jConfirmSize.repaint();
+    }
+    public boolean getConfirmationofSize(){
+        return confirmSize;
+    }
+
+    /**
+     * Method that remove button form Content
+     * @param abc takes the button which should be removed
+     */
+    public void removeButton(JButton abc){
+        content.remove(abc);
+    }
+
+    /**
+     * Getter for user-confirmed size of gameboard
+     * @return size of gameboard
+     */
 
     public int getSizeOfPlayBoard(){
         return prefferedsize;
     }
 
+    /**
+     * Method that invokes dialog at the end of the game, show, who win and also who lose
+     * @param option winner(1)/looser(else)
+     */
     public void showEndDialog(int option){
         if(option == 1){
             JOptionPane.showMessageDialog(content,"Game Over", "Congratulations!\n" +
@@ -178,7 +226,7 @@ public class ClientGUI extends JFrame{
         //set components
         setStartButtons();
         setjOptionPanel();
-        setjDrawPanel();
+        //setjDrawPanel();
         setJLabel();
         addjOptionPanelButtons();
         //add components to GUI of User
@@ -186,7 +234,7 @@ public class ClientGUI extends JFrame{
         //content.add(color_of_player);
         content.add(jOptionStart);
         content.add(jOptionPanel);
-        content.add(jDrawingBoard);
+        //content.add(jDrawingBoard);
         content.add(jBoardSelect);
         //jClient.setLocationRelativeTo(null);
         jClient.setVisible(true);
@@ -246,9 +294,6 @@ public class ClientGUI extends JFrame{
             exception.printStackTrace();
         }
     }
-    public void getSizeofBoard(){
-
-    }
     /**
      * Method which add Start game button and list of playable games
      */
@@ -303,6 +348,8 @@ public class ClientGUI extends JFrame{
         content.add(jOptionRemoveDeadGroup);
         content.add(jOptionAddTerritory);
         content.add(jOptionRemoveTerritory);
+        content.add(jConfirmSize);
+        content.add(jInformations);
         jOptionPanel.add(jOptionPass);
         jOptionPanel.add(jOptionEnd);
     }
@@ -349,6 +396,14 @@ public class ClientGUI extends JFrame{
         jOptionEnd = new JButton("GiveUp");
         setButtonLook(jOptionEnd, "GiveUp");
         jOptionEnd.setBounds(250, height - 40, b_width,b_height);
+
+        jInformations = new JButton("Game Info");
+        setButtonLook(jInformations,"Game Info");
+        jInformations.setBounds(X_WINDOW_SIZE-b_width-10,Y_WINDOW_SIZE-2*b_height,b_width,b_height);
+
+        jConfirmSize = new JButton("Confirm Size");
+        setButtonLook(jConfirmSize,"Confirm Size");
+        jConfirmSize.setBounds(5,0,b_width,b_height);
     }
 
     /**

@@ -64,9 +64,16 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         intersectionPoint[1] =-1;
     }
 
+    /**
+     * Setter for Dead Table - which holds information about Dead Groups
+     */
     public void SetterDeadTable(){
         this.DeadTable = play.getPlayBoard().getDeadTable();
     }
+
+    /**
+     * Setter for Terrirtory Table - which holds information about Territory of players
+     */
     public void SetterTerritoryTable(){
         this.TerritoryTable = play.getPlayBoard().getTerritoryTable();
     }
@@ -200,15 +207,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(120, 120, 120));
         }
-
-        /*
-         poniższe wywołanie metody w celu odświeżania natychmiastowego obrazka
-        Adnote: tutaj g2 chyba nigdy nie będzie nullem, bo jeżeli
-        image = null, to tworzymy image, dodajemy do niego grafikę i więcej razy nie wchodzimy
-        w image == null, bo nigdzie go nie zerujemy, tak samo nigdy nie zerujemy grafiki
-        ale trzeba to sprawdzić, żeby usunąć update() i wszędzie zamiast niej wywoływać
-        metodę paintImmedietntly()
-         */
         g2.drawImage(gettempimage(),0,0,null);
         if(allow_to_drawing == 1)
             drawLines(g2,distance);
@@ -231,13 +229,49 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         g.drawImage(image, 0, 0, null);
     }
 
+    /**
+     * Function for changing state of Drawing Board
+     * @param state given state
+     */
+    public void changeState(STATE state){
+        switch(state){
+            case GAME:
+                drawIntersection=true;
+                drawDeadPools=false;
+                drawTerritory=false;
+                break;
+            case ADD_DEAD_GROUPS:
+                drawDeadPools=true;
+                drawIntersection=false;
+                drawTerritory=false;
+                break;
+            case REMOVE_DEAD_GROUPS:
+                drawDeadPools=true;
+                drawIntersection=false;
+                drawTerritory=false;
+                break;
+            case BEFORE_GAME:
+                drawIntersection=true;
+                drawDeadPools=false;
+                drawTerritory=false;
+                break;
+            default:
+                break;
+        }
+    }
+
 
     public boolean getterMouseListener(){
         return isClicable;
     }
-    public void setterMouseListener(boolean bla){
-        System.out.println("\n1.state of bla a-active u->unactive : " + bla);
-        this.isClicable = bla;
+
+    /**
+     * Setter for boolean which tell if player's clicks are allowed
+     * @param click takes a boolean true/false
+     */
+    public void setterMouseListener(boolean click){
+        System.out.println("\n1.state of bla a-active u->unactive : " + click);
+        this.isClicable = click;
     }
 
     /**
@@ -281,13 +315,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
         criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
         Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
-        setBlackandWhite(this);
+        setImages(this);
         strokeOne = 2;
         strokeTwo = 2;
         allow_to_drawing = 1;
         initializeMouseListener();
-        //paintImmediately(0,0,this.getWidth(),this.getHeight());
-        //update();
     }
 
     /**
@@ -295,33 +327,26 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * @param window takes drawingboard table
      */
 
-    private void setBlackandWhite(DrawingBoard window){
-        try{
+    private void setImages(DrawingBoard window){
             imageResizer = new ImageResize();
-            InputStream imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/black_button.png");
+            im_black = imageSetter(window,imageResizer,"/GoGraphics/black_button.png",criclefilled,criclefilled);
+            im_white = imageSetter(window,imageResizer,"/GoGraphics/white_button2.png",criclefilled,criclefilled);
+            controlerImage = imageSetter(window,imageResizer,"/GoGraphics/DrawingBoardTexture.png",this.getWidth(),this.getHeight());
+            im_ko = imageSetter(window,imageResizer,"/GoGraphics/KOsituationButton.png",criclefilled,criclefilled);
+            im_dead = imageSetter(window,imageResizer,"/GoGraphics/KOsituationButton.png",criclefilled*1/2,criclefilled*1/2);
+            im_territoryBlack = imageSetter(window,imageResizer,"/GoGraphics/Territory_Black.png",criclefilled,criclefilled);
+            im_territoryWhite = imageSetter(window,imageResizer,"/GoGraphics/Territory_White.png",criclefilled,criclefilled);
+    }
+    public BufferedImage imageSetter(DrawingBoard window, ImageResize imageResizer, String name, int prefW, int prefH){
+        try {
+            InputStream imageInputStream = window.getClass().getResourceAsStream(name);
             BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-            im_black = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/white_button2.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            im_white = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/DrawingBoardTexture.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            controlerImage = imageResizer.scale(bufferedImage,this.getWidth(),this.getHeight());
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            im_ko = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/KOsituationButton.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            im_dead = imageResizer.scale(bufferedImage,(criclefilled*1/2),(criclefilled*1/2));
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/Territory_Black.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            im_territoryBlack = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-            imageInputStream = window.getClass().getResourceAsStream("/GoGraphics/Territory_White.png");
-            bufferedImage = ImageIO.read(imageInputStream);
-            im_territoryWhite = imageResizer.scale(bufferedImage,criclefilled,criclefilled);
-        } catch (IOException exception){
-            exception.printStackTrace();
+            return imageResizer.scale(bufferedImage,prefW,prefH);
+        } catch(IOException e){
+            e.printStackTrace();
         }
+        return null;
+
     }
 
     /**
@@ -350,20 +375,6 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     public void update(){
         repaint();
     }
-   /* @Override
-    public void update() {
-        if(g2 != null) {
-            g2.setColor(new Color(160, 160, 160));
-            g2.drawImage(gettempimage(),0,0,null);
-        } else{
-            if(image != null){
-                g2 = (Graphics2D) image.getGraphics();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            }
-        }
-        //paintImmediately(0,0,getWidth(),getHeight());
-        repaint();
-    }*/
 
     /**
      * Method that initialize KO Situation

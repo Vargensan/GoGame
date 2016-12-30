@@ -283,7 +283,7 @@ public class Board implements BoardI {
                 try {
                     actuall = table[tempX][tempY];
                     if (actuall.equals(PLACE.EMPTY)) {
-                        System.out.println("I can breath here: X: "+tempX+" Y:"+tempY);
+                        //System.out.println("I can breath here: X: "+tempX+" Y:"+tempY);
                         return true;
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
@@ -385,7 +385,7 @@ public class Board implements BoardI {
                 if (DeleteGameTable[i][j].equals(GameTable[i][j])) {
                     if(!DeleteGameTable[i][j].equals(PLACE.EMPTY)){
                         counter++;
-                        System.out.println("Deleted: "+i+" "+j);
+                        //System.out.println("Deleted: "+i+" "+j);
                     }
                     GameTable[i][j] = PLACE.EMPTY;
                 }
@@ -450,7 +450,7 @@ public class Board implements BoardI {
            return true;
         }
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-            System.out.println("\nI can breathe here - Simmeric <3\n");
+            //System.out.println("\nI can breathe here - Simmeric <3\n");
             nullCoordinates();
             return true;
         }else{
@@ -517,20 +517,20 @@ public class Board implements BoardI {
             }
             deleteTableNuller();
             cantBreath = canBreathHere(GameTable,enemyplayer, tempX,tempY,placeX,placeY) == false;
-            System.out.println("State: "+cantBreath+ " temp X: "+tempX+" temp Y: "+tempY+" color:"+ enemyplayer);
+            //System.out.println("State: "+cantBreath+ " temp X: "+tempX+" temp Y: "+tempY+" color:"+ enemyplayer);
             if(cantBreath){
                 //Usunięcie wszystkich pol
                 deleteTempTableDeleted();
                 //Dodajemy ko_state, ale po sprawdzeniu innego symerica, możemy mieć więcej niż jedną ko-like-sytuacje
                 ko_state_counter++;
                 if(ko_state_counter == 1 && one_time) {
-                    System.out.println("Setting KO: X: "+tempX+" Y: "+tempY);
+                    //System.out.println("Setting KO: X: "+tempX+" Y: "+tempY);
                     koSituationXY[0] = tempX;
                     koSituationXY[1] = tempY;
                     one_time = false;
                 } else if (ko_state_counter > 1){
                     //if(ko_detected==false)
-                    System.out.println("I am a nuller");
+                    //System.out.println("I am a nuller");
                     nullKO_situation();
                 }
                 //nullKO_situation();
@@ -563,7 +563,7 @@ public class Board implements BoardI {
      */
     public boolean isItNotA_KO(PLAYER color, int placeX, int placeY){
        if( placeX == koSituationXY[0] && placeY == koSituationXY[1]) {
-           System.out.println("KO Situation detected!");
+           //System.out.println("KO Situation detected!");
            ko_detected = true;
            return false;
        }
@@ -585,7 +585,7 @@ public class Board implements BoardI {
     }
 
     private void nullKO_situation(){
-        System.out.println("\nNulling KO\n");
+        //System.out.println("\nNulling KO\n");
         ko_detected = false;
         koSituationXY[0] = -1;
         koSituationXY[1] = -1;

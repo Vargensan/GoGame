@@ -16,9 +16,11 @@ class GamePlay
     String line = "";
     int i;
     int x, y;
+    //holds size of gameboard
     int preferedSize;
     int blackplayer_int_checker;
     boolean whosturn;
+    int stateOfGamePlay;
     String whoisblack;
     String color[] = new String[2];
     BufferedReader clientInput1;
@@ -157,22 +159,30 @@ class GamePlay
         line = clientInput1.readLine();
         if (line.equals("play"))
         {
+            stateOfGamePlay=0;
             System.out.println("play");
             sendBoardMove(clientInput1, clientOutput2);
             sendChangeTurn("u", clientOutput1);
         } else if (line.equals("pass"))
         {
-            //System.out.println("pass");
-            clientOutput2.println("pass");
-            clientOutput1.println("a");
             sendChangeTurn("u", clientOutput1);
+            if(stateOfGamePlay==1){
+                clientOutput2.println("double-pass");
+                clientOutput2.println("a");
+                clientOutput1.println("double-pass");
+                clientOutput1.println("u");
+            }else {
+                stateOfGamePlay = 1;
+                clientOutput2.println("pass");
+                clientOutput2.println("a");
+            }
         } else if (line.equals("dead"))
         {
             clientOutput2.println("dead");
 
-            for (int i = 0; i < 19; ++i)
+            for (int i = 0; i < preferedSize; ++i)
             {
-                for (int j = 0; j < 19; ++j)
+                for (int j = 0; j < preferedSize; ++j)
                 {
                     line = clientInput1.readLine().substring(0, 1);
                     if (Integer.parseInt(line) == 1)
@@ -195,22 +205,38 @@ class GamePlay
         line = clientInput2.readLine();
         if (line.equals("play"))
         {
+            stateOfGamePlay=0;
             System.out.println("play");
             sendBoardMove(clientInput2, clientOutput1);
             sendChangeTurn("u", clientOutput2);
         } else if (line.equals("pass"))
         {
             //System.out.println("pass");
-            clientOutput1.println("pass");
-            clientOutput1.println("a");
+            /*
+            zmień swój stan na unactive:
+            -Wyślij changeTurn to siebie
+            zmień stan przeciwnika na active
+            -jestem w stanie słuchania -> wyślij do mnie pass + change turn
+             */
             sendChangeTurn("u", clientOutput2);
+            if(stateOfGamePlay==1){
+                //Implementacja sygnału double pass
+                clientOutput1.println("double-pass");
+                clientOutput1.println("a");
+                clientOutput2.println("double-pass");
+                clientOutput2.println("u");
+            }else {
+                stateOfGamePlay=1;
+                clientOutput1.println("pass");
+                clientOutput1.println("a");
+            }
         } else if (line.equals("dead"))
         {
             clientOutput1.println("dead");
 
-            for (int i = 0; i < 19; ++i)
+            for (int i = 0; i < preferedSize; ++i)
             {
-                for (int j = 0; j < 19; ++j)
+                for (int j = 0; j < preferedSize; ++j)
                 {
                     line = clientInput2.readLine().substring(0, 1);
                     if (Integer.parseInt(line) == 1)

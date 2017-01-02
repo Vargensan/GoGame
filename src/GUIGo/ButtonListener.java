@@ -27,14 +27,14 @@ public class ButtonListener implements ActionListener{
                if(play.getPlayState()== STATE.GAME)
                play.passGame();
              break;
-           case "AddTerritory":
+           case "Mark Territory":
 
             break;
-           case "RemoveTerritory":
+           case "Unmark Territory":
 
                break;
            case "Start":
-               if(play.getPlayState()==STATE.BEFORE_GAME) {
+               if(play.getPlayState()==STATE.BEFORE_GAME && play.getConfirmation()) {
                    int selectedOption = JOptionPane.showConfirmDialog(null,
                            "Do you want to play with player?",
                            "Start Game",
@@ -46,14 +46,14 @@ public class ButtonListener implements ActionListener{
                    }
                }
                break;
-           case "AddDeadGroup":
+           case "Mark As Dead":
                if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.REMOVE_DEAD_GROUPS)){
                    play.setPlayState(STATE.ADD_DEAD_GROUPS);
                }
 
 
                break;
-           case "RemoveDeadGroup":
+           case "Unmark Dead":
                if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.ADD_DEAD_GROUPS)){
                    play.setPlayState(STATE.REMOVE_DEAD_GROUPS);
                }
@@ -63,6 +63,7 @@ public class ButtonListener implements ActionListener{
            case "GiveUp":
                break;
            case "Confirm Size":
+               if(play.getPlayState() == STATE.BEFORE_GAME)
                play.setConfirmation();
                break;
            case "Game Info":
@@ -70,7 +71,7 @@ public class ButtonListener implements ActionListener{
                        " Kinga Krata and Bartłomiej Woś\n\n" +
                        "Firstly pick a size from a list in right corner\n" +
                        "Next confirm it with the button 'Confirm Size'\n" +
-                       "Draw Panel should be drown, next Start Game and pick a\n" +
+                       "Draw Panel should be drown, next Start Game and pick \n" +
                        "option if you want to play with Bot or Normal User\n" +
                        "Wait for connection and play, after double pass\n" +
                        "at same time, You will need to select dead groups by mouse\n" +
@@ -78,6 +79,14 @@ public class ButtonListener implements ActionListener{
                        "then you go to select territory and actions are same as described above\n" +
                        "After all system calculates your points and send a message if\n" +
                        "you won or lost\n","Game Information",JOptionPane.INFORMATION_MESSAGE);
+               break;
+           case "Send":
+               break;
+           case "Accept":
+               break;
+           case "Reject":
+               break;
+           default:
                break;
 
 

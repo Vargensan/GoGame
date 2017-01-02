@@ -22,10 +22,13 @@ public class Play {
     private PLAYER player_color;
     private BoardOnClickListener clickListener;
     private STATE playState;
+
+    private int hasGameEnded;
     
 
     Play()
     {
+        hasGameEnded = 0;
         playState=STATE.BEFORE_GAME;
 
         //playBoard=new Board(5,this);
@@ -55,6 +58,9 @@ public class Play {
     }
     public void setConfirmation(){
         window.confirmSize();
+    }
+    public boolean getConfirmation(){
+        return window.getConfirmationofSize();
     }
     public void inicializeGameWithServer()
     {
@@ -169,25 +175,40 @@ public class Play {
         recivefromOther();
     }
     public void passGame() {
+        //hasGameEnded = 1;
         clientSocket.out.println("pass");
         //System.out.println("pass");
-        try {
-            setTurn(clientSocket.in.readLine());
-        }catch(IOException ex)
-        {
+        //Tutaj ok, zmieniamy turę
+        reciveTurn();
+        //Tutaj możemy zrobić opcję nasłuchiwania na double-pass
+        recivefromOther(); //Musimy się przygotować na inną wiadomość niż pass...
+        /*
+        Opis Implementacji:
 
-        }
-        String line;
-        try {
-            if((line=clientSocket.in.readLine()).equals("pass"))
-                System.out.println("Game ended");
-                else
-                System.out.println(line);
-        }
-        catch(IOException ex)
-        {
-            System.out.println("problem z polaczeniem");
-        }
+        Gracz pierwszy pasuje -> wysyła komunikat passGame(), czyli:
+            1.zmienia swoją turę
+            2.przechodzi w stan nasłuchiwania.
+        Po stronie servera należy zaimplementować opcję ile razy padło pass
+        Gracz drugi dostaje turę
+            1.Inny komunikat niż pass? -> mamy normalny stan nasłuchiwania recivefromOther()
+            na Graczu pierwszym
+            2.Komunikat PassGame()? -> wysyłamy do Servera komunikat pass, ten nalicza countera,
+            zmienia naszą turę, dodatkowo zostaje do nas wysłany komuniakt double-pass zarówno do nas
+            jak i do gracza przeciwnego. Tury zostają normalnie ustawione, i działamy teraz na
+            Mark As Territory
+         */
+        //String line;
+       // try {
+            //Tutaj nasłuchujemy na kolejną wiadomość, ale jeśli jest inna niż pass? Nie zadziała prawidłowo
+       //     if((line=clientSocket.in.readLine()).equals("pass"))
+       //         System.out.println("Game ended");
+       //         else
+       //         System.out.println(line);
+       // }
+       // catch(IOException ex)
+       // {
+       //     System.out.println("problem z polaczeniem");
+       // }
     }
 
     private void sendToOther(int x, int y){
@@ -225,6 +246,7 @@ public class Play {
     private void recivefromOther(){
         String line = "";
         String turn = "";
+        String dead_mess = "";
         int x = -1;
         int y = -1;
         try {
@@ -248,21 +270,22 @@ public class Play {
                 turn = clientSocket.in.readLine();
 
             }
-            else if(line.equals("dead"))
+            else if(line.equals("dead")) //Tutaj można z Clienta GUI 'send'
             {
+
                 setPlayState(STATE.ADD_DEAD_GROUPS);
 
-                for(int i=0;i<19;++i){
-                    for(int j=0;j<19;++j){
-                        line=clientSocket.in.readLine().substring(0,1);
-                        if(Integer.parseInt(line)==1)
+                for(int i=0;i<window.getSizeOfPlayBoard();++i){
+                    for(int j=0;j<window.getSizeOfPlayBoard();++j){
+                        dead_mess=clientSocket.in.readLine().substring(0,1);
+                        if(Integer.parseInt(dead_mess)==1)
                             playBoard.setDeadTable(i,j,true);
                         else
                             playBoard.setDeadTable(i,j,false);
-                        if(Integer.parseInt(line)==1)
-                            System.out.print(line);
+                        if(Integer.parseInt(dead_mess)==1)
+                            System.out.print(dead_mess);
                         else
-                            System.out.print(line);
+                            System.out.print(dead_mess);
                     }
                     System.out.println();
                 }
@@ -271,11 +294,34 @@ public class Play {
 
 
             }
+            else if(line.equals("double-pass")){
+                setPlayState(STATE.ADD_DEAD_GROUPS);
+                window.showSendandAccept();
+                window.showMarkAsDead();
+                turn = clientSocket.in.readLine();
+
+            }
+            /*
+            Gdzie był błąd, Gracz po otrzymaniu wiadomości Dead, nie nasłuchiwał dalej tj.
+            1.Wysłał do gracza nasłuchującego
+            2.Przeszedł w stan nasłuchiwania
+            3.Otrzymał wiadomość, wypełnił ją -> narysował deadtable
+            4.Po czym powiedział że już nie słucha, bo nie wchodzi do funckji recivefromOther()
+             */
 
             //Tego nie rozumiem, nie lepiej wyslac, odebrac u innego klienta i zmienic u innego kliena, i dac mu ture?
             //Możliwe Bugi
 
             setTurn(turn);
+
+            //Jeden z nich musi dalej nasłuchiwać po double passie...
+            if(line.equals("double-pass") && turn.equals("u")){
+                recivefromOther();
+            }
+            //Analogicznie dla wiadomości dead
+            if(line.equals("dead") && turn.equals("u")){
+                recivefromOther();
+            }
 
         }catch(Exception e){
             System.exit(-1);

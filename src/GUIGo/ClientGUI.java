@@ -39,7 +39,7 @@ public class ClientGUI extends JFrame{
     private DrawingBoard jDrawingBoard;
     private JButton jOptionPass,jOptionAddTerritory,jOptionRemoveTerritory,jOptionEnd,jOptionAddDeadGroup,jOptionRemoveDeadGroup,jOptionStart;
     private Play play;
-    private JButton jConfirmSize, jInformations;
+    private JButton jConfirmSize, jInformations,jSend,jAccept,jReject;
 
     private JComboBox<String> jBoardSelect;
     private ButtonListener bonl_ClickListener;
@@ -276,11 +276,11 @@ public class ClientGUI extends JFrame{
     }
     public void setJPlayerColor(String abc){
         color_of_player = new JLabel(abc);
-        color_of_player.setBounds(0,0,200,50);
+        color_of_player.setBounds(0,0,200,40);
         color_of_player.setBackground(new Color(249, 224, 75));
         //turn.setOpaque(true);
-        color_of_player.setForeground(Color.ORANGE);
-        color_of_player.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        color_of_player.setForeground(new Color(249, 224, 75));
+        color_of_player.setFont(new Font("Times New Roman", Font.PLAIN, 22));
         content.add(color_of_player);
         color_of_player.repaint();
     }
@@ -344,12 +344,17 @@ public class ClientGUI extends JFrame{
 
     private void addjOptionPanelButtons(){
         setJOptionButtonsNames();
-        content.add(jOptionAddDeadGroup);
-        content.add(jOptionRemoveDeadGroup);
-        content.add(jOptionAddTerritory);
-        content.add(jOptionRemoveTerritory);
+        //content.add(jOptionAddDeadGroup);
+        //content.add(jOptionRemoveDeadGroup);
+        //content.add(jOptionAddTerritory);
+        //content.add(jOptionRemoveTerritory);
         content.add(jConfirmSize);
         content.add(jInformations);
+        //for acepting and sending information about Territory and Dead Groups
+        //content.add(jSend);
+        //content.add(jReject);
+        //content.add(jAccept);
+        //---------------------------------------------------------------------
         jOptionPanel.add(jOptionPass);
         jOptionPanel.add(jOptionEnd);
     }
@@ -364,6 +369,36 @@ public class ClientGUI extends JFrame{
     }
 
     /**
+     * Method that shows Send and Accept Buttons for marking dead
+     * groups and Territory
+     */
+    public void showSendandAccept(){
+        showButtonandRepaint(jSend);
+        showButtonandRepaint(jAccept);
+        showButtonandRepaint(jReject);
+    }
+
+    /**
+     * Method that hide Send and Accept Buttons for marking dead groups
+     * and Territory
+     */
+    public void hideSendandAccept(){
+        hideButtonandRepaint(jSend);
+        hideButtonandRepaint(jAccept);
+        hideButtonandRepaint(jReject);
+    }
+
+    public void showMarkAsDead(){
+        showButtonandRepaint(jOptionAddDeadGroup);
+        showButtonandRepaint(jOptionRemoveDeadGroup);
+    }
+
+    public void hideMarkAsDead(){
+        hideButtonandRepaint(jOptionAddDeadGroup);
+        hideButtonandRepaint(jOptionRemoveDeadGroup);
+    }
+
+    /**
      * Method which sets default name of buttons added to
      * JPanel, also alocate their's position on JPanel
      */
@@ -372,38 +407,54 @@ public class ClientGUI extends JFrame{
         int b_height=30;
         int b_width=110;
         int start_height=70;
+        int send_w = 100;
+        int send_h=30;
 
         jOptionPass = new JButton("Pass");
         setButtonLook(jOptionPass, "Pass");
         jOptionPass.setBounds(10, height - 40, b_width,b_height);
 
-        jOptionAddTerritory = new JButton("AddTerritory");
-        setButtonLook(jOptionAddTerritory, "AddTerritory");
-        jOptionAddTerritory.setBounds(5, start_height+2*b_height, b_width,b_height);
+        jOptionAddTerritory = new JButton("Mark Territory");
+        setButtonLook(jOptionAddTerritory, "Mark Territory");
+        jOptionAddTerritory.setBounds(5, start_height+2*b_height, b_width+20,b_height);
 
-        jOptionRemoveTerritory = new JButton("RemoveTerritory");
-        setButtonLook(jOptionRemoveTerritory, "RemoveTerritory");
-        jOptionRemoveTerritory.setBounds(5,start_height+4*b_height , b_width,b_height);
+        jOptionRemoveTerritory = new JButton("Unmark Territory");
+        setButtonLook(jOptionRemoveTerritory, "Unmark Territory");
+        jOptionRemoveTerritory.setBounds(5,start_height+4*b_height , b_width+20,b_height);
 
-        jOptionAddDeadGroup = new JButton("AddDeadGroup");
-        setButtonLook(jOptionAddDeadGroup, "AddDeadGroup");
-        jOptionAddDeadGroup.setBounds(5, start_height+6*b_height, b_width,b_height);
+        jOptionAddDeadGroup = new JButton("Mark As Dead");
+        setButtonLook(jOptionAddDeadGroup, "Mark As Dead");
+        jOptionAddDeadGroup.setBounds(5, start_height+6*b_height, b_width+20,b_height);
 
-        jOptionRemoveDeadGroup = new JButton("RemoveDeadGroup");
-        setButtonLook(jOptionRemoveDeadGroup, "RemoveDeadGroup");
-        jOptionRemoveDeadGroup.setBounds(5, start_height+8*b_height, b_width,b_height);
+        jOptionRemoveDeadGroup = new JButton("Unmark Dead");
+        setButtonLook(jOptionRemoveDeadGroup, "Unmark Dead");
+        jOptionRemoveDeadGroup.setBounds(5, start_height+8*b_height, b_width+20,b_height);
 
-        jOptionEnd = new JButton("GiveUp");
-        setButtonLook(jOptionEnd, "GiveUp");
-        jOptionEnd.setBounds(250, height - 40, b_width,b_height);
+        jOptionEnd = new JButton("Give Up");
+        setButtonLook(jOptionEnd, "Give Up");
+        jOptionEnd.setBounds(150, height - 40, b_width,b_height);
 
         jInformations = new JButton("Game Info");
         setButtonLook(jInformations,"Game Info");
-        jInformations.setBounds(X_WINDOW_SIZE-b_width-10,Y_WINDOW_SIZE-2*b_height,b_width,b_height);
+        jInformations.setBounds(X_WINDOW_SIZE-b_width+10,Y_WINDOW_SIZE-2*b_height,b_width-20,b_height);
 
         jConfirmSize = new JButton("Confirm Size");
         setButtonLook(jConfirmSize,"Confirm Size");
         jConfirmSize.setBounds(5,0,b_width,b_height);
+
+        //Setting look for sending and Rejecting
+        jSend = new JButton("Send");
+        setButtonLookTransfer(jSend,"Send");
+        jSend.setBounds(260,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
+
+        jAccept = new JButton("Accept");
+        setButtonLookTransfer(jAccept,"Accept");
+        jAccept.setBounds(370,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
+
+        jReject = new JButton("Reject");
+        setButtonLookTransfer(jReject,"Reject");
+        jReject.setBounds(480,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
+        //
     }
 
     /**
@@ -419,5 +470,22 @@ public class ClientGUI extends JFrame{
         button.setFont(new Font("Times New Roman", Font.PLAIN, 12));
         button.addActionListener(bonl_ClickListener);
 
+    }
+    private void setButtonLookTransfer(JButton button, String name){
+        button.setName(name);
+        button.setBackground(new Color(172,21,21));
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Times New Roman",Font.PLAIN,12));
+        button.addActionListener(bonl_ClickListener);
+    }
+
+    private void showButtonandRepaint(JButton button){
+        content.add(button);
+        button.repaint();
+    }
+    private void hideButtonandRepaint(JButton button){
+        content.remove(button);
+        button.repaint();
     }
 }

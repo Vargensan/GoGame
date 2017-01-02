@@ -388,6 +388,11 @@ public class ClientGUI extends JFrame{
         hideButtonandRepaint(jReject);
     }
 
+    public void showTerritoryMarking(){
+        showButtonandRepaint(jOptionAddTerritory);
+        showButtonandRepaint(jOptionRemoveTerritory);
+    }
+
     public void showMarkAsDead(){
         showButtonandRepaint(jOptionAddDeadGroup);
         showButtonandRepaint(jOptionRemoveDeadGroup);
@@ -482,10 +487,14 @@ public class ClientGUI extends JFrame{
 
     private void showButtonandRepaint(JButton button){
         content.add(button);
-        button.repaint();
+        //button.repaint();
+        button.paintImmediately(button.getVisibleRect());
     }
     private void hideButtonandRepaint(JButton button){
         content.remove(button);
         button.repaint();
+        button.paintImmediately(button.getVisibleRect());
+    }
+    public void repaintFrame(){
     }
 }

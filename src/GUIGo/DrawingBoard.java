@@ -255,6 +255,16 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 drawDeadPools=false;
                 drawTerritory=false;
                 break;
+            case ADD_TERITORITY:
+                drawIntersection=false;
+                drawDeadPools=false;
+                drawTerritory=true;
+                break;
+            case REMOVE_TERRITORY:
+                drawIntersection=false;
+                drawDeadPools=false;
+                drawTerritory=true;
+                break;
             default:
                 break;
         }

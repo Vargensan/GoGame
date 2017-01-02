@@ -121,8 +121,8 @@ public class Play {
     {
         clientSocket.out.println("dead");
         boolean help[][]=playBoard.getDeadTable();
-        for(int i=0;i<19;++i){
-            for(int j=0;j<19;++j){
+        for(int i=0;i<window.getSizeOfPlayBoard();++i){
+            for(int j=0;j<window.getSizeOfPlayBoard();++j){
                 if(help[i][j]==true)
                     clientSocket.out.println(1);
                 else
@@ -136,12 +136,44 @@ public class Play {
             }
             System.out.println();
         }
+        reciveTurn();
+        recivefromOther();
+        //try {
+        //   setTurn(clientSocket.in.readLine());
+        //}catch(IOException ex){
 
-        try {
-           setTurn(clientSocket.in.readLine());
-        }catch(IOException ex){
+        //}
+    }
 
+    //0-white
+    //1-black
+    public void sendTerritory(){
+        clientSocket.out.println("territory");
+        PLACE help[][]=playBoard.getTerritoryTable();
+        for(int i=0;i<window.getSizeOfPlayBoard();i++){
+            for(int j=0;j<window.getSizeOfPlayBoard();j++){
+                if(help[i][j].equals(PLACE.BLACK))
+                    clientSocket.out.println(1);
+                else if(help[i][j].equals(PLACE.WHITE))
+                    clientSocket.out.println(0);
+                else
+                    clientSocket.out.println(2);
+
+                //if(help[i][j].equals(PLACE.WHITE))
+                //    System.out.print(help[i][j]);
+                //else
+                //    System.out.print("F\t");
+
+            }
+            System.out.println();
         }
+        reciveTurn();
+        recivefromOther();
+    }
+
+    public void changeToTerritory(){
+        clientSocket.out.println("terr-change");
+        recivefromOther();
     }
 
 
@@ -295,11 +327,39 @@ public class Play {
 
             }
             else if(line.equals("double-pass")){
+                System.out.println("I ve got message!");
                 setPlayState(STATE.ADD_DEAD_GROUPS);
                 window.showSendandAccept();
                 window.showMarkAsDead();
                 turn = clientSocket.in.readLine();
 
+            }
+            else if(line.equals("terr-change")){
+                playBoard.deleteDeadFromGameTable();
+                System.out.println("Changing Game to Territory");
+                setPlayState(STATE.ADD_TERITORITY);
+                window.hideMarkAsDead();
+                window.showTerritoryMarking();
+                turn = clientSocket.in.readLine();
+                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+            }
+            else if(line.equals("territory")){
+                setPlayState(STATE.ADD_TERITORITY);
+                for(int i = 0; i < window.getSizeOfPlayBoard(); i++){
+                    for(int j = 0; j < window.getSizeOfPlayBoard(); j++){
+                        dead_mess = clientSocket.in.readLine().substring(0,1);
+                        if(Integer.parseInt(dead_mess) == 1){
+                            playBoard.markAsTerritory(PLAYER.BLACK,i,j);
+                        }
+                        else if(Integer.parseInt(dead_mess) == 0){
+                            playBoard.markAsTerritory(PLAYER.WHITE,i,j);
+                        } else{
+                            playBoard.unMarkAsTerritory(i,j);
+                        }
+                    }
+                }
+                turn = clientSocket.in.readLine();
+                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             /*
             Gdzie był błąd, Gracz po otrzymaniu wiadomości Dead, nie nasłuchiwał dalej tj.
@@ -320,6 +380,9 @@ public class Play {
             }
             //Analogicznie dla wiadomości dead
             if(line.equals("dead") && turn.equals("u")){
+                recivefromOther();
+            }
+            if(line.equals("terr-change") && turn.equals("u")){
                 recivefromOther();
             }
 

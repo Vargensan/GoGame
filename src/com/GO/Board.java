@@ -55,7 +55,7 @@ public class Board implements BoardI {
         + Grafika dla rysowania martwych pól -> jeżeli martwe -> narysuj jakąś kropke,
         martwe to gdy nie równa się EMPTY;
          */
-        //+6.5 points to black player
+        //+6.5 points to white player
         pointsBlack = 0.0;
         pointsWhite = 6.5;
         TableofDeath = new boolean[size][size];
@@ -90,6 +90,7 @@ public class Board implements BoardI {
                 GameTable[i][j]=PLACE.EMPTY;
                 DeleteGameTable[i][j]=PLACE.EMPTY;
                 TableofDeath[i][j] = false;
+                TerritoryTable[i][j] = PLACE.EMPTY;
                 isWhom[i][j] = false;
             }
         }
@@ -156,6 +157,8 @@ public class Board implements BoardI {
             TerritoryTable[X][Y] = player.playerToPlace();
         }
     }
+
+    //public void setTerritoryTable(PLAYER)
 
     /**
      * Method that unmark selected point as Territory of player

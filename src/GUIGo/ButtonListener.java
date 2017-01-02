@@ -28,10 +28,15 @@ public class ButtonListener implements ActionListener{
                play.passGame();
              break;
            case "Mark Territory":
+               if(play.getPlayState()==STATE.ADD_DEAD_GROUPS || play.getPlayState()==STATE.REMOVE_TERRITORY){
+                   play.setPlayState(STATE.ADD_TERITORITY);
+               }
 
             break;
            case "Unmark Territory":
-
+               if(play.getPlayState()==STATE.ADD_DEAD_GROUPS || play.getPlayState()==STATE.ADD_TERITORITY){
+                   play.setPlayState(STATE.REMOVE_TERRITORY);
+               }
                break;
            case "Start":
                if(play.getPlayState()==STATE.BEFORE_GAME && play.getConfirmation()) {
@@ -81,8 +86,14 @@ public class ButtonListener implements ActionListener{
                        "you won or lost\n","Game Information",JOptionPane.INFORMATION_MESSAGE);
                break;
            case "Send":
+               if(play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
+                   play.sendDeadGroups();
+               else if(play.getPlayState().equals(STATE.ADD_TERITORITY) || play.getPlayState().equals(STATE.REMOVE_TERRITORY))
+                   play.sendTerritory();
                break;
            case "Accept":
+               if(play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
+                   play.changeToTerritory();
                break;
            case "Reject":
                break;

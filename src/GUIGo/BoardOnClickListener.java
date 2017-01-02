@@ -70,12 +70,12 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 }
                 break;
             case ADD_DEAD_GROUPS:
-                play.sendDeadGroups();
+                //play.sendDeadGroups();
 
 
                 break;
             case REMOVE_DEAD_GROUPS:
-                play.sendDeadGroups();
+                //play.sendDeadGroups();
                 break;
         }
 
@@ -139,8 +139,6 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
                 board.markAsDead(obj.intersectionPoint[0],obj.intersectionPoint[1]);
                 obj.repaint();
-
-
                 break;
             case REMOVE_DEAD_GROUPS:
                 obj.changeState(play.getPlayState());
@@ -150,6 +148,23 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 board.unMarkAsDead(obj.intersectionPoint[0],obj.intersectionPoint[1]);
                 obj.repaint();
                 break;
+            case ADD_TERITORITY:
+                obj.changeState(play.getPlayState());
+                mouse_coordinates[0] = e.getX();
+                mouse_coordinates[1] = e.getY();
+                obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
+                board.markAsTerritory(play.get_player_color(),obj.intersectionPoint[0],obj.intersectionPoint[1]);
+                obj.repaint();
+                break;
+            case REMOVE_TERRITORY:
+                obj.changeState(play.getPlayState());
+                mouse_coordinates[0] = e.getX();
+                mouse_coordinates[1] = e.getY();
+                obj.intersectionPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates,BoardSize,StartPoint,distance);
+                board.unMarkAsTerritory(obj.intersectionPoint[0],obj.intersectionPoint[1]);
+                obj.repaint();
+                break;
+
         }
     }
 

@@ -197,7 +197,25 @@ class GamePlay
             clientOutput2.println("a");
 
             sendChangeTurn("u", clientOutput1);
+        } else if(line.equals("terr-change")){
+            clientOutput2.println("terr-change");
+            sendChangeTurn("a", clientOutput2);
+            clientOutput1.println("terr-change");
+            sendChangeTurn("u", clientOutput1);
+        } else if(line.equals("territory")){
+            for(int i = 0; i < preferedSize; i++){
+                for(int j = 0 ; j < preferedSize; j++){
+                    line = clientInput1.readLine().substring(0,1);
+                    if(Integer.parseInt(line) == 1)
+                        clientOutput2.println(1);
+                    else if(Integer.parseInt(line) == 0)
+                        clientOutput2.println(0);
+                    else
+                        clientOutput2.println(2);
+                }
+            }
         }
+
     }
 
     private void readPlayerSecond() throws IOException
@@ -252,6 +270,23 @@ class GamePlay
 
             sendChangeTurn("u", clientOutput2);
 
+        } else if(line.equals("terr-change")){
+            clientOutput1.println("terr-change");
+            sendChangeTurn("a", clientOutput1);
+            clientOutput2.println("terr-change");
+            sendChangeTurn("u", clientOutput2);
+        } else if(line.equals("territory")){
+            for(int i = 0; i < preferedSize; i++){
+                for(int j = 0 ; j < preferedSize; j++){
+                    line = clientInput2.readLine().substring(0,1);
+                    if(Integer.parseInt(line) == 1)
+                        clientOutput1.println(1);
+                    else if(Integer.parseInt(line) == 0)
+                        clientOutput1.println(0);
+                    else
+                        clientOutput1.println(2);
+                }
+            }
         }
     }
 

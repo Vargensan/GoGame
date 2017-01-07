@@ -189,6 +189,14 @@ public class Play {
         }
     }
 
+    public void endGame(){
+        clientSocket.out.println("end");
+        setPlayState(STATE.END_GAME);
+        playBoard.calculateTerritory();
+        window.setTurnEnd();
+
+    }
+
     /*
     abc -> zrobimy z tego opcję
     i-> insert czyli wstawienie
@@ -322,12 +330,16 @@ public class Play {
                     System.out.println();
                 }
                 turn = clientSocket.in.readLine();
+                window.getDrawingBoard().changeState(this.getPlayState());
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
 
 
             }
             else if(line.equals("double-pass")){
                 System.out.println("I ve got message!");
+                /*
+                dodać booleana
+                 */
                 setPlayState(STATE.ADD_DEAD_GROUPS);
                 window.showSendandAccept();
                 window.showMarkAsDead();
@@ -341,6 +353,7 @@ public class Play {
                 window.hideMarkAsDead();
                 window.showTerritoryMarking();
                 turn = clientSocket.in.readLine();
+                window.repaint();
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             else if(line.equals("territory")){
@@ -359,7 +372,15 @@ public class Play {
                     }
                 }
                 turn = clientSocket.in.readLine();
+                window.getDrawingBoard().changeState(this.getPlayState());
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+            }
+            else if(line.equals("end")){
+                setPlayState(STATE.END_GAME);
+                playBoard.calculateTerritory();
+                window.setTurnEnd();
+                return;
+
             }
             /*
             Gdzie był błąd, Gracz po otrzymaniu wiadomości Dead, nie nasłuchiwał dalej tj.

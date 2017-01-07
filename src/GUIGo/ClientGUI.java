@@ -1,9 +1,6 @@
 package GUIGo;
 
-import com.GO.Board;
-import com.GO.PLACE;
-import com.GO.PLAYER;
-import com.GO.Play;
+import com.GO.*;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -11,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +93,7 @@ public class ClientGUI extends JFrame{
     public void confirmSize(){
         confirmSize = true;
         removeButton(jConfirmSize);
+        hideSizeGameBtn();
         jConfirmSize.repaint();
     }
     public boolean getConfirmationofSize(){
@@ -120,16 +119,20 @@ public class ClientGUI extends JFrame{
 
     /**
      * Method that invokes dialog at the end of the game, show, who win and also who lose
-     * @param option winner(1)/looser(else)
+     * @param player winner(1)/looser(else)
      */
-    public void showEndDialog(int option){
-        if(option == 1){
-            JOptionPane.showMessageDialog(content,"Game Over", "Congratulations!\n" +
-                    "You have won with ammount of points: "+play.getPlayBoard().getPoints(play.get_player_color()),
+    public void showEndDialog(PLAYER player){
+        double[] points = new double[2];
+        points[0] = play.getPlayBoard().getPoints(player);
+        points[1] = play.getPlayBoard().getPoints(player.getEnemyColor());
+        if(points[0] > points[1]){
+            JOptionPane.showMessageDialog(content,"Congratulations!\n" +
+                            "You have won with ammount of points: "+play.getPlayBoard().getPoints(play.get_player_color()),
+                    "Game Over",
                     JOptionPane.INFORMATION_MESSAGE);
         }else{
-            JOptionPane.showMessageDialog(content,"Game Over", "We are sorry!\n" +
-                            "You have lost. With points: "+play.getPlayBoard().getPoints(play.get_player_color()),
+            JOptionPane.showMessageDialog(content,"We are sorry!\n" +
+                            "You have lost. With points: "+play.getPlayBoard().getPoints(play.get_player_color()), "Game Over",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -196,6 +199,12 @@ public class ClientGUI extends JFrame{
             turn.paintImmediately(turn.getVisibleRect());
         }
         onetime = false;
+    }
+    public void setTurnEnd(){
+        turn.setText("Game Over!");
+        turn.paintImmediately(turn.getVisibleRect());
+        hideSendandAccept();
+        showEndDialog(play.get_player_color());
     }
 
     /**
@@ -375,7 +384,7 @@ public class ClientGUI extends JFrame{
     public void showSendandAccept(){
         showButtonandRepaint(jSend);
         showButtonandRepaint(jAccept);
-        showButtonandRepaint(jReject);
+        //showButtonandRepaint(jReject);
     }
 
     /**
@@ -385,7 +394,13 @@ public class ClientGUI extends JFrame{
     public void hideSendandAccept(){
         hideButtonandRepaint(jSend);
         hideButtonandRepaint(jAccept);
-        hideButtonandRepaint(jReject);
+        //hideButtonandRepaint(jReject);
+    }
+
+    public void hideSizeGameBtn(){
+        content.remove(jBoardSelect);
+        content.repaint();
+        jBoardSelect.repaint();
     }
 
     public void showTerritoryMarking(){
@@ -456,9 +471,9 @@ public class ClientGUI extends JFrame{
         setButtonLookTransfer(jAccept,"Accept");
         jAccept.setBounds(370,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
 
-        jReject = new JButton("Reject");
-        setButtonLookTransfer(jReject,"Reject");
-        jReject.setBounds(480,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
+        //jReject = new JButton("Reject");
+        //setButtonLookTransfer(jReject,"Reject");
+        //jReject.setBounds(480,Y_WINDOW_SIZE-3*send_h-10,send_w,send_h);
         //
     }
 
@@ -492,8 +507,9 @@ public class ClientGUI extends JFrame{
     }
     private void hideButtonandRepaint(JButton button){
         content.remove(button);
+        button.setVisible(false);
         button.repaint();
-        button.paintImmediately(button.getVisibleRect());
+        //button.paintImmediately(button.getVisibleRect());
     }
     public void repaintFrame(){
     }

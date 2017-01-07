@@ -153,7 +153,7 @@ public class Board implements BoardI {
      * @param Y takes a coordinate Y of point
      */
     public void markAsTerritory(PLAYER player, int X, int Y){
-        if(GameTable[X][Y] != PLACE.BLACK || GameTable[X][Y] != PLACE.WHITE){
+        if(GameTable[X][Y] != PLACE.BLACK && GameTable[X][Y] != PLACE.WHITE){
             TerritoryTable[X][Y] = player.playerToPlace();
         }
     }

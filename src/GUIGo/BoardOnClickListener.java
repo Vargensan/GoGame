@@ -48,10 +48,7 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
     public void mouseReleased(MouseEvent e) {
         switch(play.getPlayState()) {
             case GAME:
-                if(!obj.getterMouseListener()){
-                    play.giveWarningMessage();
-                    obj.repaint();
-                }
+                informTurn();
                 System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
                 if (obj.getterMouseListener()) {
                     mouse_coordinates[0] = e.getX();
@@ -133,6 +130,9 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 obj.repaint();
                 break;
             case ADD_DEAD_GROUPS:
+                if(informTurn() == false){
+                    break;
+                }
                 obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
@@ -141,6 +141,9 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 obj.repaint();
                 break;
             case REMOVE_DEAD_GROUPS:
+                if(informTurn() == false){
+                    break;
+                }
                 obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
@@ -149,6 +152,9 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 obj.repaint();
                 break;
             case ADD_TERITORITY:
+                if(informTurn() == false){
+                    break;
+                }
                 obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
@@ -157,6 +163,9 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 obj.repaint();
                 break;
             case REMOVE_TERRITORY:
+                if(informTurn() == false){
+                    break;
+                }
                 obj.changeState(play.getPlayState());
                 mouse_coordinates[0] = e.getX();
                 mouse_coordinates[1] = e.getY();
@@ -166,6 +175,15 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                 break;
 
         }
+    }
+
+    public boolean informTurn(){
+        if(!obj.getterMouseListener()){
+            play.giveWarningMessage();
+            obj.repaint();
+            return false;
+        }
+        return true;
     }
 
 }

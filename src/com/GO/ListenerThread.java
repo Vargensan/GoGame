@@ -7,7 +7,7 @@ public class ListenerThread extends Thread{
     Play play;
     boolean done = false;
     int job;
-    public void setJob(int option){
+    public synchronized void setJob(int option){
         job = option;
         setDone();
 
@@ -21,13 +21,32 @@ public class ListenerThread extends Thread{
     public void run() {
         while(true) {
             waitUntilJobToDo();
-            done = false;
-            if(job==1){
-
+            synchronized (this) {
+                done = false;
+            }
+            if(job==1) {
+                System.out.println("Gonna recive from other!");
+                play.recivefromOther();
+            }
+            else if(job==2) {
+                System.out.println("Gonna recive a turn!");
+                play.reciveTurn();
+            }
+            else if(job==0){
+                play.inicializeGameWithServer();
+            }
+            else if(job==3){
+                play.recivefromOther();
+                play.reciveTurn();
+            }
+            else if(job==4){
+                play.reciveTurn();
+                play.recivefromOther();
             }
         }
     }
-    public void waitUntilJobToDo(){
+    public synchronized void waitUntilJobToDo(){
+        System.out.println("waitUntilJobToDo");
         while(!done){
             try{
                 this.wait();
@@ -35,10 +54,11 @@ public class ListenerThread extends Thread{
 
             }
         }
+        System.out.println("End Wait Until Job to do");
     }
 
-    public void setDone(){
+    public synchronized void setDone(){
         done = true;
-        this.notifyAll();
+        this.notify();
     }
 }

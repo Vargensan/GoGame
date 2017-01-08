@@ -14,6 +14,7 @@ public class ButtonListener implements ActionListener{
 
     private String butt;
     private Play play;
+    private boolean isyourturn;
     ButtonListener(Play play)
     {
         this.play=play;
@@ -24,16 +25,25 @@ public class ButtonListener implements ActionListener{
        switch(butt)
        {
            case "Pass":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(play.getPlayState()== STATE.GAME)
                play.passGame();
              break;
            case "Mark Territory":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(play.getPlayState()==STATE.ADD_DEAD_GROUPS || play.getPlayState()==STATE.REMOVE_TERRITORY){
                    play.setPlayState(STATE.ADD_TERITORITY);
                }
 
             break;
            case "Unmark Territory":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(play.getPlayState()==STATE.ADD_DEAD_GROUPS || play.getPlayState()==STATE.ADD_TERITORITY){
                    play.setPlayState(STATE.REMOVE_TERRITORY);
                }
@@ -47,11 +57,14 @@ public class ButtonListener implements ActionListener{
                    if (selectedOption == 1) {
                        //sendBotGame();
                    } else {
-                       play.inicializeGameWithServer();
+                       play.setStart();
                    }
                }
                break;
            case "Mark As Dead":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.REMOVE_DEAD_GROUPS)){
                    play.setPlayState(STATE.ADD_DEAD_GROUPS);
                }
@@ -59,6 +72,9 @@ public class ButtonListener implements ActionListener{
 
                break;
            case "Unmark Dead":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if((play.getPlayState()==STATE.GAME)||(play.getPlayState()==STATE.ADD_DEAD_GROUPS)){
                    play.setPlayState(STATE.REMOVE_DEAD_GROUPS);
                }
@@ -66,6 +82,9 @@ public class ButtonListener implements ActionListener{
 
                break;
            case "Give Up":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(!play.getPlayState().equals(STATE.BEFORE_GAME) && !play.getPlayState().equals(STATE.END_GAME))
                    play.setGiveUpstatus();
                break;
@@ -88,12 +107,18 @@ public class ButtonListener implements ActionListener{
                        "you won or lost\n","Game Information",JOptionPane.INFORMATION_MESSAGE);
                break;
            case "Send":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
                    play.sendDeadGroups();
                else if(play.getPlayState().equals(STATE.ADD_TERITORITY) || play.getPlayState().equals(STATE.REMOVE_TERRITORY))
                    play.sendTerritory();
                break;
            case "Accept":
+               isyourturn = informTurn();
+               if(!isyourturn)
+                   break;
                if(play.getAcceptStatus()) {
                    if (play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
                        play.changeToTerritory();
@@ -109,5 +134,14 @@ public class ButtonListener implements ActionListener{
 
        }
 
+    }
+
+    public boolean informTurn(){
+        if(!play.getDrawingBoard().getterMouseListener()){
+            play.giveWarningMessage();
+            play.getDrawingBoard().repaint();
+            return false;
+        }
+        return true;
     }
 }

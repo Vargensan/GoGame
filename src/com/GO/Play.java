@@ -26,6 +26,7 @@ public class Play {
     private int hasGameEnded;
     private boolean accept_status;
     private int giveUpstatus;
+    private ListenerThread worker;
     
 
     Play()
@@ -46,6 +47,7 @@ public class Play {
         //window.initialize(this);
         window.createDrawingBoard(playBoard);
         this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+        initializeListener();
 
 
 
@@ -60,12 +62,18 @@ public class Play {
         }
     }
 
+    private void initializeListener(){
+        worker = new ListenerThread(this);
+        worker.start();
+    }
+
     public int isGiveUpstatus(){
         return giveUpstatus;
     }
     public void setGiveUpstatus(){
         clientSocket.out.println("giveup");
-        recivefromOther();
+        worker.setJob(1);
+        //recivefromOther();
     }
 
 
@@ -86,8 +94,12 @@ public class Play {
     public boolean getConfirmation(){
         return window.getConfirmationofSize();
     }
+    public void setStart(){
+        worker.setJob(0);
+    }
     public void inicializeGameWithServer()
     {
+        //initializeListener();
         System.out.println("I went here!");
         playState=STATE.GAME;
         String color="";
@@ -130,7 +142,8 @@ public class Play {
 
         if(player_color==PLAYER.WHITE)
         {
-            recivefromOther();
+            worker.setJob(1);
+            //recivefromOther();
         }
 
     }
@@ -160,8 +173,10 @@ public class Play {
             }
             System.out.println();
         }
-        reciveTurn();
-        recivefromOther();
+        worker.setJob(4);
+        //worker.setJob(1);
+        //reciveTurn();
+        //recivefromOther();
         //try {
         //   setTurn(clientSocket.in.readLine());
         //}catch(IOException ex){
@@ -191,13 +206,16 @@ public class Play {
             }
             System.out.println();
         }
-        reciveTurn();
-        recivefromOther();
+        worker.setJob(4);
+        //worker.setJob(1);
+        //reciveTurn();
+        //recivefromOther();
     }
 
     public void changeToTerritory(){
         clientSocket.out.println("terr-change");
-        recivefromOther();
+        worker.setJob(1);
+        //recivefromOther();
     }
 
 
@@ -234,45 +252,23 @@ public class Play {
         //This send
         sendToOther(x,y);
         //change your state
-        reciveTurn();
+        System.out.println("You have a job to do!");
+        worker.setJob(4);
+        //reciveTurn();
         //And wait for the answer from other player
-        recivefromOther();
+        //worker.setJob(1);
+        //recivefromOther();
     }
     public void passGame() {
         //hasGameEnded = 1;
         clientSocket.out.println("pass");
         //System.out.println("pass");
         //Tutaj ok, zmieniamy turę
-        reciveTurn();
+        worker.setJob(4);
+        //reciveTurn();
         //Tutaj możemy zrobić opcję nasłuchiwania na double-pass
-        recivefromOther(); //Musimy się przygotować na inną wiadomość niż pass...
-        /*
-        Opis Implementacji:
-
-        Gracz pierwszy pasuje -> wysyła komunikat passGame(), czyli:
-            1.zmienia swoją turę
-            2.przechodzi w stan nasłuchiwania.
-        Po stronie servera należy zaimplementować opcję ile razy padło pass
-        Gracz drugi dostaje turę
-            1.Inny komunikat niż pass? -> mamy normalny stan nasłuchiwania recivefromOther()
-            na Graczu pierwszym
-            2.Komunikat PassGame()? -> wysyłamy do Servera komunikat pass, ten nalicza countera,
-            zmienia naszą turę, dodatkowo zostaje do nas wysłany komuniakt double-pass zarówno do nas
-            jak i do gracza przeciwnego. Tury zostają normalnie ustawione, i działamy teraz na
-            Mark As Territory
-         */
-        //String line;
-       // try {
-            //Tutaj nasłuchujemy na kolejną wiadomość, ale jeśli jest inna niż pass? Nie zadziała prawidłowo
-       //     if((line=clientSocket.in.readLine()).equals("pass"))
-       //         System.out.println("Game ended");
-       //         else
-       //         System.out.println(line);
-       // }
-       // catch(IOException ex)
-       // {
-       //     System.out.println("problem z polaczeniem");
-       // }
+        //worker.setJob(1);
+        //recivefromOther(); //Musimy się przygotować na inną wiadomość niż pass...
     }
 
     private void sendToOther(int x, int y){
@@ -282,7 +278,7 @@ public class Play {
         clientSocket.out.println("y"+y);
 
     }
-    private void reciveTurn(){
+    public void reciveTurn(){
         String turn = "";
         try{
             turn = clientSocket.in.readLine();
@@ -294,7 +290,7 @@ public class Play {
         }
     }
 
-    private void setTurn(String turn){
+    public void setTurn(String turn){
       //  System.out.println("I change your status to "+ turn);
         if(turn.equals("a")){
         //    System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
@@ -307,7 +303,7 @@ public class Play {
         }
     }
 
-    private void recivefromOther(){
+    public void recivefromOther(){
         String line = "";
         String turn = "";
         String dead_mess = "";
@@ -429,14 +425,17 @@ public class Play {
 
             //Jeden z nich musi dalej nasłuchiwać po double passie...
             if(line.equals("double-pass") && turn.equals("u")){
-                recivefromOther();
+                worker.setJob(1);
+                //recivefromOther();
             }
             //Analogicznie dla wiadomości dead
             if(line.equals("dead") && turn.equals("u")){
-                recivefromOther();
+                worker.setJob(1);
+                //recivefromOther();
             }
             if(line.equals("terr-change") && turn.equals("u")){
-                recivefromOther();
+                worker.setJob(1);
+                //recivefromOther();
             }
 
         }catch(Exception e){

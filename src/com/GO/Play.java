@@ -332,6 +332,7 @@ public class Play {
             }
             else if(line.equals("dead")) //Tutaj można z Clienta GUI 'send'
             {
+                accept_status=true;
 
                 setPlayState(STATE.ADD_DEAD_GROUPS);
 
@@ -379,6 +380,7 @@ public class Play {
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             else if(line.equals("territory")){
+                accept_status=true;
                 setPlayState(STATE.ADD_TERITORITY);
                 for(int i = 0; i < window.getSizeOfPlayBoard(); i++){
                     for(int j = 0; j < window.getSizeOfPlayBoard(); j++){

@@ -65,7 +65,9 @@ public class ButtonListener implements ActionListener{
 
 
                break;
-           case "GiveUp":
+           case "Give Up":
+               if(!play.getPlayState().equals(STATE.BEFORE_GAME) && !play.getPlayState().equals(STATE.END_GAME))
+                   play.setGiveUpstatus();
                break;
            case "Confirm Size":
                if(play.getPlayState() == STATE.BEFORE_GAME)
@@ -92,10 +94,12 @@ public class ButtonListener implements ActionListener{
                    play.sendTerritory();
                break;
            case "Accept":
-               if(play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
-                   play.changeToTerritory();
-               else if(play.getPlayState().equals(STATE.ADD_TERITORITY) || play.getPlayState().equals(STATE.REMOVE_TERRITORY))
-                   play.endGame();
+               if(play.getAcceptStatus()) {
+                   if (play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
+                       play.changeToTerritory();
+                   else if (play.getPlayState().equals(STATE.ADD_TERITORITY) || play.getPlayState().equals(STATE.REMOVE_TERRITORY))
+                       play.endGame();
+               }
                break;
           // case "Reject":
           //     break;

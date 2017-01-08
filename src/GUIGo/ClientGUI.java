@@ -122,18 +122,27 @@ public class ClientGUI extends JFrame{
      * @param player winner(1)/looser(else)
      */
     public void showEndDialog(PLAYER player){
-        double[] points = new double[2];
-        points[0] = play.getPlayBoard().getPoints(player);
-        points[1] = play.getPlayBoard().getPoints(player.getEnemyColor());
-        if(points[0] > points[1]){
-            JOptionPane.showMessageDialog(content,"Congratulations!\n" +
-                            "You have won with ammount of points: "+play.getPlayBoard().getPoints(play.get_player_color()),
-                    "Game Over",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            JOptionPane.showMessageDialog(content,"We are sorry!\n" +
-                            "You have lost. With points: "+play.getPlayBoard().getPoints(play.get_player_color()), "Game Over",
-                    JOptionPane.INFORMATION_MESSAGE);
+        if(play.isGiveUpstatus() == 1){
+            JOptionPane.showMessageDialog(content,"Your enemy give up!\n"+
+            "Congratulations, you won!", "Game Over",JOptionPane.INFORMATION_MESSAGE);
+        } else if(play.isGiveUpstatus() == 2){
+            JOptionPane.showMessageDialog(content,"You give up a game!\n"+
+                    "YOU LOST!", "Game Over",JOptionPane.INFORMATION_MESSAGE);
+
+        } else {
+            double[] points = new double[2];
+            points[0] = play.getPlayBoard().getPoints(player);
+            points[1] = play.getPlayBoard().getPoints(player.getEnemyColor());
+            if (points[0] > points[1]) {
+                JOptionPane.showMessageDialog(content, "Congratulations!\n" +
+                                "You have won with ammount of points: " + play.getPlayBoard().getPoints(play.get_player_color()),
+                        "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(content, "We are sorry!\n" +
+                                "You have lost. With points: " + play.getPlayBoard().getPoints(play.get_player_color()), "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 

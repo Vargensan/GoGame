@@ -24,11 +24,14 @@ public class Play {
     private STATE playState;
 
     private int hasGameEnded;
+    private boolean accept_status;
+    private int giveUpstatus;
     
 
     Play()
     {
         hasGameEnded = 0;
+        giveUpstatus = 0;
         playState=STATE.BEFORE_GAME;
 
         //playBoard=new Board(5,this);
@@ -54,6 +57,27 @@ public class Play {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public int isGiveUpstatus(){
+        return giveUpstatus;
+    }
+    public void setGiveUpstatus(){
+        clientSocket.out.println("giveup");
+        recivefromOther();
+    }
+
+
+    public boolean getAcceptStatus(){
+        return accept_status;
+    }
+    public void setAccept_status(String turn){
+        if(turn.equals("a")){
+            accept_status=false;
+        }
+        else if(turn.equals("u")){
+            accept_status=true;
         }
     }
     public void setConfirmation(){
@@ -344,6 +368,7 @@ public class Play {
                 window.showSendandAccept();
                 window.showMarkAsDead();
                 turn = clientSocket.in.readLine();
+                setAccept_status(turn);
 
             }
             else if(line.equals("terr-change")){
@@ -353,6 +378,7 @@ public class Play {
                 window.hideMarkAsDead();
                 window.showTerritoryMarking();
                 turn = clientSocket.in.readLine();
+                setAccept_status(turn);
                 window.repaint();
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
@@ -376,11 +402,17 @@ public class Play {
                 window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             else if(line.equals("end")){
-                setPlayState(STATE.END_GAME);
-                playBoard.calculateTerritory();
-                window.setTurnEnd();
+                endGame();
+                return;
+            } else if(line.equals("win")){
+                giveUpstatus=1;
+                endGame();
                 return;
 
+            } else if(line.equals("lose")){
+                giveUpstatus=2;
+                endGame();
+                return;
             }
             /*
             Gdzie był błąd, Gracz po otrzymaniu wiadomości Dead, nie nasłuchiwał dalej tj.
@@ -410,6 +442,12 @@ public class Play {
         }catch(Exception e){
             System.exit(-1);
         }
+    }
+
+    public void setEnd(){
+        setPlayState(STATE.END_GAME);
+        playBoard.calculateTerritory();
+        window.setTurnEnd();
     }
 
     public void informTurnChange(){

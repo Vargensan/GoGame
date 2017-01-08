@@ -223,6 +223,9 @@ class GamePlay
 
             clientOutput2.println("end");
             killGame();
+        } else if(line.equals("giveup")){
+            clientOutput2.println("win");
+            clientOutput1.println("lose");
         }
 
     }
@@ -306,6 +309,9 @@ class GamePlay
 
             clientOutput1.println("end");
             killGame();
+        }else if(line.equals("giveup")){
+            clientOutput2.println("lose");
+            clientOutput1.println("win");
         }
     }
 

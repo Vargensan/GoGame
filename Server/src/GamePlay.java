@@ -205,6 +205,9 @@ class GamePlay
             clientOutput1.println("terr-change");
             sendChangeTurn("u", clientOutput1);
         } else if(line.equals("territory")){
+
+            clientOutput2.println("territory");
+
             for(int i = 0; i < preferedSize; i++){
                 for(int j = 0 ; j < preferedSize; j++){
                     line = clientInput1.readLine().substring(0,1);
@@ -216,6 +219,12 @@ class GamePlay
                         clientOutput2.println(2);
                 }
             }
+            clientOutput2.println("a");
+            sendChangeTurn("u",clientOutput1);
+        } else if(line.equals("end")){
+
+            clientOutput2.println("end");
+            killGame();
         }
 
     }
@@ -272,12 +281,16 @@ class GamePlay
 
             sendChangeTurn("u", clientOutput2);
 
+
         } else if(line.equals("terr-change")){
             clientOutput1.println("terr-change");
             sendChangeTurn("a", clientOutput1);
             clientOutput2.println("terr-change");
             sendChangeTurn("u", clientOutput2);
         } else if(line.equals("territory")){
+
+            clientOutput1.println("territory");
+
             for(int i = 0; i < preferedSize; i++){
                 for(int j = 0 ; j < preferedSize; j++){
                     line = clientInput2.readLine().substring(0,1);
@@ -289,6 +302,12 @@ class GamePlay
                         clientOutput1.println(2);
                 }
             }
+            clientOutput1.println("a");
+            sendChangeTurn("u",clientOutput2);
+        } else if(line.equals("end")){
+
+            clientOutput1.println("end");
+            killGame();
         }
     }
 

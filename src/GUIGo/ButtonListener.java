@@ -94,9 +94,11 @@ public class ButtonListener implements ActionListener{
            case "Accept":
                if(play.getPlayState().equals(STATE.REMOVE_DEAD_GROUPS) || play.getPlayState().equals(STATE.ADD_DEAD_GROUPS))
                    play.changeToTerritory();
+               else if(play.getPlayState().equals(STATE.ADD_TERITORITY) || play.getPlayState().equals(STATE.REMOVE_TERRITORY))
+                   play.endGame();
                break;
-           case "Reject":
-               break;
+          // case "Reject":
+          //     break;
            default:
                break;
 

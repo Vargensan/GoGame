@@ -15,6 +15,7 @@ class ClientThread extends Thread
     private final ClientThread[] threads;
     private int maxClientCount;
     private GamePlay game;
+    private int threadNumber;
     PrintWriter clientOutput;
     BufferedReader clientInput;
 
@@ -23,10 +24,11 @@ class ClientThread extends Thread
     Dunno, on same port or what
      */
 
-    public ClientThread(Socket clientSocket, ClientThread[] threads)
+    public ClientThread(Socket clientSocket, ClientThread[] threads,int threadNumber)
     {
         this.clientSocket = clientSocket;
         this.threads = threads;
+        this.threadNumber=threadNumber;
         maxClientCount = threads.length;
     }
 
@@ -93,7 +95,7 @@ class ClientThread extends Thread
                 //-----------TRY-CATCH FOR SUPPRESSING EXCEPTION PRINT-----------//
                 try
                 {
-                    game = new GamePlay(threads);
+                    game = new GamePlay(threads,threadNumber);
                     busy = true;
                     game.setClient(clientSocket);
                     game.setGameBoardSize(sizeOfGame);

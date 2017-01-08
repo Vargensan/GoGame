@@ -29,13 +29,15 @@ class GamePlay
     PrintWriter clientOutput2;
     Socket Client1;
     Socket Client2;
+    private int threadNumber;
 
     /*
 
      */
-    public GamePlay(ClientThread[] threads)
+    public GamePlay(ClientThread[] threads,int threadNumber)
     {
         this.threads = threads;
+        this.threadNumber=threadNumber;
         randnum.setSeed(System.currentTimeMillis());
     }
 
@@ -363,6 +365,8 @@ class GamePlay
         {
             this.Client1.close();
             this.Client2.close();
+            threads[threadNumber]=null;
+
         } catch (Exception e)
         {
         }

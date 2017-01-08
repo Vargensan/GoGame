@@ -46,7 +46,7 @@ public class GameServer {
                 int i = 0;
                 for(i = 0; i < maxClientCount; i++) {
                     if(threads[i] == null){
-                        threads[i] = new ClientThread(clientSocket,threads);
+                        threads[i] = new ClientThread(clientSocket,threads,i);
                         threads[i].start();
                         break;
                     }

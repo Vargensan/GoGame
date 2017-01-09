@@ -20,6 +20,10 @@ public class GameServer {
 
     private static final ClientThread[] threads = new ClientThread[maxClientCount];
 
+    /**
+     * Constructor, invokes start of server socket
+     * @param port takes a port on which Server will be start
+     */
 
     GameServer(int port){
         this.PORT = port;
@@ -27,6 +31,10 @@ public class GameServer {
         serverListen();
     }
 
+    /**
+     * Method responsible for setting Server Socket, initialize
+     * it's port etc
+     */
     public void startServer(){
         try{
             server = new ServerSocket(PORT);
@@ -39,6 +47,11 @@ public class GameServer {
 
     }
 
+    /**
+     * Method responsible for accepting connections from clients
+     * creating for them thread so they can connect to other players
+     * and start play a game
+     */
     public void serverListen(){
         while(true){
             try {

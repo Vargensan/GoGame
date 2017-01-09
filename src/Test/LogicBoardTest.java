@@ -35,9 +35,33 @@ public class LogicBoardTest{
         likeKO();
 
         gameboard.canAddHere(player.getEnemyColor(),4,4);
-        gameboard.addStone(player.getEnemyColor(),4,4);
+        gameboard.addStone(player.getEnemyColor(),5,4);
+
         canadd = gameboard.canAddHere(player,5,4);
         assertFalse(canadd);
+    }
+    @Test
+    public void test_ko_status(){
+        setstone();
+        boolean canadd;
+        likeKO();
+
+        gameboard.canAddHere(player.getEnemyColor(),4,4);
+        gameboard.addStone(player.getEnemyColor(),5,4);
+
+        canadd = gameboard.canAddHere(player,5,4);
+        assertTrue(gameboard.getKO_Status());
+    }
+    @Test
+    public void test_ko_coordinates(){
+        setstone();
+        boolean canadd;
+        likeKO();
+        int[] i= new int[2];
+
+        canadd = gameboard.canAddHere(player,5,4);
+        i = gameboard.getKO_Points();
+        assertNotEquals(i,-1);
     }
     @Test
     public void test_getterKO(){
@@ -53,14 +77,14 @@ public class LogicBoardTest{
         gameboard.addStone(player.getEnemyColor(),4,4);
         canadd = gameboard.canAddHere(player,5,4);
         if(canadd == false) {
-            gameboard.canAddHere(player.getEnemyColor(), 4, 8);
-            gameboard.addStone(player.getEnemyColor(), 4, 8);
+            gameboard.canAddHere(player, 4, 8);
+            gameboard.addStone(player, 4, 8);
         }
         canadd = gameboard.canAddHere(player,5,4);
         if(canadd){
             canadd = gameboard.getKO_Status();
         }
-        assertFalse(canadd);
+        assertTrue(canadd);
     }
 
     @Test
@@ -140,6 +164,44 @@ public class LogicBoardTest{
         assertFalse(canadd);
     }
 
+    @Test
+    public void testMarkingDead(){
+        setstone();
+        boolean [][] deadtable = gameboard.getDeadTable();
+        gameboard.markAsDead(3, 3);
+        if(!GameTable[3][3].equals(PLACE.EMPTY)) {
+            //gameboard.markAsDead(3, 3);
+            assertTrue(deadtable[3][3]);
+        }else
+            assertFalse(deadtable[3][3]);
+    }
+    @Test
+    public void testUnmarkingDead(){
+        setstone();
+        boolean [][] deadtable = gameboard.getDeadTable();
+        gameboard.addStone(player,4,3);
+        gameboard.markAsDead(4,3);
+        gameboard.unMarkAsDead(4,3);
+        assertFalse(deadtable[4][3]);
+    }
+    @Test
+    public void testTerritoryDoubleCalculating(){
+
+    }
+    @Test
+    public void testMarkTerritory(){
+
+    }
+    @Test
+    public void testUnmarkTerritory(){
+
+    }
+    @Test
+    public void ifGoodReturnofInvaildOption(){
+
+    }
+
+
     public void setstone(){
         //play = new Play();
         player = PLAYER.BLACK;
@@ -156,7 +218,9 @@ public class LogicBoardTest{
         gameboard.addStone(player.getEnemyColor(),5,5);
         gameboard.addStone(player.getEnemyColor(),5,3);
         gameboard.addStone(player.getEnemyColor(),6,4);
+
     }
+
 
     @Test
     public void testDrawingTerritory(){

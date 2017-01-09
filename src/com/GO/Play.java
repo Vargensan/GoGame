@@ -27,9 +27,13 @@ public class Play {
     private boolean accept_status;
     private int giveUpstatus;
     private ListenerThread worker;
-    
 
-    Play()
+
+    /**
+     * Constructor
+     * Set start values, initialize client GUI
+     */
+    public Play()
     {
         hasGameEnded = 0;
         giveUpstatus = 0;
@@ -52,6 +56,11 @@ public class Play {
 
 
     }
+
+    /**
+     * Method that waits for client confirm of size of Drawing Board before invoking
+     * Connection with the Server
+     */
     public void requestSizeConfirmation(){
         while(!window.getConfirmationofSize()){
             try {
@@ -62,14 +71,29 @@ public class Play {
         }
     }
 
+    /**
+     * Method which is responsible for initializing Listener Thread
+     * which takes a messages from server
+     */
+
     private void initializeListener(){
         worker = new ListenerThread(this);
         worker.start();
     }
 
+    /**
+     * Method which tells if player gived up / or not gived up
+     * or there was any give up in game
+     * @return give up status
+     */
+
     public int isGiveUpstatus(){
         return giveUpstatus;
     }
+
+    /**
+     * Method responsible for sending give up message to the server
+     */
     public void setGiveUpstatus(){
         clientSocket.out.println("giveup");
         worker.setJob(1);
@@ -77,9 +101,21 @@ public class Play {
     }
 
 
+    /**
+     * Method which is getter for Accept status, which tells if click on Accept button
+     * is allowed
+     * @return status if click on Accept button is allowed
+     */
     public boolean getAcceptStatus(){
         return accept_status;
     }
+
+    /**
+     * Method that is responisable for not allowing to accept dead table/territory table
+     * at the first move of player, so his enemy could mark his own dead groups/terrirtory
+     * @param turn takes a turn of player, and change depending on it state if player can click accept
+     *             button
+     */
     public void setAccept_status(String turn){
         if(turn.equals("a")){
             accept_status=false;
@@ -88,15 +124,32 @@ public class Play {
             accept_status=true;
         }
     }
+
+    /**
+     *
+     */
     public void setConfirmation(){
         window.confirmSize();
     }
+
+    /**
+     * Method which gets the size of Drawing Board, defined in Client GUI class
+     * @return
+     */
     public boolean getConfirmation(){
         return window.getConfirmationofSize();
     }
+
+    /**
+     * Setting start to listener thread
+     */
     public void setStart(){
         worker.setJob(0);
     }
+
+    /**
+     * Method which is responsible for initializing game client with server
+     */
     public void inicializeGameWithServer()
     {
         //initializeListener();
@@ -147,13 +200,28 @@ public class Play {
         }
 
     }
+
+    /**
+     * Method that is responsible for getting current play-game state
+     * @return actual game state
+     */
     public STATE getPlayState()
     {
         return playState;
     }
+
+    /**
+     * Method that sets current Play State of game
+     * @param state gets a stake to which game will be change
+     */
     public void setPlayState(STATE state){
         playState=state;
     }
+
+    /**
+     * Method which is responsiable for sending dead groups table from the client
+     * to the server
+     */
     public void sendDeadGroups()
     {
         clientSocket.out.println("dead");
@@ -186,6 +254,11 @@ public class Play {
 
     //0-white
     //1-black
+
+    /**
+     * Method which is responsible for sending territory table from a client
+     * to a server
+     */
     public void sendTerritory(){
         clientSocket.out.println("territory");
         PLACE help[][]=playBoard.getTerritoryTable();
@@ -212,6 +285,11 @@ public class Play {
         //recivefromOther();
     }
 
+    /**
+     * Method which is responsible for changing game-status to
+     * territory changing
+     */
+
     public void changeToTerritory(){
         clientSocket.out.println("terr-change");
         worker.setJob(1);
@@ -219,18 +297,10 @@ public class Play {
     }
 
 
-    public void changeplayer(String abc){
-        clientSocket.out.println(abc);
-
-        try{
-            if(clientSocket.in.readLine().equals("play")){
-
-           }
-        }catch(IOException e){
-            System.out.println("Error");
-        }
-    }
-
+    /**
+     * Method which is responsible for printing the server 'end'
+     * status also makes this client status changed
+     */
     public void endGame(){
         clientSocket.out.println("end");
         setPlayState(STATE.END_GAME);
@@ -247,29 +317,37 @@ public class Play {
     jak już wysłucha co ma do powiedzenia serwer, to będzie wiedział że ma ruch
     Wykona ruch czyli zrobi senda() a później znowu będzie nasłuchiwał, czyli wszystko git!
      */
+
+    /**
+     * Method which is responsible for invoking method which sends
+     * a coordinates of putted stone to the server, besides this method
+     * set listener thread to read server for two messages, where
+     * first is game-situation
+     * and the other one is turn-situation
+     * @param x
+     * @param y
+     */
     public void game(int x, int y)
     {
-        //This send
         sendToOther(x,y);
-        //change your state
-        System.out.println("You have a job to do!");
         worker.setJob(4);
-        //reciveTurn();
-        //And wait for the answer from other player
-        //worker.setJob(1);
-        //recivefromOther();
     }
+
+    /**
+     * Method responsiable for sending to the server pass message
+     */
     public void passGame() {
-        //hasGameEnded = 1;
         clientSocket.out.println("pass");
-        //System.out.println("pass");
-        //Tutaj ok, zmieniamy turę
         worker.setJob(4);
-        //reciveTurn();
-        //Tutaj możemy zrobić opcję nasłuchiwania na double-pass
-        //worker.setJob(1);
-        //recivefromOther(); //Musimy się przygotować na inną wiadomość niż pass...
+
     }
+
+    /**
+     * Method which sends X,Y coordinates of position where stone was placed
+     * by the player to server
+     * @param x takes X coordinates of that point
+     * @param y takes Y coordinates of that point
+     */
 
     private void sendToOther(int x, int y){
 
@@ -278,6 +356,10 @@ public class Play {
         clientSocket.out.println("y"+y);
 
     }
+
+    /**
+     * Method which is responsible for receiving turn from server
+     */
     public void reciveTurn(){
         String turn = "";
         try{
@@ -289,6 +371,13 @@ public class Play {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Method responsible for setting player turn after receiving from Server
+     * a message what turn it should be active/unactive
+     * also invokes method responsible for graphical output for received turn
+     * @param turn
+     */
 
     public void setTurn(String turn){
       //  System.out.println("I change your status to "+ turn);
@@ -302,6 +391,14 @@ public class Play {
             window.getDrawingBoard().setterMouseListener(false);
         }
     }
+
+    /**
+     * Method which allows receiving messages from Server
+     * such as, changing game status, pass, marked territory, dead stones etc...
+     * also invokes other methods responsible for changing game play status
+     * such as endGame(), invokes method responsible
+     * for visible graphic interface to continue next play stage
+     */
 
     public void recivefromOther(){
         String line = "";
@@ -445,15 +542,18 @@ public class Play {
         }
     }
 
+    /**
+     * Method which change game status to end of game, and invokes
+     * method to calculate each player's territory, also invokes method responsiable
+     * for'Game Over'
+     * message instead of 'Your Turn'/'Turn of Enemy'
+     */
     public void setEnd(){
         setPlayState(STATE.END_GAME);
         playBoard.calculateTerritory();
         window.setTurnEnd();
     }
 
-    public void informTurnChange(){
-
-    }
     /**
      * If KO situation is detected it prints it to the client
      */
@@ -508,6 +608,7 @@ public class Play {
     }
 
     public DrawingBoard getDrawingBoard(){return window.getDrawingBoard();}
+
 
     /**
      * Getter for player color

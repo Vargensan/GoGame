@@ -64,15 +64,21 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
                         obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
                         play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
                     }
+                    else{
+                        int i;
+                        i = board.getInvaildOption();
+                        if(i == 1)
+                            play.informInvaildMove(1);
+                        if(i == 2)
+                            play.informInvaildMove(2);
+                        if(i == 3)
+                            play.informKO();
+                        play.turnRepaint();
+
+                    }
                 }
                 break;
-            case ADD_DEAD_GROUPS:
-                //play.sendDeadGroups();
-
-
-                break;
-            case REMOVE_DEAD_GROUPS:
-                //play.sendDeadGroups();
+            default:
                 break;
         }
 
@@ -88,10 +94,6 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
     public void initialize(){
         this.distance = obj.distance;
         StartPoint = obj.dmo_calculate.calculateStartPoint(height, BoardSize, distance);
-        //Usunąć setera set Size
-        //BoardSize = play.getPlayBoard().getSize();
-        //Usunąć settera set Height
-        //I dodac jakos set height przy inicjalizacji, automatyczna werfyfikacja z playem
     }
 
     /**
@@ -177,6 +179,10 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
         }
     }
 
+    /**
+     * Method which checks if it is turn of player
+     * @return status of player turn true/false
+     */
     public boolean informTurn(){
         if(!obj.getterMouseListener()){
             play.giveWarningMessage();

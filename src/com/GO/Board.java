@@ -16,8 +16,6 @@ public class Board implements BoardI {
     private PLACE GameTable[][];
     private PLACE DeleteGameTable[][];
     private PLACE TempDeleteGameTable[][];
-    private PLACE BlackTerritoryTable[][];
-    private PLACE WhiteTerritoryTable[][];
     //Who's Territory
     private boolean isWhom[][];
     //Table of death pools
@@ -31,8 +29,7 @@ public class Board implements BoardI {
     private int[] koSituationXY = new int[2];
     private boolean ko_detected;
     private boolean one_time_calculate = true;
-    private boolean suicide_move = false;
-    private boolean check_sic_once = true;
+    private int invalid_option;
     //------------------------------
     //Nie sprawdzac simmerica zawsze -> dopiero po braku oddechu?
     //
@@ -43,18 +40,9 @@ public class Board implements BoardI {
         GameTable=new PLACE[size][size];
         DeleteGameTable = new PLACE[size][size];
         TempDeleteGameTable = new PLACE[size][size];
-        //BlackTerritoryTable = new PLACE[size][size];
-        //WhiteTerritoryTable = new PLACE[size][size];
         //Czyje Terytorium true - Czarny false - Biały
         isWhom = new boolean[size][size];
         //Tablica Martwych Pól
-        /*
-        Tablica martwych pól:
-        pole martwe -> pole martwe = czarne -> +1 dla białego
-        pole martwe -> pole martwe = białe -> +1 dla czarnego
-        + Grafika dla rysowania martwych pól -> jeżeli martwe -> narysuj jakąś kropke,
-        martwe to gdy nie równa się EMPTY;
-         */
         //+6.5 points to white player
         pointsBlack = 0.0;
         pointsWhite = 6.5;
@@ -68,17 +56,12 @@ public class Board implements BoardI {
         stoneCoordinates[0] = -1;
         stoneCoordinates[1] = -1;
 
-        //Tests
-        //TerritoryTable[2][2] = PLACE.BLACK;
-        //TableofDeath[1][1] = true;
-        //TableofDeath[2][2] = true;
-
         koSituationXY[0] = -1;
         koSituationXY[1] = -1;
     }
 
     /**
-     * initialize board with empty places
+     * initialize board with empty places, same Territory Table and DeleteGameTable
      */
     private void initialize()
     {
@@ -180,6 +163,11 @@ public class Board implements BoardI {
         return TerritoryTable;
     }
 
+    /**
+     *  Method which calculate Territory and add points for each player
+     *  depending on how much teritory they have
+     *  Can be invoked only once at end of game
+     */
     public void calculateTerritory(){
         if(one_time_calculate) {
             for (int i = 0; i < size; i++) {
@@ -425,6 +413,9 @@ public class Board implements BoardI {
     }
 
 
+    public int getInvaildOption(){
+        return invalid_option;
+    }
     @Override
     public boolean canAddHere(PLAYER color, int placeX, int placeY) {
         //Wywyłanie metod w zależności od stanu gracza -> nie wywoływać dla bota
@@ -434,14 +425,12 @@ public class Board implements BoardI {
             return false;
         }
         if(!checkifempty(GameTable,color,placeX,placeY)){
-            play.informInvaildMove(1);
-            play.turnRepaint();
+            invalid_option=1;
             return false;
         }
         //Wyzerowanie wsp KO dopiero po ruchu
         if(!isItNotA_KO(color,placeX,placeY)){
-            play.informKO();
-            play.turnRepaint();
+            invalid_option=3;
             return false;
         }
         stoneCoordinates[0] = placeX;
@@ -449,18 +438,14 @@ public class Board implements BoardI {
         if(canBreathHere(GameTable,color,placeX,placeY,placeX,placeY)){
            nullKO_situation();
            nullCoordinates();
-          // System.out.println("\nI can breathe at here <3\n");
            return true;
         }
         if(canBreatheAfterSicmering(color, placeX, placeY)) {
-            //System.out.println("\nI can breathe here - Simmeric <3\n");
             nullCoordinates();
             return true;
         }else{
-            //System.out.println("Inavild");
             GameTable[placeX][placeY] = PLACE.EMPTY;
-            play.informInvaildMove(2);
-            play.turnRepaint();
+            invalid_option=2;
             nullCoordinates();
             return false;
         }
@@ -530,6 +515,7 @@ public class Board implements BoardI {
                     //System.out.println("Setting KO: X: "+tempX+" Y: "+tempY);
                     koSituationXY[0] = tempX;
                     koSituationXY[1] = tempY;
+                    //ko_detected = true;
                     one_time = false;
                 } else if (ko_state_counter > 1){
                     //if(ko_detected==false)
@@ -571,20 +557,6 @@ public class Board implements BoardI {
            return false;
        }
        return true;
-    }
-
-    /**
-     * Getter for KO points
-     * @return KO situation coordinates
-     */
-    public int[] getKoPoints(){
-        return koSituationXY;
-    }
-
-
-    public void setKoSituationXY(int koPointsX, int koPointsY){
-        koSituationXY[0] = koPointsX;
-        koSituationXY[1] = koPointsY;
     }
 
     private void nullKO_situation(){
@@ -647,19 +619,7 @@ public class Board implements BoardI {
 
     @Override
     public void giveToMyTerritory(PLAYER player, int placeX, int placeY) {
-        boolean isEmpty = GameTable[placeX][placeY] == PLACE.EMPTY;
-        if(isEmpty){
-            if(player.equals(PLAYER.BLACK)){
-                //if(isInAreaOfControl())
-                BlackTerritoryTable[placeX][placeY] = GameTable[placeX][placeY];
-            }
-            else {
-                WhiteTerritoryTable[placeX][placeY] = GameTable[placeX][placeY];
-            }
-        }
-    }
-    public boolean showTerritory(){
-        return true;
+
     }
 
     @Override

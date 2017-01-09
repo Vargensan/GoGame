@@ -31,8 +31,10 @@ class GamePlay
     Socket Client2;
     private int threadNumber;
 
-    /*
-
+    /**
+     * Constructor, initialize game
+     * @param threads takes list of threads
+     * @param threadNumber takes a current thread Number
      */
     public GamePlay(ClientThread[] threads,int threadNumber)
     {
@@ -42,6 +44,12 @@ class GamePlay
     }
 
     //Add Client To Game
+
+    /**
+     * Method responsiable for Setting Client to this game
+     * @param Client takes client Socket, to connect it with other player
+     * @throws IOException unexpected behavior
+     */
     public void setClient(Socket Client) throws IOException
     {
         if (Client1 == null)

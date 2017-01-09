@@ -19,9 +19,11 @@ class ClientThread extends Thread
     PrintWriter clientOutput;
     BufferedReader clientInput;
 
-    /*
-    Add implementation to 1-1 connection between clients
-    Dunno, on same port or what
+    /**
+     * Constructor, initalize start values
+     * @param clientSocket takes a client socket
+     * @param threads takes a list of all threads
+     * @param threadNumber takes a actual this thread number
      */
 
     public ClientThread(Socket clientSocket, ClientThread[] threads,int threadNumber)
@@ -32,7 +34,11 @@ class ClientThread extends Thread
         maxClientCount = threads.length;
     }
 
-
+    /**
+     * Method responsiable for checking list of avaliable games and connecting
+     * player to this one which is free, if there was no active game found, then
+     * client creates his own game
+     */
     public void run()
     {
         String size  = "";

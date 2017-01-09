@@ -270,6 +270,11 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
     }
 
+    /**
+     * Return status if it is turn player for interaction mouse with board
+     * @return status of interaction
+     */
+
 
     public boolean getterMouseListener(){
         return isClicable;
@@ -347,7 +352,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             im_territoryBlack = imageSetter(window,imageResizer,"/GoGraphics/Territory_Black.png",criclefilled,criclefilled);
             im_territoryWhite = imageSetter(window,imageResizer,"/GoGraphics/Territory_White.png",criclefilled,criclefilled);
     }
-    public BufferedImage imageSetter(DrawingBoard window, ImageResize imageResizer, String name, int prefW, int prefH){
+    private BufferedImage imageSetter(DrawingBoard window, ImageResize imageResizer, String name, int prefW, int prefH){
         try {
             InputStream imageInputStream = window.getClass().getResourceAsStream(name);
             BufferedImage bufferedImage = ImageIO.read(imageInputStream);

@@ -8,6 +8,6 @@ public class START {
     public static void main(String argv[])
     {
         //-----------STARTS SERVER ON PORT 4444-----------//
-        serverSocket=new GameServer(4444);
+        serverSocket= GameServer.getGameServer();
     }
 }

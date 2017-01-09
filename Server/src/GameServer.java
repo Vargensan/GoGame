@@ -10,7 +10,8 @@ import java.net.Socket;
 public class GameServer {
 
     //-----------STARTS SERVER ON PORT 4444-----------//
-    private final int PORT;
+    private static int PORT=4444;
+    private static GameServer gameServer;
 
     //-----------STARTS SERVER ON PORT 4444-----------//
     private final static int maxClientCount = 20;
@@ -18,17 +19,23 @@ public class GameServer {
     private ServerSocket server;
     private Socket clientSocket;
 
+
     private static final ClientThread[] threads = new ClientThread[maxClientCount];
 
     /**
      * Constructor, invokes start of server socket
-     * @param port takes a port on which Server will be start
+
      */
 
-    GameServer(int port){
-        this.PORT = port;
+    private GameServer(){
         startServer();
         serverListen();
+    }
+    public static GameServer getGameServer(){
+        if(gameServer==null){
+            gameServer=new GameServer();
+        }
+        return gameServer;
     }
 
     /**

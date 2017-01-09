@@ -40,18 +40,7 @@ public class LogicBoardTest{
         canadd = gameboard.canAddHere(player,5,4);
         assertFalse(canadd);
     }
-    @Test
-    public void test_ko_status(){
-        setstone();
-        boolean canadd;
-        likeKO();
 
-        gameboard.canAddHere(player.getEnemyColor(),4,4);
-        gameboard.addStone(player.getEnemyColor(),5,4);
-
-        canadd = gameboard.canAddHere(player,5,4);
-        assertTrue(gameboard.getKO_Status());
-    }
     @Test
     public void test_ko_coordinates(){
         setstone();
@@ -63,29 +52,8 @@ public class LogicBoardTest{
         i = gameboard.getKO_Points();
         assertNotEquals(i,-1);
     }
-    @Test
-    public void test_getterKO(){
-        test_ko_situation();
-        assertTrue(gameboard.getKO_Status());
-    }
-    @Test
-    public void test_null_KO_afterVaildMove(){
-        setstone();
-        boolean canadd;
-        likeKO();
-        gameboard.canAddHere(player.getEnemyColor(),4,4);
-        gameboard.addStone(player.getEnemyColor(),4,4);
-        canadd = gameboard.canAddHere(player,5,4);
-        if(canadd == false) {
-            gameboard.canAddHere(player, 4, 8);
-            gameboard.addStone(player, 4, 8);
-        }
-        canadd = gameboard.canAddHere(player,5,4);
-        if(canadd){
-            canadd = gameboard.getKO_Status();
-        }
-        assertTrue(canadd);
-    }
+
+
 
     @Test
     public void testifcanbreathe(){
@@ -184,20 +152,32 @@ public class LogicBoardTest{
         gameboard.unMarkAsDead(4,3);
         assertFalse(deadtable[4][3]);
     }
-    @Test
-    public void testTerritoryDoubleCalculating(){
 
-    }
     @Test
     public void testMarkTerritory(){
+        setstone();
+        gameboard.markAsTerritory(player,3,3);
+        PLACE [][] terr = gameboard.getTerritoryTable();
+        assertEquals(terr[3][3],player.playerToPlace());
 
     }
     @Test
     public void testUnmarkTerritory(){
+        setstone();
+        gameboard.markAsTerritory(player,3,3);
+        PLACE[][] terr = gameboard.getTerritoryTable();
+        gameboard.unMarkAsTerritory(3,3);
+        assertEquals(terr[3][3], PLACE.EMPTY);
 
     }
     @Test
     public void ifGoodReturnofInvaildOption(){
+        setstone();
+        gameboard.canAddHere(player,3,3);
+        gameboard.addStone(player,3,3);
+        boolean istrue = gameboard.canAddHere(player,3,3);
+        int i = gameboard.getInvaildOption();
+        assertEquals(1,i);
 
     }
 

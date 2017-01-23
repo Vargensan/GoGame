@@ -1,0 +1,49 @@
+@(connected: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Game Go</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/go_icon.png")">
+        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    </head>
+    <body>
+
+        <div class="topbar">
+            <div class="fill">
+                <div class="container">
+
+                @if(connected != null) {
+                    // JESLI JESTESMY POLACZENI Z ROZGRYWKA
+                    <p class="pull-right">
+                        Logged in as @connected —
+                        <a href="@routes.Application.index()">Disconnect</a>
+                    </p>
+                } else {
+                    // JEZELI NIE JESTESMY POLACZENI Z ROZGRYWKA
+                    // tutaj mamy przycisk sign in w poczatkowym menu
+                    // mozna go zgapic do potwierdzenia rozmiaru planszy/rozpoczecia gry
+                    // ma on zdefiniowana akcje na klikniecie
+                    <form action="@routes.Application.gameGo()" class="pull-right">
+                        <input id="username" name="username" class="input-small" type="text" placeholder="Username">
+                        <button class="btn" type="submit">Sign in</button>
+                    </form>
+                }
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="content">
+            @content
+            </div>
+
+        </div>
+
+    </body>
+</html>

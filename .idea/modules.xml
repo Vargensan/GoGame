@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GO.iml" filepath="$PROJECT_DIR$/GO.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/Server/Server.iml" filepath="$PROJECT_DIR$/app/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/go.iml" filepath="$PROJECT_DIR$/.idea/modules/go.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/go-build.iml" filepath="$PROJECT_DIR$/.idea/modules/go-build.iml" />
     </modules>
   </component>
 </project>

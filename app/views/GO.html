@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+
+    
+     <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=UTF-8">
+
+    
+    <title>GO</title>
+
+	  <link href="styl.css" rel="stylesheet" >
+  </head>
+
+  <body>
+  <table>
+	<tr>
+		<td onclick="giveUp(event)" id="plansza" background="board.png" width="456px" max-height="456px">
+		<dev class="ball">
+			<img  id="butt" src="black.png" /></dev>
+		</td>
+		<td>
+			<ul>
+					<li> <button  id=start onclick="start()" type="button">START</button></li>
+					<li><p id='test' >x y </p> </li>
+					<li><p id='test1' >x y </p> </li>
+					<script>
+						function start(){
+						confirm("Czy chcesz rozpoczac gre z przeciwnikiem?");
+					//	document.getElementById("plansza").style.display='none'; usuwanie obrazka
+						}
+					</script>
+					<li><button  id=pass onclick="pass()" type="button">PASS</button></li>
+					<script>
+						function pass(){
+							
+						}
+					</script>
+					<li><button  onclick="giveUp()" type="button">GIVE UP</button></li>
+					<script>
+						function giveUp(event){
+						var x= event.clientX;
+						var y= event.clientY;
+						document.getElementById('test').innerHTML = "x: " +x + ", y: " + y;
+						document.getElementById("butt").left=x;
+						document.getElementById("butt").top=y;
+						document.getElementById("butt").src="";
+						var a= document.getElementById("butt").left;
+						var b= document.getElementById("butt").top;
+						  document.getElementById('test1').innerHTML = "x: " +a + ", y: " + b;
+						
+						}
+					</script>
+					<li></li>
+					<li><button  onclick="info()" type="button">INFO</button></li>
+					<script>
+						function info(){
+						confirm("Created by Kinga Krata and Bartłomiej Woś\n\n Firstly pick a size from a list in right corner\n Next confirm it with the button 'Confirm Size'\n Draw Panel should be drown, next Start Game and pick \n option if you want to play with Bot or Normal User\n Wait for connection and play, after double pass\n at same time, You will need to select dead groups by mouse\n dragging, you can also remove them, if you both accept dead groups\n then you go to select territory and actions are same as described above\n After all system calculates your points and send a message");
+						}
+					</script>
+					
+			</ul>
+			<ul>
+					<li> <button onclick="markTer()" type="button">MARK TERITORITY</button></li>
+					
+		
+					<li><button onclick="unmarkTer()" type="button">UNMARK TERITORITY</button></li>
+					<li></li>
+					<li><button onclick="markDead()" type="button">MARK DEAD</button></li>
+					
+					<li><button onclick="unMarkDead()" type="button">MARK UNDEAD</button></li>
+					<li></li>
+					<li><button onclick="send()" type="button">SEND</button><button onclick="accept()" type="button">ACCEPT</button></li>
+					
+					
+			</ul>
+		</td>
+		
+			
+		
+	</tr>
+  </table>
+    
+
+  </body>
+</html>

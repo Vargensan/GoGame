@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                                           controllers.Application.index()
-GET     /room                                       controllers.Application.gameGo(username: String ?= null)
+GET     /room                                       controllers.Application.goGame(username: String ?= null)
 GET     /room/goGame                                controllers.Application.goSocketCreator(username)
 GET     /assets/javascripts/gamego                  controllers.Application.goGameJs(username)
 

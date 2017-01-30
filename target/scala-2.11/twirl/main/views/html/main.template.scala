@@ -58,7 +58,7 @@ Seq[Any](format.raw/*1.36*/("""
                     // tutaj mamy przycisk sign in w poczatkowym menu
                     // mozna go zgapic do potwierdzenia rozmiaru planszy/rozpoczecia gry
                     // ma on zdefiniowana akcje na klikniecie
-                    <form action=""""),_display_(/*30.36*/routes/*30.42*/.Application.gameGo()),format.raw/*30.63*/("""" class="pull-right">
+                    <form action=""""),_display_(/*30.36*/routes/*30.42*/.Application.goGame()),format.raw/*30.63*/("""" class="pull-right">
                         <input id="username" name="username" class="input-small" type="text" placeholder="Username">
                         <button class="btn" type="submit">Sign in</button>
                     </form>
@@ -98,9 +98,9 @@ Seq[Any](format.raw/*1.36*/("""
 object main extends main_Scope0.main
               /*
                   -- GENERATED --
-                  DATE: Mon Jan 23 04:53:21 CET 2017
+                  DATE: Mon Jan 30 00:17:11 CET 2017
                   SOURCE: C:/Users/cp24/IdeaProjects/Game/app/views/main.scala.html
-                  HASH: 011dfe5ea426dec331598889e27e793fa18a5b9a
+                  HASH: 8d84cbaf8fa7d0ac929cd03cb5847b3125b8ac6a
                   MATRIX: 748->1|877->35|905->37|1050->156|1064->162|1123->201|1205->257|1219->263|1273->297|1361->358|1376->364|1429->396|1481->421|1496->427|1562->472|1766->649|1796->670|1836->672|1885->693|2033->814|2063->823|2092->824|2155->860|2170->866|2211->886|2289->946|2302->951|2341->952|2390->973|2718->1274|2733->1280|2775->1301|3065->1560|3111->1578|3260->1700|3288->1707|3329->1720
                   LINES: 27->1|32->1|34->3|39->8|39->8|39->8|40->9|40->9|40->9|41->10|41->10|41->10|42->11|42->11|42->11|50->19|50->19|50->19|51->20|53->22|53->22|53->22|54->23|54->23|54->23|56->25|56->25|56->25|57->26|61->30|61->30|61->30|65->34|67->36|74->43|74->43|75->44
                   -- GENERATED --

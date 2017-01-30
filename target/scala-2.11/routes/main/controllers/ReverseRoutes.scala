@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/cp24/IdeaProjects/Game/conf/routes
-// @DATE:Mon Jan 23 04:53:20 CET 2017
+// @DATE:Mon Jan 30 00:19:15 CET 2017
 
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
 import play.core.routing.{ HandlerDef, ReverseRouteContext, queryString, dynamicString }
@@ -35,16 +35,16 @@ package controllers {
     }
 
   
+    // @LINE:7
+    def goGame(username:String = null): Call = {
+      import ReverseRouteContext.empty
+      Call("GET", _prefix + { _defaultPrefix } + "room" + queryString(List(if(username == null) None else Some(implicitly[QueryStringBindable[String]].unbind("username", username)))))
+    }
+  
     // @LINE:9
     def goGameJs(username:String): Call = {
       import ReverseRouteContext.empty
       Call("GET", _prefix + { _defaultPrefix } + "assets/javascripts/gamego" + queryString(List(Some(implicitly[QueryStringBindable[String]].unbind("username", username)))))
-    }
-  
-    // @LINE:7
-    def gameGo(username:String = null): Call = {
-      import ReverseRouteContext.empty
-      Call("GET", _prefix + { _defaultPrefix } + "room" + queryString(List(if(username == null) None else Some(implicitly[QueryStringBindable[String]].unbind("username", username)))))
     }
   
     // @LINE:8

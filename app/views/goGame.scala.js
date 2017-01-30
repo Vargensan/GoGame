@@ -2,7 +2,7 @@
 
 $(function() {
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
- var chatSocket = new WS("@routes.Application.goSocketCreator(username).webSocketURL(request)")
+    var chatSocket = new WS("@routes.Application.goSocketCreator(username).webSocketURL(request)")
 
     var sendMessage = function() {
         chatSocket.send(JSON.stringify( {nr: $("#nr").val()} ))

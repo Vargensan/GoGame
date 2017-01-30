@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/cp24/IdeaProjects/Game/conf/routes
-// @DATE:Mon Jan 23 04:53:20 CET 2017
+// @DATE:Mon Jan 30 00:19:15 CET 2017
 
 import play.api.routing.JavaScriptReverseRoute
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
@@ -43,22 +43,22 @@ package controllers.javascript {
     }
 
   
+    // @LINE:7
+    def goGame: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.Application.goGame",
+      """
+        function(username) {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "room" + _qS([(username == null ? null : (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("username", username))])})
+        }
+      """
+    )
+  
     // @LINE:9
     def goGameJs: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.Application.goGameJs",
       """
         function(username) {
           return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "assets/javascripts/gamego" + _qS([(""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("username", username)])})
-        }
-      """
-    )
-  
-    // @LINE:7
-    def gameGo: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.Application.gameGo",
-      """
-        function(username) {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "room" + _qS([(username == null ? null : (""" + implicitly[QueryStringBindable[String]].javascriptUnbind + """)("username", username))])})
         }
       """
     )

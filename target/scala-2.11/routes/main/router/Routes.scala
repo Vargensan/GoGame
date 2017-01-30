@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/cp24/IdeaProjects/Game/conf/routes
-// @DATE:Mon Jan 23 04:53:20 CET 2017
+// @DATE:Mon Jan 30 00:19:15 CET 2017
 
 package router
 
@@ -39,7 +39,7 @@ class Routes extends GeneratedRouter {
 
   def documentation: Seq[(String, String, String)] = List(
     ("""GET""", prefix, """controllers.Application.index()"""),
-    ("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """room""", """controllers.Application.gameGo(username:String ?= null)"""),
+    ("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """room""", """controllers.Application.goGame(username:String ?= null)"""),
     ("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """room/goGame""", """controllers.Application.goSocketCreator(username:String)"""),
     ("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/javascripts/gamego""", """controllers.Application.goGameJs(username:String)"""),
     ("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""", """controllers.Assets.at(path:String = "/public", file:String)"""),
@@ -68,15 +68,15 @@ class Routes extends GeneratedRouter {
   )
 
   // @LINE:7
-  private[this] lazy val controllers_Application_gameGo1_route: Route.ParamsExtractor = Route("GET",
+  private[this] lazy val controllers_Application_goGame1_route: Route.ParamsExtractor = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("room")))
   )
-  private[this] lazy val controllers_Application_gameGo1_invoker = createInvoker(
-    controllers.Application.gameGo(fakeValue[String]),
+  private[this] lazy val controllers_Application_goGame1_invoker = createInvoker(
+    controllers.Application.goGame(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.Application",
-      "gameGo",
+      "goGame",
       Seq(classOf[String]),
       "GET",
       """""",
@@ -145,9 +145,9 @@ class Routes extends GeneratedRouter {
       }
   
     // @LINE:7
-    case controllers_Application_gameGo1_route(params) =>
+    case controllers_Application_goGame1_route(params) =>
       call(params.fromQuery[String]("username", Some(null))) { (username) =>
-        controllers_Application_gameGo1_invoker.call(controllers.Application.gameGo(username))
+        controllers_Application_goGame1_invoker.call(controllers.Application.goGame(username))
       }
   
     // @LINE:8

@@ -1,0 +1,54 @@
+﻿
+	body 
+	{
+		background-color:Lavender;
+	}
+	ul
+	{
+	  list-style-type:none;
+        
+	  width:250px;
+	  font-size: x-large;
+	  border-radius:6px;
+	  
+	  background-color:LightSlateGray;
+	 
+	}
+	ul li
+	{
+		height: 30px;
+		
+	}
+	ul li a:hover 
+	{
+		color:DarkSlateGray;
+	}
+	ul li:first-child 
+	{
+		border-top:none;
+	}
+	 ul li a 
+	 {
+        text-decoration:none;
+		font-family:monospace;
+		color:Gainsboro;
+		padding:20px;
+     }
+	.board
+	{
+		background-color:Red;
+		color:Blue;
+	}
+	.rect
+	{
+		background-color:White;
+	}
+	.ball
+	{
+			position: static;			
+	}
+	
+	 button
+	 {
+		 font-size: 20px
+	 }

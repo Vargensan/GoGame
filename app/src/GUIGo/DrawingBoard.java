@@ -12,31 +12,31 @@ import java.io.InputStream;
 /**
  * Created by Bartłomiej on 2016-11-21.
  */
-public class DrawingBoard extends JComponent implements DrawingBoardI{
+public class DrawingBoard{
 
     //General Objects
     DrawMathObject dmo_calculate = new DrawMathObject();
 
     private Board board;
     private Play play;
-    private BoardOnClickListener mouseListener;
+    //private BoardOnClickListener mouseListener;
     //LOGIC INFORMATIONS
     private boolean DeadTable[][];              // reference on Special
     private PLACE[][] TerritoryTable;           // reference on Special
     private PLACE[][] gameboard;                // refernece on Special
-    private int[] KO_Points;                    // refernece on Special
-    private boolean ko_detected = false;        // Boolean Draw Class
+    //private int[] KO_Points;                    // refernece on Special
+    //private boolean ko_detected = false;        // Boolean Draw Class
     //Drawing Mouse Informations
-    private int[][][] Table_Intersection;       // reference on DMO
-    int[] intersectionPoint;                    // refernece on DMO
-    int[] relasedPoint;                         // reference on DMO
+    //private int[][][] Table_Intersection;       // reference on DMO
+    //int[] intersectionPoint;                    // refernece on DMO
+    //int[] relasedPoint;                         // reference on DMO
     //Boolean-Drawing Informations
-    boolean drawIntersection = false;
-    private boolean drawDeadPools = true;       // Boolean Draw Class
-    private boolean drawTerritory = true;       // Boolean Draw Class
+    //boolean drawIntersection = false;
+    //private boolean drawDeadPools = true;       // Boolean Draw Class
+    //private boolean drawTerritory = true;       // Boolean Draw Class
     //----???---
-    private boolean firsttime_setTerritory = true;  // Boolean Draw Class
-    private boolean firsttime_setDead = true;          // Boolean Draw Class
+    //private boolean firsttime_setTerritory = true;  // Boolean Draw Class
+    //private boolean firsttime_setDead = true;          // Boolean Draw Class
     //DrawingBoard self-use
     //--Reference on Draw Class Initialize
     private BufferedImage image,controlerImage,im_black,im_white,im_ko,im_dead,im_territoryBlack,im_territoryWhite;
@@ -45,27 +45,27 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
     private Graphics2D g2;
     // Reference on Boolean Draw Class
     private int allow_to_drawing = 0;
-    private final String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
-    private final String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+    //private final String abc[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U"};
+    //private final String numbers[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
     private int strokeOne;
     private int strokeTwo;
     //DrawingBoard Informations
     int distance;
-    private int criclefilled;
-    private static int[] StartPoint = new int[2];
+   // private int criclefilled;
+   // private static int[] StartPoint = new int[2];
     //General Informations
     boolean isClicable;
-    private int sizeGameBoard;
+   // private int sizeGameBoard;
 
 
 
 
-    DrawingBoard(Board board,Play play){
+    public DrawingBoard(Board board,Play play){
         this.play=play;
         this.board=board;
-        intersectionPoint = new int[2];
-        intersectionPoint[0]=-1;
-        intersectionPoint[1] =-1;
+        //intersectionPoint = new int[2];
+        //intersectionPoint[0]=-1;
+        //intersectionPoint[1] =-1;
     }
 
     /**
@@ -92,6 +92,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
         return image;
     }
+    /*
     @Override
     public void filledCircle(Graphics2D g2,PLAYER player, int[] cordinates) {
         if ((cordinates[0] >= 0) && (cordinates[1] >= 0)) {
@@ -101,12 +102,13 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 g2.drawImage(im_white, Table_Intersection[cordinates[0]][cordinates[1]][0], Table_Intersection[cordinates[0]][cordinates[1]][1], null);
         }
     }
+    */
 
-    private void allertKO(Graphics2D g2){
+  /*  private void allertKO(Graphics2D g2){
         int from[] = {Table_Intersection[KO_Points[0]][KO_Points[1]][0], Table_Intersection[KO_Points[0]][KO_Points[1]][1]};
         g2.drawImage(im_ko,from[0],from[1],null);
     }
-
+    /*
     @Override
     public int getXofPoint() {
 
@@ -118,7 +120,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
 
         return 0;
     }
-
+    */
+    /*
     @Override
     public void drawLines(Graphics2D g2,int temp) {
         int[] X = new int[sizeGameBoard];
@@ -140,7 +143,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             g2.drawString(numbers[i],X[0]-criclefilled,Y[i]);
         }
     }
-
+    */
+    /*
     @Override
     public void drawBorders(Graphics2D g2) {
         int offset = strokeTwo/2;
@@ -169,7 +173,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         }
 
     }
-
+    */
+    /*
     @Override
     public void drawDeadPools(Graphics2D g2) {
         if(firsttime_setDead){
@@ -184,12 +189,14 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             }
         }
     }
-
+    */
+    /*
     /**
      * Method which allows to draw on the picture, create image
      * and also initialize the other drawing functions
      * @param g graphics added to override method
      */
+    /*
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -237,7 +244,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * Function for changing state of Drawing Board
      * @param state given state
      */
-    public void changeState(STATE state){
+   /* public void changeState(STATE state){
         switch(state){
             case GAME:
                 drawIntersection=true;
@@ -273,6 +280,7 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
                 break;
         }
     }
+    */
 
     /**
      * Return status if it is turn player for interaction mouse with board
@@ -280,47 +288,50 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      */
 
 
-    public boolean getterMouseListener(){
-        return isClicable;
-    }
-
-    /**
-     * Setter for boolean which tell if player's clicks are allowed
-     * @param click takes a boolean true/false
-     */
-    public void setterMouseListener(boolean click){
-        System.out.println("\n1.state of bla a-active u->unactive : " + click);
-        this.isClicable = click;
-    }
-
+   // public boolean getterMouseListener(){
+    //    return isClicable;
+  //  }
+//
+  //  /**
+ //    * Setter for boolean which tell if player's clicks are allowed
+ //    * @param click takes a boolean true/false
+  //   */
+  //  public void setterMouseListener(boolean click){
+  //      System.out.println("\n1.state of bla a-active u->unactive : " + click);
+  //      this.isClicable = click;
+ //   }
+/*
     /**
      * Method that initialize custom MouseListener
      * set it's properties
      */
+/*
     private void initializeMouseListener(){
         mouseListener = new BoardOnClickListener(board,this,play,isClicable);
         mouseListener.setBoardSize(this.sizeGameBoard);
         mouseListener.setHeight(this.getHeight());
         mouseListener.initialize();
-        this.addMouseMotionListener(mouseListener);
-        this.addMouseListener(mouseListener);
+        //this.addMouseMotionListener(mouseListener);
+        //this.addMouseListener(mouseListener);
         System.out.println("Added Mouse Motion Listener + Mouse Listener!");
     }
-    public BoardOnClickListener getBoardOnClickListener()
-    {
-        return mouseListener;
-    }
+    */
+   // public BoardOnClickListener getBoardOnClickListener()
+   // {
+  //      return mouseListener;
+  //  }
+    /*
+        /**
+         * Method which sets game board, and starts method responsible for computing start vales
+         * of drawing
+         *
+         * @param GameBoard takes actual gameboard
+         */
 
-    /**
-     * Method which sets game board, and starts method responsible for computing start vales
-     * of drawing
-     *
-     * @param GameBoard takes actual gameboard
-     */
     public void startDrawing(PLACE GameBoard[][]){
-        this.gameboard = GameBoard;
-        setStartValues();
-        repaint();
+       // this.gameboard = GameBoard;
+       // setStartValues();
+        //repaint();
         //paintImmediately(this.get,this.getWidth(),this.getHeight());
     }
 
@@ -329,23 +340,24 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * table of intersections of lines ect.
      */
     private void setStartValues(){
-        sizeGameBoard = gameboard.length;
-        distance = dmo_calculate.calculateDistance(this.getHeight(),sizeGameBoard);
-        StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
-        criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
-        Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
-        setImages(this);
-        strokeOne = 2;
-        strokeTwo = 2;
-        allow_to_drawing = 1;
-        initializeMouseListener();
+       // sizeGameBoard = gameboard.length;
+        //distance = dmo_calculate.calculateDistance(this.getHeight(),sizeGameBoard);
+        //StartPoint = dmo_calculate.calculateStartPoint(this.getHeight(),sizeGameBoard,distance);
+        //criclefilled = dmo_calculate.calculateSizeOfCircle(distance);
+        //Table_Intersection = dmo_calculate.calculateTableIntersection(StartPoint,distance,sizeGameBoard,criclefilled);
+      //  setImages(this);
+      //  strokeOne = 2;
+      //  strokeTwo = 2;
+      //  allow_to_drawing = 1;
+        //initializeMouseListener();
     }
 
+/*
     /**
      * Method that reads images and sets graphic of buttons
      * @param window takes drawingboard table
      */
-
+/*
     private void setImages(DrawingBoard window){
             imageResizer = new ImageResize();
             im_black = imageSetter(window,imageResizer,"/GoGraphics/black_button.png",criclefilled,criclefilled);
@@ -367,15 +379,17 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
         return null;
 
     }
-
-    /**
-     * Method responsible for checking the state of each point in game table
-     * and depending on it's state, change the color of mentioned point to the color of
-     * the player whom sets it on the game board table.
-     * @param g2 takes a graphic
-     * @param sizeGameBoard takes a size of game table
-     * @param GameBoard takes a game board
-     */
+    *?
+    /*
+        /**
+         * Method responsible for checking the state of each point in game table
+         * and depending on it's state, change the color of mentioned point to the color of
+         * the player whom sets it on the game board table.
+         * @param g2 takes a graphic
+         * @param sizeGameBoard takes a size of game table
+         * @param GameBoard takes a game board
+         */
+    /*
     private void fillBoard(Graphics2D g2, int sizeGameBoard, PLACE GameBoard[][]){
         for(int i = 0; i < sizeGameBoard; i++){
             for(int j = 0; j < sizeGameBoard; j++){
@@ -389,7 +403,8 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
             }
         }
     }
-
+*/
+    /*
     @Override
     public void update(){
         repaint();
@@ -399,16 +414,16 @@ public class DrawingBoard extends JComponent implements DrawingBoardI{
      * Method that initialize KO Situation
      * @param ko_detected boolean which says if ko situation was detected
      */
-    public void set_KO_Situation(boolean ko_detected){
-        this.ko_detected = ko_detected;
-    }
-
+    //public void set_KO_Situation(boolean ko_detected){
+       // this.ko_detected = ko_detected;
+    //}
+/*
     /**
      * Setter for ko situation
      * @param KO_Points takes a point where KO situation was detected
      */
-    public void set_KO_Points(int[] KO_Points){
-        this.KO_Points = KO_Points;
-    }
+    //public void set_KO_Points(int[] KO_Points){
+      //  this.KO_Points = KO_Points;
+    //}
 
 }

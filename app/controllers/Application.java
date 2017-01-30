@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import play.mvc.*;
+import models.GameServer;
 
 import views.html.*;
 
@@ -59,7 +60,8 @@ public class Application extends Controller {
 
             public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
                 try{
-                    Server.join(username,in,out);
+                    GameServer gameServer = GameServer.getGameServer();
+                    gameServer.join(username,in,out);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

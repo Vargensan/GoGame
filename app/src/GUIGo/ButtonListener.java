@@ -15,7 +15,7 @@ public class ButtonListener implements ActionListener{
     private String butt;
     private Play play;
     private boolean isyourturn;
-    ButtonListener(Play play)
+    public ButtonListener(Play play)
     {
         this.play=play;
     }
@@ -24,6 +24,14 @@ public class ButtonListener implements ActionListener{
     Pass() <- wysłanie z JavaScript "Pass"
     MarkTerritory() etc...
      */
+    public void callPass(){
+        isyourturn = informTurn();
+        if(play.getPlayState()==STATE.GAME){
+            play.passGame();
+        }
+    }
+    public void callMark(){}
+
     @Override
     public void actionPerformed(ActionEvent e) {
         butt=e.getActionCommand();
@@ -142,9 +150,9 @@ public class ButtonListener implements ActionListener{
     }
 
     public boolean informTurn(){
-        if(!play.getDrawingBoard().getterMouseListener()){
+        if(!play.getTurn()){
             play.giveWarningMessage();
-            play.getDrawingBoard().repaint();
+            //play.getDrawingBoard().repaint();
             return false;
         }
         return true;

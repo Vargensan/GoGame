@@ -1,3 +1,5 @@
+package models;
+
 /**
  * Kinga Krata 2016-12-05.
  */

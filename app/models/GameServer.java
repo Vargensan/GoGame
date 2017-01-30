@@ -1,7 +1,13 @@
+package models;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import play.mvc.WebSocket;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import src.com.GO.Play;
 
 /**
  * Kinga Krata 2016-12-05.
@@ -52,6 +58,11 @@ public class GameServer {
 
         System.out.println("Waiting for connections!");
 
+    }
+
+    //Utworzenie nowego gracza
+    public void join(String name,WebSocket.In<JsonNode>in,WebSocket.Out<JsonNode>out){
+        new Play(name,in,out);
     }
 
     /**

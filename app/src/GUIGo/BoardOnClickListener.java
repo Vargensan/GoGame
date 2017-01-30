@@ -18,7 +18,7 @@ public class BoardOnClickListener extends MouseAdapter{
     private Play play;
     private int[] StartPoint = new int[2];
     private int[] mouse_coordinates = new int[2];
-    private DrawingBoard obj;
+   // private DrawingBoard obj;
     private boolean puttingStone;
     private boolean isClicable;
     private int error;
@@ -28,10 +28,10 @@ public class BoardOnClickListener extends MouseAdapter{
     //z logika
     //isClicable, do usunięcia bo nie działa
     //
-BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
+BoardOnClickListener(Board board,Play play,boolean isClicable)
 {
     this.play=play;
-    this.obj = obj;
+    //this.obj = obj;
     this.board = board;
     this.isClicable = isClicable;
 
@@ -49,22 +49,22 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
     jest Game, wgl sprawdzanie w Aktorze, aktualizowanie Unactive/Active -> Sprawdzanie State -> Wykonanie ruchu
 
      */
-    @Override
+    //@Override
     public void mouseReleased(MouseEvent e) {
         switch(play.getPlayState()) {
             case GAME:
-                informTurn();
-                System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
-                if (obj.getterMouseListener()) {
-                    mouse_coordinates[0] = e.getX();
-                    mouse_coordinates[1] = e.getY();
-                    obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
+               // informTurn();
+                //System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
+                //if (obj.getterMouseListener()) {
+                 //   mouse_coordinates[0] = e.getX();
+                  //  mouse_coordinates[1] = e.getY();
+                   // obj.relasedPoint = obj.dmo_calculate.calculateIntersection(mouse_coordinates, BoardSize, StartPoint, distance);
                     //System.out.println("rel point X: "+obj.relasedPoint[0] + " rel point Y: "+obj.relasedPoint[1]);
                     puttingStone = board.canAddHere(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
                     //System.out.println(puttingStone);
-                    if (puttingStone) {
-                        board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
-                        play.informKO();
+                  //  if (puttingStone) {
+                    //    board.addStone(board.getPLayerColor(), obj.relasedPoint[0], obj.relasedPoint[1]);
+                   //     play.informKO();
                         obj.drawIntersection = true;
                         obj.paintImmediately(0, 0, obj.getWidth(), obj.getHeight());
                         play.game(obj.relasedPoint[0], obj.relasedPoint[1]);
@@ -91,33 +91,36 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
 
     }
 
-
+/*
     /**
      * Method that sets distance between drawed lines and Start Point where
      * the drawing begins
      */
+/*
     public void initialize(){
         this.distance = obj.distance;
         StartPoint = obj.dmo_calculate.calculateStartPoint(height, BoardSize, distance);
     }
-
+/*
     /**
      * Method that sets a height
      * @param height takes height from DrawingBoard
      */
+/*
     public void setHeight(int height){
         this.height = height;
     }
-
+/*
     /**
      * Method that takes a length of the playable area
      * @param boardSize take board size from DrawingBoard
      */
+/*
     public void setBoardSize(int boardSize){
         this.BoardSize = boardSize;
     }
 
-
+*/
 
     /**
      *
@@ -183,11 +186,12 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
 
         }
     }
-
+/*
     /**
      * Method which checks if it is turn of player
      * @return status of player turn true/false
      */
+/*
     public boolean informTurn(){
         if(!obj.getterMouseListener()){
             play.giveWarningMessage();
@@ -196,5 +200,5 @@ BoardOnClickListener(Board board,DrawingBoard obj,Play play,boolean isClicable)
         }
         return true;
     }
-
+*/
 }

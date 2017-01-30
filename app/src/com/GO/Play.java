@@ -1,14 +1,22 @@
 package src.com.GO;
 
-import src.GUIGo.BoardOnClickListener;
-import src.GUIGo.ClientGUI;
-import src.GUIGo.DrawingBoard;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import play.mvc.WebSocket;
+import src.GUIGo.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+import play.libs.*;
+import play.libs.F.*;
+import play.Logger;
+import play.mvc.*;
 
 import static java.lang.System.exit;
-import static java.lang.System.lineSeparator;
 
 /**
  * Kinga Krata 2016-12-05.
@@ -26,6 +34,33 @@ public class Play {
     private boolean accept_status;
     private int giveUpstatus;
     private ListenerThread worker;
+
+    //---------------------------------------------
+    //IMAGES
+    private BufferedImage image,controlerImage,im_black,im_white,im_ko,im_dead,im_territoryBlack,im_territoryWhite;
+    private ImageResize imageResizer;
+
+    //----------Communication Between Clients------//
+    DrawMathObject dmo;
+    private int distance;
+    private int sizeGameBoard;
+    private int[] StartPoint = new int[2];
+    private int criclefilled;
+    private int[][][] Table_Intersection;
+
+    private int javascriptHeight;
+    private int javascriptWidth;
+    //----------Holding Game Status---------------//
+    private boolean turn;
+    private boolean ifCanAdd;
+    private int[] intersectinPoint = new int[2];
+
+    //WEBSOCKETS
+    WebSocket.In<JsonNode> in;
+    WebSocket.Out<JsonNode> out;
+
+    //Player Name
+    private String nameofPlayer;
 
 
     /**
@@ -45,12 +80,158 @@ public class Play {
         playBoard = new Board(window.getSizeOfPlayBoard(),this);
 
         window.createDrawingBoard(playBoard);
-        this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
-        initializeListener();
+        //this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
+        //initializeListener();
 
 
 
     }
+
+    private boolean canAddHere(){
+        if(playBoard.canAddHere(get_player_color(),intersectinPoint[0],intersectinPoint[1])){
+            return true;
+        }
+        return false;
+    }
+
+    private void AddHere(){
+        playBoard.addStone(get_player_color(),intersectinPoint[0],intersectinPoint[1]);
+
+    }
+
+    private int [] getIntersectinPoint(){
+        return intersectinPoint;
+    }
+
+
+    public Play(String name, WebSocket.In<JsonNode>in,WebSocket.Out<JsonNode>out){
+        hasGameEnded = 0;
+        giveUpstatus = 0;
+        playState = STATE.BEFORE_GAME;
+        this.in = in;
+        this.out = out;
+        this.nameofPlayer = name;
+
+        //Create Game Logic
+        playBoard = new Board(19,this);
+        //We dont need to create DrawingBoard but DrawMathObject
+        dmo = new DrawMathObject();
+        //Utworzenie Warunków Wstępnych
+        initialize(in,out);
+        //Utworzenie nowych Socketów do komuniakcji z serverem
+        inicializeGameWithServer();
+
+
+
+
+    }
+    public void initialize( WebSocket.In<JsonNode>in,WebSocket.Out<JsonNode>out){
+        askforHeight();
+        askforWidth();
+        //Kod Synchorizujacy że doopiero po dostaniu Width lecimy dalej
+        //........
+        StartPoint = dmo.calculateStartPoint(javascriptHeight,javascriptWidth,19);
+        distance = dmo.calculateDistance(javascriptHeight,playBoard.getSize());
+        criclefilled = dmo.calculateSizeOfCircle(distance);
+        Table_Intersection = dmo.calculateTableIntersection(StartPoint,distance,playBoard.getSize(),criclefilled);
+        setImages(this);
+        initializeClicks(in,out);
+    }
+
+    //****************************************************************
+    //WEBSOCKET JSON IN - ON MESSAGE ACTIONS
+    public void initializeClicks (WebSocket.In<JsonNode>in,WebSocket.Out<JsonNode>out){
+        in.onMessage(new Callback<JsonNode>(){
+            @Override
+            public void invoke(JsonNode event) throws Throwable {
+                try{
+                    //EVENT TO WIADOMOSC WYSLANA DO NAS
+                    //TRZEBA JA TUTAJ PRZETWORZYC
+                    //1.SPRAWDZ NAZWE
+                    //W ZALEZNOSCI OD NAZWY SKOCZ DO FUNKCJI JA PRZETWARZAJACA
+
+                }catch (Exception e){
+
+                }
+            }
+        });
+
+        in.onClose(new Callback0() {
+            @Override
+            public void invoke() throws Throwable {
+
+            }
+        });
+    }
+    //******************************************************************
+    //******************************************************************
+    //--------------COMUNICATION BETWEEN CLIENTS-----------------------//
+    public void askForStartPoint(){
+
+    }
+    public void askforHeight(){
+
+    }
+    public void askforWidth(){
+
+
+    }
+    /*
+    Metoda do utworzenia obiektu typu JSON zawierajacego
+    1) X
+    2) Y
+    3) Gracza
+    4) Wiadomosc  "Narysuj"
+     */
+    public void demandDraw(){
+
+    }
+
+
+
+
+    //******************************************************************
+    //******************************************************************
+
+
+
+    //-----------------------------------------------------------------
+    //          PAKOWANIE OBSŁUGI BUTTONÓW JS -> JSON -> JAVA
+    public void callPass(){
+
+    }
+    public void callMarkTerritory(){
+
+    }
+    public void callMarkDead(){
+
+    }
+    public void callMarkUndead(){
+
+    }
+    public void callGiveUp(){
+
+    }
+    public void callSend(){
+
+    }
+    //*****************************************************************
+    //              OBSŁUGA TURY GRACZA
+    //--WYWOWŁYWANIE ZA KAZDYM RAZEM GDY COKOLWIEK PRZEJDZIE PRZEZ JS -> JSON -> JAVA
+    public boolean checkTurn(){
+        return turn;
+    }
+
+
+    //*****************************************************************
+    //                  CLIENT TURN
+
+    public void setTurn(boolean value){
+        turn = value;
+    }
+
+
+    //*****************************************************************
 
     /**
      * Method that waits for client confirm of size of Drawing Board before invoking
@@ -185,7 +366,8 @@ public class Play {
 
         }
         clientSocket.out.println("ok");
-        window.getDrawingBoard().setterMouseListener(active);
+        //EDITED -> SET MOUSE BOARD OD CLICK LISTENER
+        //window.getDrawingBoard().setterMouseListener(active);
         window.setTurn(active);
 
         if(player_color==PLAYER.WHITE)
@@ -237,14 +419,6 @@ public class Play {
             System.out.println();
         }
         worker.setJob(4);
-        //worker.setJob(1);
-        //reciveTurn();
-        //recivefromOther();
-        //try {
-        //   setTurn(clientSocket.in.readLine());
-        //}catch(IOException ex){
-
-        //}
     }
 
     //0-white
@@ -300,6 +474,7 @@ public class Play {
         clientSocket.out.println("end");
         setPlayState(STATE.END_GAME);
         playBoard.calculateTerritory();
+        //JSON -> SEND TURN END
         window.setTurnEnd();
 
     }
@@ -375,15 +550,15 @@ public class Play {
      */
 
     public void setTurn(String turn){
-      //  System.out.println("I change your status to "+ turn);
+        //System.out.println("I change your status to "+ turn);
         if(turn.equals("a")){
-        //    System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
+            //System.out.print("A ja będę twym aniołem, będę gwiazdą na twym niebie");
             window.setTurn(true);
-            window.getDrawingBoard().setterMouseListener(true);
+            //window.getDrawingBoard().setterMouseListener(true);
         }else {
-         //   System.out.println("let's set my turn to false");
+            //System.out.println("let's set my turn to false");
             window.setTurn(false);
-            window.getDrawingBoard().setterMouseListener(false);
+            //window.getDrawingBoard().setterMouseListener(false);
         }
     }
 
@@ -417,7 +592,8 @@ public class Play {
                 if(playBoard.canAddHere(player_color.getEnemyColor(),x,y)){
                     playBoard.addStone(player_color.getEnemyColor(),x,y);
                 }
-                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+                //Implement here call to JSON
+                //window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }else if(line.equals("pass")){
                 turn = clientSocket.in.readLine();
 
@@ -443,8 +619,8 @@ public class Play {
                     System.out.println();
                 }
                 turn = clientSocket.in.readLine();
-                window.getDrawingBoard().changeState(this.getPlayState());
-                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+                //window.getDrawingBoard().changeState(this.getPlayState());
+                //window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
 
 
             }
@@ -464,12 +640,12 @@ public class Play {
                 playBoard.deleteDeadFromGameTable();
                 System.out.println("Changing Game to Territory");
                 setPlayState(STATE.ADD_TERITORITY);
-                window.hideMarkAsDead();
-                window.showTerritoryMarking();
+                //window.hideMarkAsDead();
+                //window.showTerritoryMarking();
                 turn = clientSocket.in.readLine();
                 setAccept_status(turn);
-                window.repaint();
-                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+                //window.repaint();
+                //window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             else if(line.equals("territory")){
                 accept_status=true;
@@ -488,8 +664,8 @@ public class Play {
                     }
                 }
                 turn = clientSocket.in.readLine();
-                window.getDrawingBoard().changeState(this.getPlayState());
-                window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+                //window.getDrawingBoard().changeState(this.getPlayState());
+                //window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
             }
             else if(line.equals("end")){
                 endGame();
@@ -499,37 +675,22 @@ public class Play {
                 endGame();
                 return;
 
-            } else if(line.equals("lose")){
-                giveUpstatus=2;
+            } else if(line.equals("lose")) {
+                giveUpstatus = 2;
                 endGame();
                 return;
             }
-            /*
-            Gdzie był błąd, Gracz po otrzymaniu wiadomości Dead, nie nasłuchiwał dalej tj.
-            1.Wysłał do gracza nasłuchującego
-            2.Przeszedł w stan nasłuchiwania
-            3.Otrzymał wiadomość, wypełnił ją -> narysował deadtable
-            4.Po czym powiedział że już nie słucha, bo nie wchodzi do funckji recivefromOther()
-             */
-
-            //Tego nie rozumiem, nie lepiej wyslac, odebrac u innego klienta i zmienic u innego kliena, i dac mu ture?
-            //Możliwe Bugi
 
             setTurn(turn);
 
-            //Jeden z nich musi dalej nasłuchiwać po double passie...
             if(line.equals("double-pass") && turn.equals("u")){
                 worker.setJob(1);
-                //recivefromOther();
             }
-            //Analogicznie dla wiadomości dead
             if(line.equals("dead") && turn.equals("u")){
                 worker.setJob(1);
-                //recivefromOther();
             }
             if(line.equals("terr-change") && turn.equals("u")){
                 worker.setJob(1);
-                //recivefromOther();
             }
 
         }catch(Exception e){
@@ -546,18 +707,19 @@ public class Play {
     public void setEnd(){
         setPlayState(STATE.END_GAME);
         playBoard.calculateTerritory();
-        window.setTurnEnd();
+        //LOOK WHAT GONNA IMPLEMENT HERE
+        //window.setTurnEnd();
     }
 
     /**
      * If KO situation is detected it prints it to the client
      */
     public void informKO(){
-        window.getDrawingBoard().set_KO_Points(playBoard.getKO_Points());
-        window.getDrawingBoard().set_KO_Situation(playBoard.getKO_Status());
-        if(playBoard.getKO_Status()){
-            window.showWarningKO_Situation();
-        }
+        //window.getDrawingBoard().set_KO_Points(playBoard.getKO_Points());
+        //window.getDrawingBoard().set_KO_Situation(playBoard.getKO_Status());
+        //if(playBoard.getKO_Status()){
+        //    window.showWarningKO_Situation();
+        //}
     }
 
     /**
@@ -584,7 +746,7 @@ public class Play {
      */
     public void turnRepaint(){
         //window.getDrawingBoard().repaint();
-        window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
+        //window.getDrawingBoard().paintImmediately(0,0,window.getDrawingBoard().getWidth(),window.getDrawingBoard().getHeight());
     }
 
     /**
@@ -602,7 +764,7 @@ public class Play {
         return playBoard;
     }
 
-    public DrawingBoard getDrawingBoard(){return window.getDrawingBoard();}
+   // public DrawingBoard getDrawingBoard(){return window.getDrawingBoard();}
 
 
     /**
@@ -610,6 +772,31 @@ public class Play {
      * @return color of player
      */
     public PLAYER get_player_color() {return player_color;}
+
+
+    //CODE FOR RENDERING IMAGES
+
+    private void setImages(Play window){
+        imageResizer = new ImageResize();
+        im_black = imageSetter(window,imageResizer,"/GoGraphics/black_button.png",criclefilled,criclefilled);
+        im_white = imageSetter(window,imageResizer,"/GoGraphics/white_button2.png",criclefilled,criclefilled);
+        //controlerImage = imageSetter(window,imageResizer,"/GoGraphics/DrawingBoardTexture.png",this.getWidth(),this.getHeight());
+        im_ko = imageSetter(window,imageResizer,"/GoGraphics/KOsituationButton.png",criclefilled,criclefilled);
+        im_dead = imageSetter(window,imageResizer,"/GoGraphics/KOsituationButton.png",criclefilled*1/2,criclefilled*1/2);
+        im_territoryBlack = imageSetter(window,imageResizer,"/GoGraphics/Territory_Black.png",criclefilled,criclefilled);
+        im_territoryWhite = imageSetter(window,imageResizer,"/GoGraphics/Territory_White.png",criclefilled,criclefilled);
+    }
+    private BufferedImage imageSetter(Play window, ImageResize imageResizer, String name, int prefW, int prefH){
+        try {
+            InputStream imageInputStream = window.getClass().getResourceAsStream(name);
+            BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+            return imageResizer.scale(bufferedImage,prefW,prefH);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
 
 

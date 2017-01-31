@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 /**
  * Created by Bartłomiej on 2016-12-04.
  */
-public class BoardOnClickListener extends MouseAdapter{
+public class BoardOnClickListener{
 
     private int distance;
     private int height;
@@ -50,11 +50,11 @@ BoardOnClickListener(Board board,Play play,boolean isClicable)
 
      */
     //@Override
-    public void mouseReleased(MouseEvent e) {
+   /* public void mouseReleased(MouseEvent e) {
         switch(play.getPlayState()) {
             case GAME:
-               // informTurn();
-                //System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
+                //informTurn();
+                System.out.println("play : Color of player" +play.get_player_color()+" Mouse State: "+obj.getterMouseListener());
                 //if (obj.getterMouseListener()) {
                  //   mouse_coordinates[0] = e.getX();
                   //  mouse_coordinates[1] = e.getY();
@@ -90,6 +90,7 @@ BoardOnClickListener(Board board,Play play,boolean isClicable)
 
 
     }
+    */
 
 /*
     /**
@@ -121,7 +122,7 @@ BoardOnClickListener(Board board,Play play,boolean isClicable)
     }
 
 */
-
+/*
     /**
      *
      * Method which refresh actuall position of the mouse
@@ -129,6 +130,7 @@ BoardOnClickListener(Board board,Play play,boolean isClicable)
      * and depending on state of game can invoke paint of some states
      * @param e mouse event action was made
      */
+/*
     @Override
     public void mouseDragged(MouseEvent e) {
         switch(play.getPlayState()) {

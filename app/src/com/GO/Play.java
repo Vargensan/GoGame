@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import play.mvc.WebSocket;
+import scala.util.parsing.combinator.testing.Str;
 import src.GUIGo.*;
 
 import javax.imageio.ImageIO;
@@ -48,13 +49,19 @@ public class Play {
     private int criclefilled;
     private int[][][] Table_Intersection;
 
+    private PLACE[][] TerritoryTable;           // reference on Special
+    private PLACE[][] gameboard;                // refernece on Special
+    private boolean DeadTable[][];              // reference on Special
+
     private int javascriptHeight;
     private int javascriptWidth;
     //----------Holding Game Status---------------//
     private boolean turn;
     private boolean ifCanAdd;
     private int[] intersectinPoint = new int[2];
+    private int[] clickedPoint = new int[2];
 
+    private boolean terr_or_dead;
     //WEBSOCKETS
     WebSocket.In<JsonNode> in;
     WebSocket.Out<JsonNode> out;
@@ -82,8 +89,6 @@ public class Play {
         window.createDrawingBoard(playBoard);
         //this.clickListener=window.getDrawingBoard().getBoardOnClickListener();
         //initializeListener();
-
-
 
     }
 
@@ -117,6 +122,12 @@ public class Play {
         //We dont need to create DrawingBoard but DrawMathObject
         dmo = new DrawMathObject();
         //Utworzenie Warunków Wstępnych
+
+        //reference to tables
+        DeadTable = playBoard.getDeadTable();
+        gameboard = playBoard.getGameTable();
+        TerritoryTable = playBoard.getTerritoryTable();
+
         initialize(in,out);
         //Utworzenie nowych Socketów do komuniakcji z serverem
         inicializeGameWithServer();
@@ -125,10 +136,13 @@ public class Play {
 
 
     }
+    //INITIALIZE GAME WITH SERVER AT END OF CODE???
     public void initialize( WebSocket.In<JsonNode>in,WebSocket.Out<JsonNode>out){
-        askforHeight();
-        askforWidth();
+        //Send request for Height and Width
+        askforHeightandWidth();
         //Kod Synchorizujacy że doopiero po dostaniu Width lecimy dalej
+        //........
+        //waitUntilGet()?
         //........
         StartPoint = dmo.calculateStartPoint(javascriptHeight,javascriptWidth,19);
         distance = dmo.calculateDistance(javascriptHeight,playBoard.getSize());
@@ -145,10 +159,42 @@ public class Play {
             @Override
             public void invoke(JsonNode event) throws Throwable {
                 try{
-                    //EVENT TO WIADOMOSC WYSLANA DO NAS
-                    //TRZEBA JA TUTAJ PRZETWORZYC
-                    //1.SPRAWDZ NAZWE
-                    //W ZALEZNOSCI OD NAZWY SKOCZ DO FUNKCJI JA PRZETWARZAJACA
+                    String a;
+                    //Wydarzenia od JS -> klikniecie Buttona + klikniecie w plansze
+                    a = event.get("What").asText();
+                    if(a.equals("Pass")){
+                        callPass(event);
+                    }
+                    else if(a.equals("Send")){
+                        callSend(event);
+                    }
+                    else if(a.equals("Accept")){
+                        callAccept(event);
+                    }
+                    else if(a.equals("MarkTerritory")){
+                        callMarkTerritory(event);
+                    }
+                    else if(a.equals("UnMarkTerritory")){
+                        callUnMarkTerritor(event);
+                    }
+                    else if(a.equals("GiveUp")){
+                        callGiveUp(event);
+                    }
+                    else if(a.equals("MarkDead")){
+                        callMarkDead(event);
+                    }
+                    else if(a.equals("UnMarkDead")){
+                        callUnMarkDead(event);
+                    }
+                    else if(a.equals("Click")){
+                        //Add note After canAddHere, AddStone -> invoke game method with parameters
+                        //Which are understood by table -> dmo.CalculateIntersectionPoint(X.click, Y.click)
+                        callClick(event);
+                    }
+                    else if(a.equals("Size")){
+                        javascriptHeight=event.get("Height").asInt();
+                        javascriptWidth=event.get("Width").asInt();
+                    }
 
                 }catch (Exception e){
 
@@ -168,23 +214,43 @@ public class Play {
     //--------------COMUNICATION BETWEEN CLIENTS-----------------------//
     public void askForStartPoint(){
 
-    }
-    public void askforHeight(){
 
     }
-    public void askforWidth(){
-
+    public void askforHeightandWidth(){
+        ObjectNode event = Json.newObject();
+        event.put("What","Size");
+        event.put("SizeX","Width");
+        event.put("SizeY","Height");
+        out.write(event);
 
     }
-    /*
-    Metoda do utworzenia obiektu typu JSON zawierajacego
-    1) X
-    2) Y
-    3) Gracza
-    4) Wiadomosc  "Narysuj"
-     */
-    public void demandDraw(){
 
+    public void demandDraw(PLACE[][] Table, String what){
+        ObjectNode event = Json.newObject();
+        event.put("What",what);
+        for(int i=0; i < playBoard.getSize(); i++){
+            for(int j = 0 ; j < playBoard.getSize(); j++) {
+                if (Table[i][j].equals(PLACE.WHITE)){
+                    event.put("Color","White");
+                }
+                else if(Table[i][j].equals(PLACE.BLACK)){
+                    event.put("Color","Black");
+                }
+                else{
+                    event.put("Color","Empty");
+                }
+                putOnEvent(event,i,j);
+            }
+        }
+    }
+
+    public void putOnEvent(ObjectNode event, int i, int j){
+        String x = String.valueOf(i);   //Format data 0X 1X 2X 3X 4X
+        String y = String.valueOf(j);
+        String b = x + "X";
+        String c = y + "Y";
+        event.put(b, intersectinPoint[0]);
+        event.put(c, intersectinPoint[1]);
     }
 
 
@@ -192,27 +258,93 @@ public class Play {
 
     //******************************************************************
     //******************************************************************
+    public void callClick(JsonNode event){
+        clickedPoint[0]=event.get("X").asInt();
+        clickedPoint[1]=event.get("Y").asInt();
+        //If it is our turn then do actions
+        // Converts to readable by table format
+        intersectinPoint = convertToPointTable(clickedPoint);
+        //
+        if(checkTurn()){
+            switch (getPlayState()){
+                case BEFORE_GAME:
+                    break;
+                case GAME:
+                    if(playBoard.canAddHere(player_color,intersectinPoint[0],intersectinPoint[1])){
+                        playBoard.addStone(player_color,intersectinPoint[0],intersectinPoint[1]);
+                        demandDraw(gameboard,"Game");
+                        //After drowning it we need to invoke game method
+                        //So give it to another client
+                        game(intersectinPoint[0],intersectinPoint[1]);
+                    }
+                    break;
+                case ADD_TERITORITY:
+                    playBoard.giveToMyTerritory(player_color,intersectinPoint[0],intersectinPoint[1]);
+                    //And with others call same
+                    sendTerritory();
+                    demandDraw(TerritoryTable,"Territory");
+                    break;
+                case REMOVE_DEAD_GROUPS:
+                    playBoard.markAsDead(intersectinPoint[0],intersectinPoint[1]);
+                    sendDeadGroups();
+                    break;
+                case ADD_DEAD_GROUPS:
+                    playBoard.markAsDead(intersectinPoint[0],intersectinPoint[1]);
+                    sendDeadGroups();
+                    break;
+                case REMOVE_TERRITORY:
+                    sendTerritory();
+                    break;
+                default:
+                    break;
+            }
+        }
 
+    }
 
-
+    //----------------------------------------------------------------
+    public int[] convertToPointTable(int[] markedPoint){
+        int[] pointer;
+        pointer = dmo.calculateIntersection(markedPoint,playBoard.getSize(),StartPoint,distance);
+        return pointer;
+    }
     //-----------------------------------------------------------------
     //          PAKOWANIE OBSŁUGI BUTTONÓW JS -> JSON -> JAVA
-    public void callPass(){
+    public void callPass(JsonNode event){
+        passGame();
 
     }
-    public void callMarkTerritory(){
+
+    public void callUnMarkTerritor(JsonNode event){
+        if(checkVaildChange(STATE.REMOVE_DEAD_GROUPS))
+            setPlayState(STATE.REMOVE_DEAD_GROUPS);
+    }
+    public void callMarkTerritory(JsonNode event){
+        if(checkVaildChange(STATE.ADD_TERITORITY))
+            setPlayState(STATE.ADD_TERITORITY);
 
     }
-    public void callMarkDead(){
-
+    public void callMarkDead(JsonNode event){
+        if(checkVaildChange(STATE.ADD_DEAD_GROUPS))
+            setPlayState(STATE.ADD_DEAD_GROUPS);
     }
-    public void callMarkUndead(){
-
+    public void callUnMarkDead(JsonNode event){
+        if(checkVaildChange(STATE.REMOVE_DEAD_GROUPS))
+            setPlayState(STATE.REMOVE_DEAD_GROUPS);
     }
-    public void callGiveUp(){
-
+    public void callGiveUp(JsonNode event){
+        setGiveUpstatus();
     }
-    public void callSend(){
+    public void callSend(JsonNode event){
+        //We need to do proper
+        if(terr_or_dead){
+            sendDeadGroups();
+        }
+        else{
+            sendTerritory();
+        }
+    }
+    public void callAccept(JsonNode event){
 
     }
     //*****************************************************************
@@ -220,6 +352,38 @@ public class Play {
     //--WYWOWŁYWANIE ZA KAZDYM RAZEM GDY COKOLWIEK PRZEJDZIE PRZEZ JS -> JSON -> JAVA
     public boolean checkTurn(){
         return turn;
+    }
+    //*****************************************************************
+    public boolean checkVaildChange(STATE given){
+        boolean returnstatement = false;
+        switch (given){
+            case ADD_TERITORITY:
+                if(getPlayState()==STATE.ADD_DEAD_GROUPS || getPlayState()==STATE.REMOVE_TERRITORY)
+                    returnstatement = true;
+                else
+                    returnstatement = false;
+                break;
+            case GAME:
+                break;
+            case REMOVE_TERRITORY:
+                if(getPlayState()==STATE.ADD_DEAD_GROUPS || getPlayState()==STATE.ADD_TERITORITY)
+                    returnstatement = true;
+                else
+                    returnstatement = false;
+                break;
+            case ADD_DEAD_GROUPS:
+                if((getPlayState()==STATE.GAME)||(getPlayState()==STATE.REMOVE_DEAD_GROUPS))
+                    returnstatement = true;
+                else
+                    returnstatement = false;
+                break;
+            case REMOVE_DEAD_GROUPS:
+                break;
+            default:
+                returnstatement = false;
+                break;
+        }
+        return returnstatement;
     }
 
 
@@ -356,19 +520,22 @@ public class Play {
         if(color.equals("b"))
         {
             player_color=PLAYER.BLACK;
-            window.setJPlayerColor("Player Black");
+            //JSON? SEND COLOR?
+           // window.setJPlayerColor("Player Black");
 
         }
         else
         {
             player_color=PLAYER.WHITE;
-            window.setJPlayerColor("Player White");
+            //JSON? SEND COLOR?
+           // window.setJPlayerColor("Player White");
 
         }
         clientSocket.out.println("ok");
         //EDITED -> SET MOUSE BOARD OD CLICK LISTENER
         //window.getDrawingBoard().setterMouseListener(active);
-        window.setTurn(active);
+        //JSON? SEND ACTIVE?
+        //window.setTurn(active);
 
         if(player_color==PLAYER.WHITE)
         {
